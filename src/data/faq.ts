@@ -1,0 +1,63 @@
+import type { FaqItem } from "@/components/ui/Faq";
+
+export const homeFaq: FaqItem[] = [
+  {
+    q: "Le CBD est-il légal en France ?",
+    a: "Oui. La vente de fleurs, résines et produits à base de CBD est légale en France dès lors que le taux de THC est inférieur à 0,3 % et que les produits sont issus de variétés de chanvre autorisées. Tous nos produits respectent cette réglementation et nos analyses de laboratoire sont consultables en ligne.",
+  },
+  {
+    q: "Livrez-vous partout en France ?",
+    a: "Oui, nous expédions dans toute la France métropolitaine : Lettre suivie, Colissimo 48 h (offert dès 60 € d'achat) ou Chronopost Express 24 h. Les commandes passées avant 13 h partent le jour même (jours ouvrés). Dans le Haut-Doubs, nous livrons aussi à domicile et proposons le retrait gratuit à Damprichard et au Russey.",
+  },
+  {
+    q: "L'emballage est-il discret ?",
+    a: "Totalement. Vos produits voyagent dans des sachets hermétiques inodores, glissés dans un colis ou une enveloppe neutre, sans aucune mention de CBD ni de CBDoux à l'extérieur. Le libellé bancaire est lui aussi neutre.",
+  },
+  {
+    q: "Comment payer ma commande ?",
+    a: "Par carte bancaire (CB, Visa, Mastercard), Apple Pay ou Google Pay, via notre prestataire de paiement sécurisé Mollie. Le retrait sur place peut aussi être réglé en espèces ou par carte au moment du retrait. Nos distributeurs automatiques acceptent la carte bancaire 24 h/24.",
+  },
+  {
+    q: "Que signifient les forces Classique, 2, 3 et Maxi ?",
+    a: "La force indique la concentration en CBD du produit. Classique : CBD naturel, non renforcé. Force 2 et Force 3 : fleur ou résine renforcée en CBD (ressenti plus présent). Force Maxi : la concentration la plus élevée de la gamme, réservée aux adultes habitués et déconseillée aux débutants. Dans tous les cas, commencez par une petite quantité, attendez les effets et ne conduisez pas après usage.",
+  },
+  {
+    q: "Vos huiles CBD peuvent-elles être ingérées ?",
+    a: "Non. Conformément à la réglementation française, nos huiles Full Spectrum 10 % et 20 % sont des produits à usage cutané exclusivement (massage, peau). Elles ne doivent pas être avalées.",
+  },
+  {
+    q: "Puis-je conduire après avoir consommé du CBD ?",
+    a: "Nous le déconseillons. Même avec un THC inférieur à 0,3 %, le CBD peut entraîner une somnolence et les tests salivaires routiers ne distinguent pas le CBD du THC. Attendez plusieurs heures avant de prendre le volant.",
+  },
+  {
+    q: "Avez-vous une offre de bienvenue ?",
+    a: "Oui : 10 € offerts sur votre première commande dès 100 € d'achat avec le code BIENVENUE10, à saisir dans le panier. Le port Colissimo est offert dès 60 € pour tout le monde.",
+  },
+];
+
+export const shippingFaq: FaqItem[] = [
+  {
+    q: "Quels sont les délais de livraison ?",
+    a: "Commande avant 13 h (jours ouvrés) = expédition le jour même. Lettre suivie : 2 à 4 jours ouvrés. Colissimo : 48 h ouvrées. Chronopost Express : livraison le lendemain avant 13 h pour la plupart des adresses en France métropolitaine. Livraison locale par nos soins : 24 à 48 h sur un créneau convenu par WhatsApp.",
+  },
+  {
+    q: "Comment suivre mon colis ?",
+    a: "Dès l'expédition, vous recevez un email avec votre numéro de suivi et le lien du transporteur. Vous pouvez aussi retrouver l'état de votre commande à tout moment sur la page « Suivre ma commande » avec votre numéro de commande et votre email.",
+  },
+  {
+    q: "Mon colis est-il discret et sécurisé ?",
+    a: "Oui. Sachets hermétiques inodores, colis ou enveloppe neutre sans mention du contenu, remise contre signature pour Chronopost. Le libellé qui apparaît sur votre relevé bancaire est neutre.",
+  },
+  {
+    q: "Livrez-vous en Belgique, en Suisse ou dans les DOM-TOM ?",
+    a: "Pour l'instant, la boutique en ligne expédie en France métropolitaine uniquement. Nos distributeurs 24/7 de Charquemont et du Russey, à quelques minutes de la frontière suisse, restent accessibles à tous.",
+  },
+  {
+    q: "Comment fonctionne le retrait gratuit ?",
+    a: "Choisissez « Retrait gratuit » lors de la commande (Damprichard ou Le Russey). Nous vous contactons par WhatsApp pour convenir d'un créneau, généralement dès le lendemain. Vous pouvez payer en ligne ou sur place.",
+  },
+  {
+    q: "Que se passe-t-il si mon colis est perdu ou abîmé ?",
+    a: "Contactez-nous sous 48 h avec votre numéro de commande et, en cas de casse, des photos. Nous ouvrons une réclamation auprès du transporteur et vous renvoyons votre commande ou vous remboursons.",
+  },
+];
