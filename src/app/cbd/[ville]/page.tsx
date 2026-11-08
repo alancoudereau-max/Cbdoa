@@ -10,7 +10,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, vendingMachineJsonLd } from "@/lib/seo";
-import { getAvailabilityMap } from "@/lib/supabase";
+import { getAvailabilityMap } from "@/lib/stock";
 
 export const dynamicParams = false;
 export const revalidate = 3600;
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ ville: st
 
 const modeCards = {
   distributeur: { icon: Clock, title: "Distributeur 24 h/24", text: "Servez-vous à toute heure, paiement par carte, produits conservés à 20 °C.", href: "/distributeurs", cta: "Voir les distributeurs" },
-  retrait: { icon: MapPin, title: "Retrait gratuit", text: "Commandez en ligne, retirez sur rendez-vous. Paiement en ligne ou sur place.", href: "/livraison", cta: "Comment ça marche" },
+  retrait: { icon: MapPin, title: "Retrait gratuit", text: "Commandez en ligne, retirez sur rendez-vous. Paiement par lien sécurisé ou sur place.", href: "/livraison", cta: "Comment ça marche" },
   "livraison-locale": { icon: Truck, title: "Livraison à domicile", text: "Par nos soins, sous 24 à 48 h, remise en main propre. 10 €, offerte dès 100 €.", href: "/livraison", cta: "Zone et tarifs" },
   expedition: { icon: Package, title: "Expédition 24/48 h", text: "Colissimo 48 h offert dès 60 €, Chronopost le lendemain, colis neutre.", href: "/livraison", cta: "Délais et tarifs" },
 } as const;
@@ -37,7 +37,7 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
   const { ville } = await params;
   const c = getCity(ville);
   if (!c) notFound();
-  const availability = await getAvailabilityMap();
+  const availability = getAvailabilityMap();
   const machine = locations.vendingMachines.find((m) => m.id === c.slug);
   const nearby = c.nearby.map(getCity).filter((x): x is NonNullable<typeof x> => Boolean(x));
 

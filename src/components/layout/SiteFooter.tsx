@@ -5,7 +5,7 @@ import { site, footerNav, company } from "@/data/site";
 
 const trust = [
   { icon: Truck, t: "Expédition 24/48 h", d: "Partout en France, colis neutre" },
-  { icon: Lock, t: "Paiement sécurisé", d: "CB, Apple Pay, Google Pay via Mollie" },
+  { icon: Lock, t: "Paiement sécurisé", d: "Lien de paiement CB (Shine) ou virement, après confirmation" },
   { icon: FlaskConical, t: "Analyses labo", d: "THC < 0,3 %, COA consultables" },
   { icon: ShieldCheck, t: "Vendeur français", d: "SARL SMART VEND · Haut-Doubs" },
 ];
@@ -78,7 +78,7 @@ export function SiteFooter() {
           <p>
             © {new Date().getFullYear()} {site.name} · {company.legalName} ({company.legalForm}) · SIREN {company.siren}
           </p>
-          <p>Paiement sécurisé · CB · Apple Pay · Google Pay</p>
+          <p>Commande par WhatsApp · Paiement par lien sécurisé CB ou virement</p>
         </div>
       </div>
     </footer>

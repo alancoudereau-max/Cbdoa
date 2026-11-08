@@ -12,7 +12,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { JsonLd } from "@/components/JsonLd";
 import { itemListJsonLd, buildMetadata } from "@/lib/seo";
-import { getAvailabilityMap } from "@/lib/supabase";
+import { getAvailabilityMap } from "@/lib/stock";
 
 export const revalidate = 300;
 
@@ -27,7 +27,7 @@ export const metadata: Metadata = buildMetadata({
 const marqueeWords = ["Super Lemon Haze", "Amnesia Hydro", "Critical Berry", "Snow White", "Orangello", "3X Filtré", "Olivette Gold", "Cali Fruit", "Bubble Gum", "Beldia", "Piatella", "Full Spectrum"];
 
 export default async function HomePage() {
-  const availability = await getAvailabilityMap();
+  const availability = getAvailabilityMap();
   const featured = featuredProducts.slice(0, 4);
   const latestGuides = guides.slice(0, 3);
 

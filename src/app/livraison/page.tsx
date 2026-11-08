@@ -19,7 +19,7 @@ export const metadata: Metadata = buildMetadata({
 });
 
 const steps = [
-  { icon: Lock, t: "Vous commandez", d: "Paiement sécurisé CB, Apple Pay ou Google Pay. Libellé bancaire neutre. Confirmation immédiate par email." },
+  { icon: Lock, t: "Vous commandez", d: "Votre panier nous arrive sur WhatsApp en un clic. Nous confirmons la disponibilité et vous envoyons la facture avec un lien de paiement sécurisé (CB) ou un RIB." },
   { icon: Package, t: "Nous préparons", d: "Pesée précise, sachet hermétique inodore avec régulateur d'humidité, colis neutre sans aucune mention." },
   { icon: Zap, t: "Expédition le jour même", d: "Toute commande passée avant 13 h (jours ouvrés) part le jour même. Numéro de suivi envoyé par email." },
   { icon: Truck, t: "Vous recevez", d: "Chez vous en 24 h (Chronopost) ou 48 h (Colissimo), ou en boîte aux lettres (Lettre suivie)." },
@@ -89,7 +89,7 @@ export default function LivraisonPage() {
           <MapPin className="text-gold mb-4" size={26} />
           <h2 className="font-serif text-3xl mb-3">Retrait gratuit dans le Haut-Doubs</h2>
           <p className="text-sm text-foreground/70 leading-relaxed mb-5">
-            Choisissez « Retrait gratuit » à la commande. Nous convenons ensemble d'un rendez-vous par WhatsApp, généralement dès le lendemain. Paiement en ligne ou sur place.
+            Choisissez « Retrait gratuit » à la commande. Nous convenons ensemble d'un rendez-vous par WhatsApp, généralement dès le lendemain. Paiement par lien sécurisé ou sur place.
           </p>
           <ul className="space-y-2 text-sm">
             {locations.pickupPoints.map((pp) => (

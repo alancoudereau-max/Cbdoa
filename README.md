@@ -4,10 +4,8 @@ Site e-commerce professionnel de **CBDoux** (SARL SMART VEND, Haut-Doubs) : fleu
 
 - **Framework** : Next.js 15 (App Router, React 19, TypeScript) — rendu statique/ISR, ultra-rapide, SEO natif
 - **Style** : Tailwind CSS v4, identité noir profond & or champagne, polices auto-hébergées (Instrument Serif, Inter, JetBrains Mono)
-- **Paiement** : Mollie (CB, Apple Pay, Google Pay, 3-D Secure) via page de paiement hébergée + webhook
-- **Base de données** : Supabase (PostgreSQL) — commandes, stock, codes promo, messages
-- **Emails** : Resend — confirmation client, notification marchand, expédition / retrait
-- **Hébergement** : Vercel (recommandé) — guide complet dans `DEPLOIEMENT.md`
+- **Commande** : le client compose son panier puis envoie le récapitulatif complet sur le WhatsApp du marchand en un clic (fallback email / copie). Facturation, lien de paiement (Shine) et expédition gérés par le marchand — aucune base de données, aucun back-office à maintenir.
+- **Hébergement** : Vercel ou Netlify — guide complet dans `DEPLOIEMENT.md`
 
 ## Démarrer en local
 
@@ -17,7 +15,7 @@ cp .env.example .env.local   # puis renseigner les clés
 npm run dev                  # http://localhost:3000
 ```
 
-Sans base ni clés, le site vitrine fonctionne entièrement (catalogue, pages, SEO). Le tunnel de commande affiche un message clair tant que Supabase / Mollie ne sont pas configurés.
+Une seule variable est utile : `NEXT_PUBLIC_SITE_URL` (URL publique du site). Le site est entièrement statique côté données : aucun service externe n'est requis.
 
 ## Scripts
 
@@ -32,7 +30,8 @@ Sans base ni clés, le site vitrine fonctionne entièrement (catalogue, pages, S
 
 | Besoin | Fichier |
 |---|---|
-| Produits, prix, forces, textes, photos | `src/data/products.ts` (+ images dans `public/images/products/`) |
+| Produits, prix, forces, textes, photos, ruptures (`soldOut`) | `src/data/products.ts` (+ images dans `public/images/products/`) |
+| Codes promo | `src/data/promos.ts` |
 | Tarifs et modes de livraison, seuil port offert, codes postaux zone locale | `src/lib/shipping.ts` |
 | Coordonnées, société, mentions légales (SIRET…), points de retrait, navigation | `src/data/site.ts` |
 | FAQ (accueil, livraison, catégories) | `src/data/faq.ts`, `src/data/category-faq.ts` |
@@ -40,19 +39,15 @@ Sans base ni clés, le site vitrine fonctionne entièrement (catalogue, pages, S
 | Pages locales (villes) | `src/data/cities.ts` |
 | Analyses laboratoire (COA) | `src/data/coa.ts` + `public/images/coa/` |
 | Textes légaux (CGV, confidentialité…) | `src/data/legal.ts` |
-| Schéma base de données | `supabase/schema.sql` |
-
-Les disponibilités (rupture de stock) et les codes promo se gèrent **sans toucher au code** dans l'espace `/admin`.
 
 ## Structure
 
 ```
-src/app/            pages (App Router) : accueil, boutique, catégories, produit, panier, commande, suivi, guides, villes, légal, admin, API
-src/components/     composants UI (header, footer, panier, checkout, produit, admin…)
-src/data/           contenu : produits, site, FAQ, guides, villes, légal, COA
-src/lib/            logique : livraison, checkout, Mollie, Supabase, emails, SEO, auth admin
+src/app/            pages (App Router) : accueil, boutique, catégories, produit, panier, commande, guides, villes, légal
+src/components/     composants UI (header, footer, panier, checkout WhatsApp, produit, contact…)
+src/data/           contenu : produits, promos, site, FAQ, guides, villes, légal, COA
+src/lib/            logique : livraison (tarifs indicatifs), panier, stock, SEO
 public/             images optimisées, vidéos, PDF, icônes, manifest
-supabase/           schema.sql à exécuter dans Supabase
 scripts/            outils (import des assets, génération PDF)
 ```
 

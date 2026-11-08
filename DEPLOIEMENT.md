@@ -1,93 +1,64 @@
 # Mise en ligne de cbdoux.fr — guide pas à pas
 
-Temps estimé : **1 h 30 à 2 h** (hors délais de validation Mollie). Tout se fait depuis un navigateur. Chaque étape indique ce qu'il faut récupérer et où le coller.
+Le site n'a **aucun back-office ni base de données** : les commandes arrivent sur votre WhatsApp, vous facturez et encaissez avec Shine, vous expédiez. Il n'y a donc que **deux choses à mettre en place** : le nom de domaine et l'hébergement. Temps estimé : **45 minutes**.
 
-> **Coûts mensuels prévisionnels** : Vercel Pro ≈ 20 $/mois (obligatoire pour un usage commercial ; alternative gratuite : Netlify) · Supabase gratuit · Resend gratuit (3 000 emails/mois) · Mollie : 0 € d'abonnement, commission par transaction (≈ 1,8 % + 0,25 € pour les cartes européennes) · domaine ≈ 10 €/an.
-
----
-
-## 0. Récapitulatif des variables à renseigner
-
-| Variable | Où la trouver |
-|---|---|
-| `NEXT_PUBLIC_SITE_URL` | `https://cbdoux.fr` (votre domaine final) |
-| `SUPABASE_URL` | Supabase → Project Settings → API → *Project URL* |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API → *service_role* (secret !) |
-| `MOLLIE_API_KEY` | Mollie → Développeurs → Clés API (`test_…` puis `live_…`) |
-| `RESEND_API_KEY` | Resend → API Keys |
-| `EMAIL_FROM` | `CBDoux <commandes@cbdoux.fr>` (domaine vérifié dans Resend) |
-| `MERCHANT_EMAIL` | `contact@smart-vend.com` (reçoit les commandes et messages) |
-| `ADMIN_PASSWORD` | mot de passe long de votre choix (≥ 16 caractères) |
-| `ADMIN_SESSION_SECRET` | chaîne aléatoire de 64 caractères (ex. générée sur https://1password.com/password-generator) |
-| `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | Google Search Console (facultatif) |
+> **Coûts** : domaine ≈ 10 €/an · hébergement Vercel : plan Pro 20 $/mois (les conditions Vercel imposent le plan Pro pour un site commercial) **ou** Netlify gratuit (usage commercial autorisé sur le plan Starter). Tout le reste est gratuit.
 
 ---
 
-## 1. Le nom de domaine `cbdoux.fr`
+## 1. Acheter le nom de domaine `cbdoux.fr`
 
-1. Vérifiez la disponibilité et achetez-le chez un registrar français : **OVHcloud** (ovhcloud.com), **Gandi** (gandi.net) ou **Ionos**. Prenez `cbdoux.fr` (et, si possible, `cbdoux.com` pour le protéger).
-2. Ne configurez rien d'autre pour l'instant : les enregistrements DNS seront donnés par Vercel à l'étape 5.
+1. Rendez-vous chez un registrar français : **OVHcloud** (ovhcloud.com), **Gandi** (gandi.net) ou **Ionos**.
+2. Recherchez `cbdoux.fr` → ajoutez-le au panier (≈ 8-12 €/an). Si le budget le permet, prenez aussi `cbdoux.com` pour protéger la marque.
+3. Créez votre compte avec les coordonnées de la SARL SMART VEND et validez. Ne touchez pas encore aux DNS : l'hébergeur vous donnera les valeurs exactes à l'étape 3.
 
-## 2. La base de données — Supabase (gratuit)
+## 2. Mettre le code sur GitHub (5 min)
 
-1. Créez un compte sur https://supabase.com → **New project** : nom `cbdoux`, région **EU (Frankfurt ou Paris)**, mot de passe base de données fort (notez-le).
-2. Menu **SQL Editor** → **New query** → collez tout le contenu de `supabase/schema.sql` → **Run**. Les tables `orders`, `order_items`, `stock`, `promo_codes`, `contact_messages`, `webhook_events` sont créées et le code `BIENVENUE10` inséré.
-3. **Project Settings → API** : copiez *Project URL* → `SUPABASE_URL` et la clé **service_role** → `SUPABASE_SERVICE_ROLE_KEY`. Cette clé est secrète : jamais dans le code, uniquement dans les variables Vercel.
+1. Créez un compte gratuit sur https://github.com.
+2. En haut à droite : **+ → New repository** → nom `cbdoux-site`, visibilité **Private** → **Create repository**.
+3. Sur la page du dépôt vide, cliquez sur **uploading an existing file**, glissez-déposez le contenu du dossier `cbdoux-site` (décompressé depuis le .zip, **sans** le dossier `node_modules` s'il existe) → **Commit changes**.
+   - Alternative : envoyez-moi le nom du dépôt (`votre-identifiant/cbdoux-site`) et je pousse le code pour vous.
 
-## 3. Le paiement — Mollie
+## 3. Héberger sur Vercel (10 min)
 
-1. Créez un compte sur https://www.mollie.com/fr → renseignez la société (SARL SMART VEND, SIREN 101 678 175), le gérant, l'IBAN de la société.
-2. **Site web** : indiquez `https://cbdoux.fr`. Mollie vérifie le site : il doit être en ligne avec CGV, mentions légales, vérification d'âge et analyses — tout est déjà prévu. Déployez donc le site (étape 5) **avant** d'envoyer le dossier à la validation.
-3. **Dossier CBD** : Mollie peut demander le Kbis, les certificats d'analyse (page `/analyses-laboratoires`), les factures fournisseurs. Précisez : fleurs/résines de chanvre THC < 0,3 %, huiles cosmétiques, pas de cannabinoïdes de synthèse, pas d'allégations thérapeutiques.
-4. **Développeurs → Clés API** : utilisez d'abord la clé `test_…` dans `MOLLIE_API_KEY` pour tester une commande (cartes de test Mollie), puis remplacez par la clé `live_…` une fois le compte validé.
-5. **Paramètres → Moyens de paiement** : activez *Cartes* (CB/Visa/Mastercard), *Apple Pay*, *Google Pay*, et si vous le souhaitez *Bancontact* et *Virement bancaire*.
-6. Rien à configurer pour les webhooks : l'URL `https://cbdoux.fr/api/webhooks/mollie` est transmise automatiquement à chaque paiement.
+1. Créez un compte sur https://vercel.com en choisissant **Continue with GitHub**.
+2. **Add New → Project** → importez `cbdoux-site`. Vercel détecte Next.js automatiquement.
+3. Ouvrez **Environment Variables** et ajoutez :
+   - `NEXT_PUBLIC_SITE_URL` = `https://cbdoux.fr`
+4. **Deploy** (≈ 2 minutes). Le site est en ligne sur une adresse provisoire `https://cbdoux-site-xxx.vercel.app` : vérifiez-le sur votre téléphone.
+5. **Settings → Domains → Add** : saisissez `cbdoux.fr`, puis `www.cbdoux.fr`. Vercel affiche les enregistrements DNS à créer (un **A** pour `cbdoux.fr`, un **CNAME** pour `www`).
+6. Chez votre registrar : **Zone DNS** → ajoutez exactement ces deux enregistrements (supprimez d'éventuels enregistrements A / CNAME existants sur les mêmes noms). La propagation prend de quelques minutes à quelques heures ; le certificat HTTPS est automatique.
+7. **Settings → General → Plan** : passez le projet en **Pro** (usage commercial).
 
-## 4. Les emails — Resend
+> **Variante gratuite — Netlify** : sur https://netlify.com, « Add new site → Import from Git → GitHub → cbdoux-site ». Netlify détecte Next.js. Ajoutez la variable `NEXT_PUBLIC_SITE_URL` dans *Site configuration → Environment variables*, puis *Domain management → Add a domain* pour `cbdoux.fr`.
 
-1. Compte sur https://resend.com → **Domains → Add domain** : `cbdoux.fr`. Resend affiche 3 enregistrements DNS (DKIM, SPF/MX) à ajouter chez votre registrar → **Verify**.
-2. **API Keys → Create** : copiez la clé → `RESEND_API_KEY`.
-3. `EMAIL_FROM` = `CBDoux <commandes@cbdoux.fr>`. Les réponses des clients arrivent sur `MERCHANT_EMAIL` (contact@smart-vend.com).
+## 4. Tester une commande (5 min)
 
-## 5. L'hébergement — Vercel
+1. Sur le site en ligne : ajoutez un produit, allez jusqu'à « Finaliser ma commande », remplissez vos coordonnées.
+2. **Envoyer ma commande sur WhatsApp** : WhatsApp s'ouvre avec le récapitulatif complet (produits, forces, quantités, prix, livraison souhaitée, adresse, notes). Envoyez-le : vous le recevez sur le **07 67 98 25 63**.
+3. Côté vous : confirmez la disponibilité au client, créez la facture + le **lien de paiement Shine** depuis l'app Shine et envoyez-le dans la conversation. Expédiez après encaissement et renvoyez le numéro de suivi dans la même conversation.
+4. Vérifiez aussi la page **Contact** (boutons WhatsApp / email) et le code promo **BIENVENUE10** dans le panier (10 € dès 100 €).
 
-1. Mettez le code sur GitHub : créez un compte https://github.com → **New repository** `cbdoux-site` (privé) → importez le dossier (ou déposez le .zip décompressé via *uploading an existing file*). Si vous préférez, Claude peut pousser le code pour vous une fois le dépôt créé.
-2. Compte sur https://vercel.com (connexion avec GitHub) → **Add New → Project** → importez `cbdoux-site`. Framework détecté : Next.js. Avant de cliquer sur Deploy, ouvrez **Environment Variables** et collez toutes les variables du tableau §0.
-3. **Deploy** (≈ 2 minutes). Vous obtenez une URL `https://cbdoux-site.vercel.app` pour vérifier le site.
-4. **Settings → Domains → Add** : `cbdoux.fr` et `www.cbdoux.fr`. Vercel affiche les enregistrements DNS exacts à créer chez le registrar (un enregistrement **A** pour `cbdoux.fr` et un **CNAME** pour `www`) : copiez-les tels quels dans la zone DNS du domaine. Propagation : de quelques minutes à quelques heures. HTTPS est automatique.
-5. **Settings → General → Plan** : passez en **Pro** (usage commercial requis par les conditions Vercel).
-6. Vérifiez `NEXT_PUBLIC_SITE_URL=https://cbdoux.fr` puis **Redeploy** pour que les liens canoniques, le sitemap et les emails utilisent le bon domaine.
+## 5. Le jour de la mise en ligne — référencement (20 min)
 
-## 6. Test de bout en bout (avec la clé Mollie `test_`)
+1. **Google Search Console** (search.google.com/search-console) : *Ajouter une propriété* → `cbdoux.fr` → méthode « Balise HTML » : copiez le code `content="…"`, collez-le dans Vercel → Environment Variables → `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`, puis **Redeploy** et cliquez « Vérifier ». Ensuite *Sitemaps* → saisissez `sitemap.xml` → Envoyer.
+2. **Bing Webmaster Tools** (bing.com/webmasters) : « Importer depuis Google Search Console » en un clic.
+3. **Redirection de l'ancien site** `cbdoux.lovable.app` → `cbdoux.fr` : demandez-moi de l'activer dans votre projet Lovable (redirection 301 de toutes les anciennes pages vers les nouvelles) pour transférer le référencement acquis. Gardez l'ancien projet publié au moins 3 mois.
+4. **Fiche Google Business Profile** (business.google.com) : mettez `cbdoux.fr` comme site web, ajoutez les photos des deux distributeurs, publiez les horaires 24/7 et demandez des avis à vos clients (lien « Laisser un avis »). C'est le levier n° 1 du référencement local.
+5. **Facebook** : remplacez l'adresse du site par `cbdoux.fr` et publiez l'annonce du nouveau site.
+6. Dans 7 à 10 jours : dans la Search Console, vérifiez *Pages → indexées* (≈ 85 pages attendues).
 
-1. Ouvrez le site, ajoutez un produit, allez jusqu'au paiement : vous êtes redirigé vers la page Mollie de test → choisissez « Paid ».
-2. Vous devez recevoir l'email de confirmation (client) et la notification (marchand) ; la commande apparaît dans `/admin/commandes` avec le statut **Payée**.
-3. Dans l'admin, passez-la en **Expédiée** avec un numéro de suivi : le client reçoit l'email de suivi.
-4. Testez aussi « Retrait gratuit » avec « Payer sur place ».
-5. Puis remplacez `MOLLIE_API_KEY` par la clé `live_…` (Vercel → Environment Variables → Redeploy).
+## 6. Au quotidien
 
-## 7. Référencement — les 7 actions du jour J
+- **Commandes** : elles arrivent sur WhatsApp avec une référence `CBD-AAMMJJ-XXXX`. Répondez dans la conversation : disponibilité, facture + lien Shine, puis numéro de suivi.
+- **Rupture de stock** : demandez-moi (« mets la Snow White en rupture ») ou ajoutez `soldOut: true` au produit ou à la variante dans `src/data/products.ts`, puis enregistrez sur GitHub : Vercel redéploie automatiquement en 2 minutes.
+- **Changer un prix, un texte, une photo, ajouter un produit** : même principe (fichier `src/data/products.ts`, photos dans `public/images/products/`). Je peux faire ces modifications pour vous à la demande.
+- **Tarifs de livraison** : `src/lib/shipping.ts` (port offert dès 60 €, Chronopost 12,90 €, zone locale…).
+- **Codes promo** : `src/data/promos.ts`.
+- **Médiateur de la consommation** (obligatoire) : dès que vous avez adhéré à un médiateur (ex. CNPM, Medicys, CM2C — ≈ 50 à 100 €/an), indiquez-moi son nom pour que je le renseigne dans `src/data/site.ts` (CGV et mentions légales se mettent à jour automatiquement).
 
-1. **Google Search Console** (search.google.com/search-console) : ajoutez `cbdoux.fr`, vérifiez via la balise HTML (collez le code dans `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` puis redeploy), soumettez `https://cbdoux.fr/sitemap.xml`.
-2. **Bing Webmaster Tools** : importez depuis la Search Console en un clic.
-3. **Redirection de l'ancien site** `cbdoux.lovable.app` → `cbdoux.fr` : demandez à Claude de l'activer dans le projet Lovable (redirection 301 de toutes les anciennes URLs vers les nouvelles) afin de transférer le référencement acquis. Ne supprimez pas l'ancien projet avant 3 mois.
-4. **Fiche Google Business Profile** (business.google.com) : mettez à jour le site web vers cbdoux.fr, ajoutez les deux distributeurs (Charquemont, Le Russey) comme établissements, publiez des photos et demandez des avis clients (lien direct dans la fiche). C'est le levier n° 1 du SEO local.
-5. **Facebook** : remplacez le lien du site par cbdoux.fr dans la page.
-6. **Mollie / Resend / Supabase** : vérifiez que tout est en mode production.
-7. Dans 7 jours : contrôlez dans la Search Console que les 90 pages sont indexées et corrigez les éventuelles erreurs.
+## 7. Sécurité & sauvegarde
 
-## 8. Au quotidien
-
-- **Commandes** : `/admin/commandes` — statut, numéro de suivi (l'email part automatiquement), notes client. Vous recevez aussi un email à chaque commande.
-- **Ruptures de stock** : `/admin/stock` — désactivez une variante ou un produit entier en un clic (visible immédiatement sur le site).
-- **Codes promo** : `/admin/codes-promo` — montant ou pourcentage, minimum d'achat, date de fin, nombre d'utilisations.
-- **Messages du formulaire** : `/admin/messages` (et par email).
-- **Expédition** : achetez vos étiquettes sur La Poste Pro / Colissimo (ou Boxtal pour comparer Colissimo, Chronopost, Mondial Relay), collez le numéro de suivi dans l'admin.
-- **Modifier un prix ou un texte** : fichier `src/data/products.ts` (ou demandez à Claude), puis push GitHub → Vercel redéploie automatiquement.
-
-## 9. Sécurité et sauvegardes
-
-- Les clés (`service_role`, Mollie `live`, Resend, mot de passe admin) ne sont **jamais** dans le code : uniquement dans Vercel → Environment Variables.
-- Supabase sauvegarde quotidiennement (plan Pro) ; sur le plan gratuit, exportez de temps en temps la table `orders` (Table Editor → Export CSV).
-- Changez `ADMIN_PASSWORD` si vous soupçonnez une fuite ; les sessions admin expirent au bout de 12 h.
-- Mettez à jour les dépendances tous les 2-3 mois (`npm update`) ou demandez à Claude.
+- Aucune donnée client n'est stockée sur le site : le panier reste sur le téléphone du client, la commande vit dans WhatsApp et dans votre facturation Shine. Rien à sauvegarder côté site.
+- Le code est sauvegardé sur GitHub (historique complet). Vercel/Netlify redéploient à chaque modification.
+- Mettez à jour les dépendances tous les 2-3 mois (`npm update`) ou demandez-moi.

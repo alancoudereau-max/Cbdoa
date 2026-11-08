@@ -15,7 +15,7 @@ export const homeFaq: FaqItem[] = [
   },
   {
     q: "Comment payer ma commande ?",
-    a: "Par carte bancaire (CB, Visa, Mastercard), Apple Pay ou Google Pay, via notre prestataire de paiement sécurisé Mollie. Le retrait sur place peut aussi être réglé en espèces ou par carte au moment du retrait. Nos distributeurs automatiques acceptent la carte bancaire 24 h/24.",
+    a: "C'est simple : vous composez votre panier, vous indiquez vos coordonnées et votre mode de livraison, puis votre récapitulatif nous est envoyé sur WhatsApp en un clic. Nous confirmons la disponibilité et vous adressons votre facture avec un lien de paiement sécurisé par carte bancaire (ou un RIB pour un virement). Pour un retrait, vous pouvez aussi régler sur place en espèces ou par carte. Aucune donnée bancaire n'est saisie sur le site. Nos distributeurs automatiques acceptent la carte 24 h/24.",
   },
   {
     q: "Que signifient les forces Classique, 2, 3 et Maxi ?",
@@ -42,7 +42,7 @@ export const shippingFaq: FaqItem[] = [
   },
   {
     q: "Comment suivre mon colis ?",
-    a: "Dès l'expédition, vous recevez un email avec votre numéro de suivi et le lien du transporteur. Vous pouvez aussi retrouver l'état de votre commande à tout moment sur la page « Suivre ma commande » avec votre numéro de commande et votre email.",
+    a: "Dès l'expédition, nous vous envoyons sur WhatsApp (ou par email) votre numéro de suivi et le lien du transporteur. Une question sur votre colis ? Répondez simplement au message.",
   },
   {
     q: "Mon colis est-il discret et sécurisé ?",
@@ -54,7 +54,7 @@ export const shippingFaq: FaqItem[] = [
   },
   {
     q: "Comment fonctionne le retrait gratuit ?",
-    a: "Choisissez « Retrait gratuit » lors de la commande (Damprichard ou Le Russey). Nous vous contactons par WhatsApp pour convenir d'un créneau, généralement dès le lendemain. Vous pouvez payer en ligne ou sur place.",
+    a: "Choisissez « Retrait gratuit » lors de la commande (Damprichard ou Le Russey). Nous vous contactons par WhatsApp pour convenir d'un créneau, généralement dès le lendemain. Vous pouvez régler par lien de paiement sécurisé ou sur place (espèces ou carte).",
   },
   {
     q: "Que se passe-t-il si mon colis est perdu ou abîmé ?",

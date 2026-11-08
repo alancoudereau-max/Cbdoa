@@ -11,7 +11,7 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, articleJsonLd } from "@/lib/seo";
 import { formatDateFR } from "@/lib/utils";
-import { getAvailabilityMap } from "@/lib/supabase";
+import { getAvailabilityMap } from "@/lib/stock";
 
 export const dynamicParams = false;
 export const revalidate = 3600;
@@ -31,7 +31,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   const { slug } = await params;
   const g = getGuide(slug);
   if (!g) notFound();
-  const availability = await getAvailabilityMap();
+  const availability = getAvailabilityMap();
   const products = g.relatedProducts.map(getProduct).filter((p): p is NonNullable<typeof p> => Boolean(p));
   const related = g.relatedGuides.map(getGuide).filter((x): x is NonNullable<typeof x> => Boolean(x));
 

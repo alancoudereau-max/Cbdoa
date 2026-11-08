@@ -80,10 +80,10 @@ export function CartPage() {
                 <span className="font-serif text-3xl text-gradient-gold">{formatEUR(subtotal)}</span>
               </div>
               <Link href="/commande" className="btn-gold w-full inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold">
-                Passer la commande <ArrowRight size={16} />
+                Finaliser ma commande <ArrowRight size={16} />
               </Link>
               <ul className="mt-5 space-y-2 text-[11px] text-foreground/55">
-                <li className="flex items-center gap-2"><Lock size={12} className="text-gold" /> Paiement sécurisé CB · Apple Pay · Google Pay</li>
+                <li className="flex items-center gap-2"><Lock size={12} className="text-gold" /> Commande envoyée sur WhatsApp, paiement par lien sécurisé CB</li>
                 <li className="flex items-center gap-2"><Package size={12} className="text-gold" /> Colis neutre, expédié sous 24 h ouvrées</li>
                 <li className="flex items-center gap-2"><Truck size={12} className="text-gold" /> Code BIENVENUE10 : 10 € offerts dès 100 €</li>
               </ul>

@@ -4,7 +4,7 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { buildMetadata } from "@/lib/seo";
-import { getAvailabilityMap } from "@/lib/supabase";
+import { getAvailabilityMap } from "@/lib/stock";
 
 export const revalidate = 300;
 
@@ -15,7 +15,7 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default async function NouveautesPage() {
-  const availability = await getAvailabilityMap();
+  const availability = getAvailabilityMap();
   return (
     <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 py-10 sm:py-14">
       <Breadcrumbs items={[{ name: "Boutique", path: "/boutique" }, { name: "Nouveautés", path: "/nouveautes" }]} className="mb-8" />

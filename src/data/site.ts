@@ -129,7 +129,6 @@ export const footerNav = {
     { href: "/analyses-laboratoires", label: "Analyses laboratoires" },
     { href: "/conseils-prudence", label: "Conseils & prudence" },
     { href: "/faq", label: "Questions fréquentes" },
-    { href: "/suivi", label: "Suivre ma commande" },
   ],
   maison: [
     { href: "/a-propos", label: "À propos de CBDoux" },

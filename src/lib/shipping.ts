@@ -84,7 +84,7 @@ export const shippingMethods: ShippingMethod[] = [
   {
     id: "retrait",
     name: "Retrait gratuit",
-    description: "À Damprichard ou au Russey, sur rendez-vous confirmé par WhatsApp. Paiement en ligne ou sur place.",
+    description: "À Damprichard ou au Russey, sur rendez-vous confirmé par WhatsApp. Paiement par lien sécurisé ou sur place.",
     delay: "Dès le lendemain",
     priceCents: 0,
     freeFromCents: 0,

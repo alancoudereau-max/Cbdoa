@@ -115,7 +115,7 @@ export function storeJsonLd() {
     email: site.email,
     priceRange: "€€",
     currenciesAccepted: "EUR",
-    paymentAccepted: "Carte bancaire, Apple Pay, Google Pay, Virement",
+    paymentAccepted: "Carte bancaire (lien de paiement), Virement, Espèces (retrait)",
     parentOrganization: { "@id": `${SITE_URL}/#organization` },
     areaServed: { "@type": "Country", name: "France" },
     hasOfferCatalog: {

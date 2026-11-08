@@ -569,7 +569,7 @@ export const guides: Guide[] = [
       {
         heading: "1. La commande et le paiement",
         blocks: [
-          p("Vous choisissez vos produits, leur force et leur format, puis vous réglez par carte bancaire, Apple Pay ou Google Pay sur la page de paiement sécurisée de notre prestataire Mollie. Le libellé qui apparaît sur votre relevé bancaire est neutre. Une confirmation vous est envoyée par email immédiatement."),
+          p("Vous choisissez vos produits, leur force et leur format, puis vous indiquez vos coordonnées et votre mode de livraison. En un clic, votre récapitulatif nous est envoyé sur WhatsApp. Nous confirmons la disponibilité, puis nous vous adressons votre facture avec un lien de paiement sécurisé par carte bancaire (ou un RIB). Aucune donnée bancaire n'est saisie sur le site et le libellé bancaire est neutre."),
         ],
       },
       {
@@ -589,13 +589,13 @@ export const guides: Guide[] = [
               ["Chronopost Express", "Lendemain avant 13 h", "12,90 €"],
             ],
           ),
-          p("Dès le départ du colis, vous recevez un email avec le numéro de suivi et le lien du transporteur. Vous pouvez aussi consulter l'état de votre commande à tout moment sur la page Suivre ma commande."),
+          p("Dès le départ du colis, vous recevez sur WhatsApp (ou par email) le numéro de suivi et le lien du transporteur."),
         ],
       },
       {
         heading: "4. Dans le Haut-Doubs : retrait et livraison locale",
         blocks: [
-          p("Si vous habitez autour de Damprichard, du Russey, de Charquemont ou de Maîche, vous pouvez retirer gratuitement votre commande sur rendez-vous (paiement en ligne ou sur place), ou choisir la livraison à domicile par nos soins (10 €, offerte dès 100 €) dans un rayon de 30 km autour du Russey et 10 km autour de Damprichard. Et nos distributeurs automatiques 24/7 restent accessibles à toute heure."),
+          p("Si vous habitez autour de Damprichard, du Russey, de Charquemont ou de Maîche, vous pouvez retirer gratuitement votre commande sur rendez-vous (paiement par lien sécurisé ou sur place), ou choisir la livraison à domicile par nos soins (10 €, offerte dès 100 €) dans un rayon de 30 km autour du Russey et 10 km autour de Damprichard. Et nos distributeurs automatiques 24/7 restent accessibles à toute heure."),
         ],
       },
       {
@@ -645,7 +645,7 @@ export const guides: Guide[] = [
       {
         heading: "Retrait gratuit et livraison locale",
         blocks: [
-          p("Vous préférez commander en ligne et récupérer votre commande en main propre ? Choisissez le retrait gratuit à Damprichard ou au Russey : nous convenons d'un rendez-vous par WhatsApp, généralement dès le lendemain. Vous pouvez payer en ligne ou sur place."),
+          p("Vous préférez commander en ligne et récupérer votre commande en main propre ? Choisissez le retrait gratuit à Damprichard ou au Russey : nous convenons d'un rendez-vous par WhatsApp, généralement dès le lendemain. Vous pouvez régler par lien de paiement sécurisé ou sur place (espèces ou carte)."),
           p("Nous livrons aussi à domicile par nos soins dans un rayon de 30 km autour du Russey et 10 km autour de Damprichard (10 €, offert dès 100 €) : Maîche, Charquemont, Frambouhans, Les Fontenelles, Bonnétage, Villers-le-Lac, Morteau, Orchamps-Vennes…"),
         ],
       },

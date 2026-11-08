@@ -10,7 +10,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, itemListJsonLd } from "@/lib/seo";
-import { getAvailabilityMap } from "@/lib/supabase";
+import { getAvailabilityMap } from "@/lib/stock";
 import { categoryFaq } from "@/data/category-faq";
 
 export const revalidate = 300;
@@ -32,7 +32,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   const cat = getCategoryBySlug(category);
   if (!cat) notFound();
   const products = getProductsByCategory(cat.key);
-  const availability = await getAvailabilityMap();
+  const availability = getAvailabilityMap();
   const faq = categoryFaq[cat.key];
   const related = guides.filter((g) => g.relatedProducts.some((slug) => products.some((p) => p.slug === slug))).slice(0, 3);
   const others = categoryOrder.filter((c) => c !== cat.key);

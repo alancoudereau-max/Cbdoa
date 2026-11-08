@@ -59,7 +59,7 @@ export const legalDocs: LegalDoc[] = [
       {
         heading: "Hébergement",
         blocks: [
-          p(`Le Site est hébergé par ${company.host.name}, ${company.host.address} — ${company.host.url}. La base de données des commandes est hébergée par Supabase Inc. sur des serveurs situés dans l'Union européenne.`),
+          p(`Le Site est hébergé par ${company.host.name}, ${company.host.address} — ${company.host.url}.`),
         ],
       },
       {
@@ -105,7 +105,7 @@ export const legalDocs: LegalDoc[] = [
   {
     slug: "cgv",
     title: "Conditions générales de vente",
-    description: `Conditions générales de vente de la boutique en ligne ${site.name} : commande, prix, paiement sécurisé, livraison en France, rétractation, garanties légales, médiation.`,
+    description: `Conditions générales de vente de la boutique en ligne ${site.name} : commande par WhatsApp, prix, paiement par lien sécurisé, livraison en France, rétractation, garanties légales, médiation.`,
     updatedAt: "2026-11-08",
     intro: `Les présentes conditions générales de vente (ci-après « CGV ») régissent les ventes de produits conclues à distance entre ${vendeur} (ci-après « le Vendeur » ou « ${site.name} ») et toute personne physique majeure agissant à des fins non professionnelles (ci-après « le Client ») sur le site ${site.url}.`,
     sections: [
@@ -147,24 +147,25 @@ export const legalDocs: LegalDoc[] = [
           ol([
             "Sélection des produits, de leur force et de leur format, ajout au panier.",
             "Saisie des coordonnées, choix du mode de livraison ou de retrait, saisie éventuelle d'un code promotionnel.",
-            "Vérification du récapitulatif (produits, prix, frais de livraison, total TTC) et acceptation des CGV, de la déclaration de majorité et des conseils de prudence.",
-            "Paiement en ligne sécurisé, ou choix du paiement sur place pour le retrait.",
-            "Confirmation par email récapitulant la commande.",
+            "Vérification du récapitulatif (produits, prix, frais de livraison indicatifs, total estimé) et acceptation des CGV, de la déclaration de majorité et des conseils de prudence.",
+            "Transmission du récapitulatif au Vendeur par WhatsApp (ou par email) : cette transmission constitue une demande de commande.",
+            "Confirmation par le Vendeur de la disponibilité des produits et du montant total (frais de port compris), accompagnée de la facture et des modalités de paiement.",
+            "Paiement par le Client ; le contrat de vente est conclu à la réception du paiement (ou, pour le retrait avec paiement sur place, à la confirmation du rendez-vous par le Vendeur).",
           ]),
-          p("Le contrat est conclu à la confirmation du paiement par le prestataire de paiement (ou, pour le retrait avec paiement sur place, à l'envoi de l'email de confirmation). Le Vendeur se réserve le droit d'annuler toute commande en cas d'indisponibilité d'un produit ; le Client en est informé et remboursé dans les meilleurs délais."),
+          p("Le Vendeur se réserve le droit de refuser ou d'annuler toute demande de commande en cas d'indisponibilité d'un produit, de doute sur l'âge du Client ou de litige antérieur ; le Client en est informé dans les meilleurs délais et toute somme éventuellement versée lui est remboursée. Une demande de commande restée sans paiement 7 jours après l'envoi de la facture est annulée."),
         ],
       },
       {
         heading: "Article 6 — Paiement",
         blocks: [
-          p("Le paiement s'effectue en ligne par carte bancaire (CB, Visa, Mastercard), Apple Pay ou Google Pay via la page de paiement sécurisée de notre prestataire Mollie B.V. (Pays-Bas), établissement de paiement agréé, avec authentification forte (3-D Secure). Le Vendeur n'a jamais accès aux données de carte du Client. Le libellé figurant sur le relevé bancaire est neutre."),
-          p("Pour le retrait sur rendez-vous, le Client peut choisir de régler sur place (espèces ou carte). Les produits restent la propriété du Vendeur jusqu'au paiement intégral du prix."),
+          p("Après confirmation de la commande, le Vendeur adresse au Client sa facture ainsi qu'un lien de paiement sécurisé par carte bancaire (CB, Visa, Mastercard) émis via l'établissement de paiement agréé Shine (Shine SAS, Paris), avec authentification forte (3-D Secure), ou ses coordonnées bancaires pour un règlement par virement. Aucune donnée bancaire n'est saisie sur le Site et le Vendeur n'a jamais accès aux données de carte du Client. Le libellé figurant sur le relevé bancaire est neutre."),
+          p("Pour le retrait sur rendez-vous, le Client peut régler sur place en espèces ou par carte. Les produits sont préparés et expédiés après encaissement et restent la propriété du Vendeur jusqu'au paiement intégral du prix."),
         ],
       },
       {
         heading: "Article 7 — Livraison",
         blocks: [
-          p("Les produits sont livrés en France métropolitaine uniquement, à l'adresse indiquée par le Client, dans un emballage neutre. Les commandes validées avant 13 h un jour ouvré sont expédiées le jour même ; au-delà, le jour ouvré suivant. Les délais ci-dessous sont indicatifs et courent à compter de l'expédition."),
+          p("Les produits sont livrés en France métropolitaine uniquement, à l'adresse indiquée par le Client, dans un emballage neutre. Les commandes dont le paiement est reçu avant 13 h un jour ouvré sont expédiées le jour même ; au-delà, le jour ouvré suivant. Les délais ci-dessous sont indicatifs et courent à compter de l'expédition."),
           shippingTable,
           p("Conformément à l'article L216-1 du Code de la consommation, en cas de non-livraison dans le délai indiqué ou, à défaut, dans les trente jours suivant la commande, le Client peut, après avoir enjoint le Vendeur d'effectuer la livraison dans un délai supplémentaire raisonnable resté infructueux, résoudre le contrat par lettre recommandée ou écrit sur support durable ; les sommes versées lui sont alors remboursées."),
           p("Les risques de perte ou d'endommagement des produits sont transférés au Client au moment où il en prend physiquement possession. Il appartient au Client de vérifier l'état du colis à réception et de formuler toute réserve auprès du transporteur et du Vendeur sous 48 h. Un colis retourné pour adresse erronée ou non réclamé pourra être réexpédié aux frais du Client."),
@@ -247,10 +248,10 @@ export const legalDocs: LegalDoc[] = [
           ul([
             "Identité et contact : nom, prénom, email, téléphone.",
             "Commande : adresse de livraison, produits commandés, montants, mode de livraison, historique.",
-            "Paiement : statut et référence de transaction transmis par Mollie. Les données de carte bancaire sont saisies exclusivement sur la page sécurisée de Mollie et ne transitent jamais par nos serveurs.",
+            "Paiement : aucune donnée bancaire n'est collectée par le Site. Les paiements par lien sont traités par notre établissement de paiement (Shine) sur sa propre page sécurisée.",
             "Déclarations : confirmation de majorité, acceptation des CGV et des conseils de prudence (horodatées).",
-            "Données techniques : adresse IP et navigateur lors de la commande (prévention de la fraude), mesure d'audience agrégée et anonymisée.",
-            "Messages : contenu des demandes envoyées via le formulaire de contact.",
+            "Données techniques : mesure d'audience agrégée et anonymisée (sans cookie).",
+            "Messages : contenu des demandes de commande et des messages que vous nous adressez par WhatsApp ou par email.",
           ]),
         ],
       },
@@ -275,10 +276,9 @@ export const legalDocs: LegalDoc[] = [
         blocks: [
           ul([
             "Vercel Inc. (États-Unis) — hébergement du site. Transferts encadrés par les clauses contractuelles types de la Commission européenne.",
-            "Supabase Inc. — base de données des commandes, hébergée dans l'Union européenne.",
-            "Mollie B.V. (Pays-Bas) — traitement sécurisé des paiements.",
-            "Resend (États-Unis) — envoi des emails transactionnels (confirmation, expédition). Clauses contractuelles types.",
-            "La Poste / Colissimo / Chronopost — acheminement des colis (nom, adresse, téléphone, email pour le suivi).",
+            "WhatsApp (Meta Platforms Ireland Ltd) — réception de vos demandes de commande et échanges avec notre service client, lorsque vous choisissez ce canal. Les messages sont chiffrés de bout en bout ; la politique de confidentialité de WhatsApp s'applique.",
+            "Shine SAS (France) — émission des liens de paiement et traitement des règlements par carte.",
+            "La Poste / Colissimo / Chronopost — acheminement des colis (nom, adresse, téléphone pour le suivi).",
             "Vercel Analytics — mesure d'audience agrégée, sans cookie ni identifiant persistant.",
           ]),
           p("Vos données ne sont ni vendues ni louées à des tiers."),
@@ -291,7 +291,7 @@ export const legalDocs: LegalDoc[] = [
             "Données de commande et de facturation : 10 ans (pièces comptables, article L123-22 du Code de commerce).",
             "Données clients à des fins commerciales : 3 ans après le dernier contact.",
             "Messages de contact : 12 mois.",
-            "Journaux techniques (IP, navigateur) : 12 mois.",
+            "Conversations WhatsApp liées à une commande : 3 ans après le dernier échange.",
           ]),
         ],
       },
@@ -304,7 +304,7 @@ export const legalDocs: LegalDoc[] = [
       },
       {
         heading: "Sécurité",
-        blocks: [p("Connexion chiffrée (HTTPS/TLS), accès à la base de données restreint à nos serveurs, mots de passe d'administration robustes, paiement délégué à un prestataire certifié PCI-DSS. Nous ne stockons aucune donnée de carte bancaire.")],
+        blocks: [p("Connexion chiffrée (HTTPS/TLS), aucun stockage de données clients sur le Site (le panier reste sur votre appareil), paiement délégué à un établissement de paiement agréé. Nous ne stockons aucune donnée de carte bancaire.")],
       },
       {
         heading: "Mineurs",
@@ -331,7 +331,6 @@ export const legalDocs: LegalDoc[] = [
               ["cbdoux-cart-v2", "Stockage local (localStorage)", "Mémoriser le contenu de votre panier et le code promo saisi", "Jusqu'à suppression par vos soins"],
               ["cbdoux-age-ok", "Stockage local", "Mémoriser votre confirmation de majorité pour ne pas la redemander", "30 jours"],
               ["cbdoux-prudence-ack", "Stockage local", "Mémoriser la lecture des conseils de prudence pour les produits forts", "Jusqu'à suppression"],
-              ["cbdoux_admin", "Cookie de session (sécurisé, HttpOnly)", "Authentification de l'espace d'administration (réservé à l'équipe)", "12 heures"],
             ],
           ),
         ],
@@ -342,7 +341,7 @@ export const legalDocs: LegalDoc[] = [
       },
       {
         heading: "Services tiers",
-        blocks: [p("La page de paiement est opérée par Mollie sur son propre domaine et peut déposer des cookies techniques nécessaires à la sécurisation du paiement ; nous vous invitons à consulter la politique de confidentialité de Mollie. Aucun autre service tiers (publicité, réseaux sociaux intégrés) n'est chargé sur le Site.")],
+        blocks: [p("Aucun service tiers (publicité, réseaux sociaux intégrés, chat) n'est chargé sur le Site. Les liens vers WhatsApp, Facebook ou Google Maps ouvrent ces services dans une nouvelle fenêtre : leurs propres politiques s'appliquent alors. Le lien de paiement que nous vous envoyons ouvre la page sécurisée de Shine, soumise à sa propre politique de confidentialité.")],
       },
       {
         heading: "Gérer les stockages",
@@ -383,7 +382,7 @@ export const legalDocs: LegalDoc[] = [
             `Écrivez-nous sous 14 jours à ${site.email} ou sur WhatsApp (${site.phoneDisplay}) avec votre numéro de commande et les produits concernés — vous pouvez utiliser le formulaire type ci-dessous.`,
             "Nous vous confirmons l'adresse de retour et le numéro de dossier.",
             "Expédiez les produits non ouverts sous 14 jours, en envoi suivi, bien protégés.",
-            "Dès réception et vérification, nous vous remboursons sous 14 jours maximum.",
+            "Dès réception et vérification, nous vous remboursons sous 14 jours maximum, par le même moyen de paiement.",
           ]),
         ],
       },

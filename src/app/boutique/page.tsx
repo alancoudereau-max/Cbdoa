@@ -7,7 +7,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, itemListJsonLd } from "@/lib/seo";
-import { getAvailabilityMap } from "@/lib/supabase";
+import { getAvailabilityMap } from "@/lib/stock";
 import { cn } from "@/lib/utils";
 
 export const revalidate = 300;
@@ -24,7 +24,7 @@ type Search = { q?: string; categorie?: string; force?: string; tri?: string };
 
 export default async function BoutiquePage({ searchParams }: { searchParams: Promise<Search> }) {
   const sp = await searchParams;
-  const availability = await getAvailabilityMap();
+  const availability = getAvailabilityMap();
   const q = (sp.q ?? "").trim().toLowerCase();
   const cat = categoryOrder.find((c) => c === sp.categorie) as Category | undefined;
 

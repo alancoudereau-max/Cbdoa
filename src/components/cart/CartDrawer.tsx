@@ -122,13 +122,13 @@ export function CartDrawer() {
                 <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-foreground/60">Sous-total</span>
                 <span className="font-serif text-3xl text-gradient-gold">{formatEUR(subtotal)}</span>
               </div>
-              <p className="text-[11px] text-foreground/50">Frais de port calculés à l'étape suivante. Paiement sécurisé par carte, Apple Pay ou Google Pay.</p>
+              <p className="text-[11px] text-foreground/50">Frais de port indiqués à l'étape suivante. Votre récapitulatif nous est envoyé sur WhatsApp ; paiement par lien sécurisé après confirmation.</p>
               <Link
                 href="/commande"
                 onClick={() => setOpen(false)}
                 className="btn-gold w-full inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold"
               >
-                Commander <ArrowRight size={16} />
+                Finaliser ma commande <ArrowRight size={16} />
               </Link>
               <Link href="/panier" onClick={() => setOpen(false)} className="block text-center text-xs text-foreground/60 hover:text-gold py-1">
                 Voir le panier détaillé

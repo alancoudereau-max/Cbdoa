@@ -3,8 +3,8 @@ import { Suspense } from "react";
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 
 export const metadata: Metadata = {
-  title: "Commande — livraison & paiement sécurisé",
-  description: "Finalisez votre commande CBDoux : livraison partout en France, retrait gratuit, paiement sécurisé par carte, Apple Pay ou Google Pay.",
+  title: "Finaliser ma commande",
+  description: "Finalisez votre commande CBDoux : coordonnées, livraison partout en France ou retrait gratuit, envoi du récapitulatif sur WhatsApp.",
   robots: { index: false, follow: false },
 };
 

@@ -7,7 +7,7 @@
  *  - THC < 0,3 %, réservé aux adultes, non destiné à un usage médical
  *
  * Les prix sont en centimes d'euro TTC. Pour changer un prix, modifiez `priceCents`.
- * Pour retirer un produit de la vente, utilisez l'espace /admin (disponibilité) ou mettez `hidden: true`.
+ * Rupture de stock : `soldOut: true` sur un produit ou une variante. Retirer un produit : `hidden: true`.
  */
 
 export type Category = "fleurs" | "resines" | "huiles" | "vape";
@@ -28,6 +28,8 @@ export type Variant = {
   /** Information cannabinoïdes affichée (« Indoor 24 % CBD ») */
   cbdInfo: string;
   warning?: string;
+  /** Rupture de stock : la variante reste visible mais ne peut plus être commandée */
+  soldOut?: boolean;
 };
 
 export type Product = {
@@ -39,6 +41,8 @@ export type Product = {
   featured?: boolean;
   isNew?: boolean;
   hidden?: boolean;
+  /** Rupture de stock sur tout le produit */
+  soldOut?: boolean;
   /** Accroche courte (cartes produit, meta description) — 1 à 2 phrases */
   short: string;
   /** Description longue (fiche produit, SEO) */

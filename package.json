@@ -12,17 +12,12 @@
     "db:print": "cat supabase/schema.sql"
   },
   "dependencies": {
-    "@mollie/api-client": "^4.6.0",
-    "@supabase/supabase-js": "^2.119.0",
     "@vercel/analytics": "^2.0.1",
     "lucide-react": "^1.70.0",
     "next": "15.5.29",
     "react": "19.1.10",
     "react-dom": "19.1.10",
-    "resend": "^6.37.0",
-    "server-only": "^0.0.1",
     "sharp": "^0.35.5",
-    "zod": "^4.6.7",
     "zustand": "^5.1.0"
   },
   "devDependencies": {

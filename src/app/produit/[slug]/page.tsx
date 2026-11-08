@@ -14,7 +14,7 @@ import { ForceBadge } from "@/components/ui/ForceBadge";
 import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, productJsonLd } from "@/lib/seo";
-import { getAvailabilityMap } from "@/lib/supabase";
+import { getAvailabilityMap } from "@/lib/stock";
 import { categoryFaq } from "@/data/category-faq";
 
 export const revalidate = 120;
@@ -46,7 +46,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const p = getProduct(slug);
   if (!p) notFound();
   const cat = categories[p.category];
-  const availability = await getAvailabilityMap();
+  const availability = getAvailabilityMap();
   const anyAvailable = p.variants.some((v) => availability[v.sku] !== false);
   const related = visibleProducts.filter((x) => x.category === p.category && x.slug !== p.slug).slice(0, 4);
   const relatedGuides = guides.filter((g) => g.relatedProducts.includes(p.slug)).slice(0, 3);
@@ -172,7 +172,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <div className="mt-5 rounded-2xl border border-foreground/10 bg-card/40 p-5 text-sm text-foreground/70 space-y-2">
             <p className="flex items-center gap-2"><Truck size={14} className="text-gold" /> Port Colissimo offert dès 60 € · Chronopost 24 h disponible</p>
             <p className="flex items-center gap-2"><Leaf size={14} className="text-gold" /> Retrait gratuit à Damprichard & Le Russey</p>
-            <p className="flex items-center gap-2"><Lock size={14} className="text-gold" /> CB, Apple Pay, Google Pay — paiement sécurisé Mollie</p>
+            <p className="flex items-center gap-2"><Lock size={14} className="text-gold" /> Commande par WhatsApp, paiement par lien sécurisé CB ou virement</p>
           </div>
         </aside>
       </section>

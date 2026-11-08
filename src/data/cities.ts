@@ -50,7 +50,7 @@ export const cities: City[] = [
       "Le Russey est également le centre de notre zone de livraison à domicile : dans un rayon de 30 km, nous livrons nous-mêmes votre commande (10 €, offerte dès 100 €) sur un créneau convenu par WhatsApp. Et pour un retrait gratuit, choisissez simplement « Retrait — Le Russey » à la commande.",
     ],
     faq: [
-      { q: "Comment retirer ma commande au Russey ?", a: "Choisissez « Retrait gratuit » puis « Le Russey » lors de la commande. Nous vous contactons sur WhatsApp pour fixer un rendez-vous, généralement dès le lendemain. Paiement en ligne ou sur place." },
+      { q: "Comment retirer ma commande au Russey ?", a: "Choisissez « Retrait gratuit » puis « Le Russey » lors de la commande. Nous vous contactons sur WhatsApp pour fixer un rendez-vous, généralement dès le lendemain. Paiement par lien sécurisé ou sur place." },
       { q: "Quelles communes sont dans la zone de livraison autour du Russey ?", a: "Environ 30 km : Maîche, Charquemont, Morteau, Villers-le-Lac, Orchamps-Vennes, Pierrefontaine-les-Varans, Bonnétage, Les Fontenelles… Le code postal saisi à la commande vous indique si la livraison locale est disponible." },
     ],
     nearby: ["charquemont", "morteau", "maiche"],
@@ -141,7 +141,7 @@ export const cities: City[] = [
     description: "Du CBD premium à Saint-Hippolyte (25190) et dans la vallée du Dessoubre : livraison à domicile CBDoux ou Colissimo 48 h, retrait gratuit à Damprichard. THC < 0,3 %.",
     intro: "Au confluent du Doubs et du Dessoubre, Saint-Hippolyte est à la limite de notre zone de livraison locale et à un quart d'heure de notre point de retrait de Damprichard.",
     body: [
-      "Selon votre adresse exacte, la livraison à domicile par nos soins peut être proposée à la commande (le code postal saisi détermine les options). Sinon, le retrait gratuit à Damprichard est la solution la plus simple : rendez-vous convenu par WhatsApp, paiement en ligne ou sur place.",
+      "Selon votre adresse exacte, la livraison à domicile par nos soins peut être proposée à la commande (le code postal saisi détermine les options). Sinon, le retrait gratuit à Damprichard est la solution la plus simple : rendez-vous convenu par WhatsApp, Paiement par lien sécurisé ou sur place.",
       "Pour une livraison postale discrète, Colissimo 48 h est offert dès 60 € et Chronopost livre le lendemain. Dans tous les cas, votre colis est neutre et vos produits voyagent dans des sachets hermétiques inodores.",
     ],
     faq: [
@@ -216,7 +216,7 @@ export const cities: City[] = [
     intro: "Belfort est à moins d'une heure de notre Haut-Doubs natal : vos commandes y arrivent en 24 h (Chronopost) ou 48 h (Colissimo), dans un colis parfaitement neutre.",
     body: [
       "Fleurs indoor et hydroponie, résines filtrées, huiles Full Spectrum à usage cutané, pods : notre sélection est goûtée, validée puis analysée lot par lot. Les forces Classique, 2, 3 et Maxi permettent à chacun de trouver le bon niveau — les débutants commencent toujours par la force Classique.",
-      "Commande avant 13 h = expédition le jour même. Colissimo offert dès 60 €, Chronopost Express 12,90 €, Lettre suivie 3,90 € pour les petites quantités. Paiement sécurisé par carte, Apple Pay ou Google Pay.",
+      "Commande avant 13 h = expédition le jour même. Colissimo offert dès 60 €, Chronopost Express 12,90 €, Lettre suivie 3,90 € pour les petites quantités. Commande en un clic sur WhatsApp, paiement par lien sécurisé, Apple Pay ou Google Pay.",
     ],
     faq: [
       { q: "Expédiez-vous dans tout le Territoire de Belfort ?", a: "Oui, comme partout en France métropolitaine : Belfort, Delle, Giromagny, Valdoie… aux mêmes tarifs." },
