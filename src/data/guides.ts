@@ -658,7 +658,7 @@ export const guides: Guide[] = [
       {
         heading: "SMART VEND, la structure derrière CBDoux",
         blocks: [
-          p("CBDoux est une marque de la SARL SMART VEND, spécialisée dans la distribution automatique de produits de bien-être. Fiabilité des machines, qualité des produits, conformité réglementaire : un nouveau standard de distribution, plus propre et plus intelligent."),
+          p("CBDoux est le nom commercial de la SARL SMART VEND, spécialisée dans la distribution automatique de produits de bien-être. Fiabilité des machines, qualité des produits, conformité réglementaire : un nouveau standard de distribution, plus propre et plus intelligent."),
         ],
       },
     ],

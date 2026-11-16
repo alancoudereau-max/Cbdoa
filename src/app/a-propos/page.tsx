@@ -67,7 +67,7 @@ export default function AboutPage() {
               <li className="flex gap-3"><span className="text-gold">✺</span> Un interlocuteur humain sur WhatsApp, 7 j/7.</li>
             </ul>
             <p className="mt-8 text-xs text-foreground/50">
-              {site.name} est une marque de {company.legalName} ({company.legalForm}), SIREN {company.siren}.
+              {site.name} est le nom commercial de {company.legalName} ({company.legalForm}), SIREN {company.siren}.
             </p>
           </div>
           <blockquote className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.05] text-center lg:text-left">

@@ -18,7 +18,7 @@ export const site = {
   url: SITE_URL,
   locale: "fr_FR",
   lang: "fr",
-  email: "contact@smart-vend.com",
+  email: "contact@smart-vend.fr",
   phoneDisplay: "07 67 98 25 63",
   phoneE164: "+33767982563",
   whatsapp: "https://wa.me/33767982563",
@@ -33,7 +33,7 @@ export const site = {
   supportHours: "Du lundi au dimanche, 9 h – 21 h (WhatsApp)",
 } as const;
 
-/** Société exploitante (informations communiquées par le gérant — à vérifier sur le Kbis). */
+/** Société exploitante — informations vérifiées sur la synthèse officielle du Guichet unique des entreprises (création de la société, mars 2026). */
 export const company = {
   legalName: "SMART VEND",
   legalForm: "SARL",
@@ -48,7 +48,7 @@ export const company = {
     city: "Paris",
     country: "France",
   },
-  publicationDirector: "Alan Coudereau, gérant", // TODO : confirmer
+  publicationDirector: "Michaël Lahaine, gérant", // représentant légal inscrit au registre — à mettre à jour en cas de changement de gérance
   /** Médiateur de la consommation (obligatoire pour tout e-commerçant — art. L612-1 C. conso). */
   mediator: {
     name: "[Médiateur de la consommation à compléter — ex. CNPM Médiation Consommation]", // TODO
@@ -56,9 +56,9 @@ export const company = {
     address: "[adresse postale du médiateur]", // TODO
   },
   host: {
-    name: "Vercel Inc.",
-    address: "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",
-    url: "https://vercel.com",
+    name: "Netlify, Inc.",
+    address: "101 2nd Street, San Francisco, CA 94105, États-Unis",
+    url: "https://www.netlify.com",
   },
 } as const;
 

@@ -1,6 +1,6 @@
 /**
  * Livraison : modes, tarifs et règles.
- * Tous les montants sont en centimes TTC. Modifiez ce fichier pour changer les tarifs.
+ * Tous les montants sont en centimes d'euro (prix payé par le client). Modifiez ce fichier pour changer les tarifs.
  */
 
 export type ShippingMethodId = "lettre-suivie" | "colissimo" | "chronopost" | "livraison-locale" | "retrait";

@@ -25,7 +25,7 @@ const table = (headers: string[], rows: string[][]): LegalBlock => ({ type: "tab
 const vendeur = `${company.legalName}, ${company.legalForm} au capital de ${company.capital}, immatriculée au ${company.rcs} (SIRET ${company.siret}, TVA intracommunautaire ${company.vat}), dont le siège social est situé ${company.address.street}, ${company.address.postalCode} ${company.address.city}, ${company.address.country}`;
 
 const shippingTable = table(
-  ["Mode", "Zone", "Délai indicatif", "Tarif TTC"],
+  ["Mode", "Zone", "Délai indicatif", "Tarif"],
   [
     ["Lettre suivie La Poste (≤ 50 g)", "France métropolitaine", "2 à 4 jours ouvrés", "3,90 € — offert dès 60 €"],
     ["Colissimo domicile", "France métropolitaine", "48 h ouvrées", "5,90 € — offert dès 60 €"],
@@ -41,7 +41,7 @@ export const legalDocs: LegalDoc[] = [
     slug: "mentions-legales",
     title: "Mentions légales",
     description: `Mentions légales du site ${site.url} édité par ${company.legalName} : éditeur, hébergeur, propriété intellectuelle, informations réglementaires sur les produits CBD.`,
-    updatedAt: "2026-11-08",
+    updatedAt: "2026-11-16",
     intro: "Conformément à l'article 6-III de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN), vous trouverez ci-dessous les informations relatives à l'éditeur et à l'hébergeur du site.",
     sections: [
       {
@@ -52,7 +52,7 @@ export const legalDocs: LegalDoc[] = [
             `Directeur de la publication : ${company.publicationDirector}.`,
             `Email : ${site.email}`,
             `Téléphone / WhatsApp : ${site.phoneDisplay}`,
-            `Marque commerciale : ${site.name}.`,
+            `Nom commercial : ${site.name}.`,
           ]),
         ],
       },
@@ -72,7 +72,7 @@ export const legalDocs: LegalDoc[] = [
       {
         heading: "Propriété intellectuelle",
         blocks: [
-          p(`L'ensemble des éléments du Site (textes, photographies, vidéos, logos, marque ${site.name}, charte graphique, code) est protégé par le droit de la propriété intellectuelle et demeure la propriété exclusive de ${company.legalName} ou de ses partenaires. Toute reproduction, représentation, modification ou exploitation, totale ou partielle, sans autorisation écrite préalable est interdite.`),
+          p(`L'ensemble des éléments du Site (textes, photographies, vidéos, logos, nom commercial ${site.name}, charte graphique, code) est protégé par le droit de la propriété intellectuelle et demeure la propriété exclusive de ${company.legalName} ou de ses partenaires. Toute reproduction, représentation, modification ou exploitation, totale ou partielle, sans autorisation écrite préalable est interdite.`),
         ],
       },
       {
@@ -106,7 +106,7 @@ export const legalDocs: LegalDoc[] = [
     slug: "cgv",
     title: "Conditions générales de vente",
     description: `Conditions générales de vente de la boutique en ligne ${site.name} : commande par WhatsApp, prix, paiement par lien sécurisé, livraison en France, rétractation, garanties légales, médiation.`,
-    updatedAt: "2026-11-08",
+    updatedAt: "2026-11-16",
     intro: `Les présentes conditions générales de vente (ci-après « CGV ») régissent les ventes de produits conclues à distance entre ${vendeur} (ci-après « le Vendeur » ou « ${site.name} ») et toute personne physique majeure agissant à des fins non professionnelles (ci-après « le Client ») sur le site ${site.url}.`,
     sections: [
       {
@@ -137,7 +137,7 @@ export const legalDocs: LegalDoc[] = [
       {
         heading: "Article 4 — Prix",
         blocks: [
-          p("Les prix sont indiqués en euros, toutes taxes comprises (TVA française applicable), hors frais de livraison. Les frais de livraison sont indiqués avant la validation définitive de la commande et récapitulés à l'article 7. Le Vendeur se réserve le droit de modifier ses prix à tout moment ; les produits sont facturés sur la base des tarifs en vigueur au moment de la validation de la commande."),
+          p("Les prix sont indiqués en euros et correspondent au montant total à payer par le Client pour les produits, hors frais de livraison. Les frais de livraison sont indiqués avant la validation définitive de la commande et récapitulés à l'article 7. Le Vendeur se réserve le droit de modifier ses prix à tout moment ; les produits sont facturés sur la base des tarifs en vigueur au moment de la validation de la commande."),
           p("Les codes promotionnels ne sont pas cumulables entre eux sauf mention contraire, et s'appliquent dans les conditions indiquées (montant minimum, durée de validité, première commande)."),
         ],
       },
@@ -235,7 +235,7 @@ export const legalDocs: LegalDoc[] = [
     slug: "confidentialite",
     title: "Politique de confidentialité",
     description: `Comment ${site.name} collecte, utilise et protège vos données personnelles (RGPD) : finalités, bases légales, durées de conservation, sous-traitants, vos droits.`,
-    updatedAt: "2026-11-08",
+    updatedAt: "2026-11-16",
     intro: `${company.legalName} attache une grande importance à la protection de vos données personnelles. La présente politique décrit les traitements réalisés via le site ${site.url}, conformément au Règlement (UE) 2016/679 (RGPD) et à la loi Informatique et Libertés.`,
     sections: [
       {
@@ -250,7 +250,7 @@ export const legalDocs: LegalDoc[] = [
             "Commande : adresse de livraison, produits commandés, montants, mode de livraison, historique.",
             "Paiement : aucune donnée bancaire n'est collectée par le Site. Les paiements par lien sont traités par notre établissement de paiement (Shine) sur sa propre page sécurisée.",
             "Déclarations : confirmation de majorité, acceptation des CGV et des conseils de prudence (horodatées).",
-            "Données techniques : mesure d'audience agrégée et anonymisée (sans cookie).",
+            "Données techniques : données de connexion traitées par notre hébergeur (adresse IP, date et heure, pages demandées) pour afficher le Site et en assurer la sécurité. Aucune mesure d'audience n'est réalisée.",
             "Messages : contenu des demandes de commande et des messages que vous nous adressez par WhatsApp ou par email.",
           ]),
         ],
@@ -264,7 +264,7 @@ export const legalDocs: LegalDoc[] = [
               ["Traitement, livraison et suivi des commandes, service client", "Exécution du contrat"],
               ["Facturation et obligations comptables", "Obligation légale"],
               ["Vérification de la majorité, lutte contre la fraude", "Obligation légale / intérêt légitime"],
-              ["Mesure d'audience sans cookie, amélioration du site", "Intérêt légitime"],
+              ["Sécurité et bon fonctionnement du Site (données techniques de connexion)", "Intérêt légitime"],
               ["Réponse aux demandes de contact", "Intérêt légitime / mesures précontractuelles"],
               ["Communications commerciales (si vous y consentez)", "Consentement, retirable à tout moment"],
             ],
@@ -275,11 +275,10 @@ export const legalDocs: LegalDoc[] = [
         heading: "Destinataires et sous-traitants",
         blocks: [
           ul([
-            "Vercel Inc. (États-Unis) — hébergement du site. Transferts encadrés par les clauses contractuelles types de la Commission européenne.",
+            "Netlify, Inc. (États-Unis) — hébergement du site. Netlify est certifiée au titre du cadre de protection des données UE–États-Unis (Data Privacy Framework), qui encadre les transferts de données vers les États-Unis.",
             "WhatsApp (Meta Platforms Ireland Ltd) — réception de vos demandes de commande et échanges avec notre service client, lorsque vous choisissez ce canal. Les messages sont chiffrés de bout en bout ; la politique de confidentialité de WhatsApp s'applique.",
             "Shine SAS (France) — émission des liens de paiement et traitement des règlements par carte.",
             "La Poste / Colissimo / Chronopost — acheminement des colis (nom, adresse, téléphone pour le suivi).",
-            "Vercel Analytics — mesure d'audience agrégée, sans cookie ni identifiant persistant.",
           ]),
           p("Vos données ne sont ni vendues ni louées à des tiers."),
         ],
@@ -317,8 +316,8 @@ export const legalDocs: LegalDoc[] = [
   {
     slug: "cookies",
     title: "Politique cookies",
-    description: `${site.name} n'utilise aucun cookie publicitaire : seulement des stockages techniques indispensables (panier, vérification d'âge) et une mesure d'audience sans cookie. Détails.`,
-    updatedAt: "2026-11-08",
+    description: `${site.name} n'utilise aucun cookie publicitaire : seulement des stockages techniques indispensables (panier, vérification d'âge), sans outil de mesure d'audience. Détails.`,
+    updatedAt: "2026-11-16",
     intro: "Nous avons fait le choix d'un site sobre : pas de cookies publicitaires, pas de suivi par des tiers. Voici précisément ce qui est stocké sur votre appareil et pourquoi.",
     sections: [
       {
@@ -336,8 +335,8 @@ export const legalDocs: LegalDoc[] = [
         ],
       },
       {
-        heading: "Mesure d'audience sans cookie",
-        blocks: [p("Nous utilisons Vercel Analytics, une mesure d'audience qui ne dépose aucun cookie et n'utilise aucun identifiant persistant : les données sont agrégées et anonymes (pages vues, pays, type d'appareil). Elle est exemptée de consentement au sens des recommandations de la CNIL.")],
+        heading: "Mesure d'audience",
+        blocks: [p("Le Site n'utilise aucun outil de mesure d'audience : aucune statistique de visite n'est collectée, avec ou sans cookie. Notre hébergeur traite uniquement les données techniques nécessaires à l'affichage des pages et à la sécurité du service (adresse IP, date et heure, pages demandées).")],
       },
       {
         heading: "Services tiers",

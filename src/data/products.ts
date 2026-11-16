@@ -6,7 +6,7 @@
  *  - descriptions sensorielles (arômes, texture, culture) et « ressenti » formulé en bien-être
  *  - THC < 0,3 %, réservé aux adultes, non destiné à un usage médical
  *
- * Les prix sont en centimes d'euro TTC. Pour changer un prix, modifiez `priceCents`.
+ * Les prix sont en centimes d'euro (prix payé par le client). Pour changer un prix, modifiez `priceCents`.
  * Rupture de stock : `soldOut: true` sur un produit ou une variante. Retirer un produit : `hidden: true`.
  */
 
@@ -252,13 +252,12 @@ export const products: Product[] = [
     description: [
       "L'Amnesia Haze n'a plus rien à prouver : c'est l'une des variétés les plus recherchées d'Europe. Notre version est cultivée en hydroponie indoor, ce qui lui donne des têtes volumineuses, aérées et très bien manucurées.",
       "Le nez est dominé par le citron zesté et les agrumes vifs, soutenus par une note florale Haze et un fond légèrement terreux. Le bouquet reste long et persistant en vaporisation.",
-      "Proposée en Classique (hydro 20 % CBD), Force 2 et Force 3. Découvrez-la en vidéo sur la fiche produit.",
+      "Proposée en Classique (hydro 20 % CBD), Force 2 et Force 3.",
     ],
     aromas: "Citron zesté, agrumes vifs, floral Haze, fond légèrement terreux.",
     profile: "Profil clair et tonique, idéal pour une journée active.",
     usage: "Vaporisation ou infusion. Non destinée à la combustion.",
     image: "/images/products/amnesia-haze-hydro.jpg",
-    video: "/videos/amnesia-haze-hydro.mp4",
     variants: tiers("AMN", [
       { force: 1, cbdInfo: "Hydro 20 % CBD", perGram: 600, per10g: 5500 },
       { force: 2, cbdInfo: "20 % + ~10 % CBD renforcé", perGram: 800, per10g: 7500 },

@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { site, SITE_URL } from "@/data/site";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -104,7 +103,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CartDrawer />
         <AgeGate />
         <WhatsAppFab />
-        <Analytics />
       </body>
     </html>
   );

@@ -141,7 +141,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </div>
         </div>
         <aside className="lg:col-span-5">
-          <h2 className="font-serif text-2xl mb-4">Formats & tarifs TTC</h2>
+          <h2 className="font-serif text-2xl mb-4">Formats & tarifs</h2>
           <div className="overflow-hidden rounded-2xl border border-foreground/10">
             <table className="w-full text-sm">
               <thead className="bg-card/60">

@@ -48,7 +48,7 @@ export default async function BoutiquePage({ searchParams }: { searchParams: Pro
 
       <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-10">
         <SectionHeading as="h1" kicker="Catalogue" title="La boutique" italic="CBDoux.">
-          {visibleProducts.length} références sélectionnées et analysées. Prix TTC au gramme, port offert dès 60 €, expédition sous 24 h ouvrées.
+          {visibleProducts.length} références sélectionnées et analysées. Prix au gramme, port offert dès 60 €, expédition sous 24 h ouvrées.
         </SectionHeading>
         <form action="/boutique" className="relative w-full lg:max-w-sm" role="search">
           <input
