@@ -6,7 +6,6 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { buildMetadata } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
 
-export const revalidate = 300;
 
 export const metadata: Metadata = buildMetadata({
   title: "Nouveautés CBD : les dernières références CBDoux",

@@ -1,0 +1,11 @@
+# Configuration Netlify — rien à saisir à la main lors de l'import du dépôt.
+# Netlify détecte Next.js et installe automatiquement son adaptateur (pages statiques,
+# optimisation des images, redirections et en-têtes définis dans next.config.ts).
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"

@@ -65,7 +65,7 @@ sections = [
         "Conservez vos produits à l'abri de la lumière, de la chaleur et de l'humidité, dans leur sachet hermétique d'origine, idéalement autour de 20 °C. Tenir hors de portée des enfants et des animaux.",
     ]),
     ("Qualité, conformité et usage prévu", [
-        "Tous nos produits respectent la réglementation française (THC &lt; 0,3 %) et disposent d'analyses de laboratoire consultables sur cbdoux.fr/analyses-laboratoires.",
+        "Tous nos produits respectent la réglementation française (THC &lt; 0,3 %) et disposent d'analyses de laboratoire consultables sur notre site, page « Analyses laboratoires ».",
         "Fleurs et résines sont destinées à la vaporisation ou à l'infusion — non à la combustion. Les huiles sont à usage cutané exclusivement. Nos produits ne sont pas des médicaments.",
     ]),
 ]
@@ -75,7 +75,7 @@ def footer(canvas, doc):
     canvas.saveState()
     canvas.setFont(font, 7.5)
     canvas.setFillColor(MUTED)
-    canvas.drawCentredString(A4[0] / 2, 12 * mm, "CBDoux · SARL SMART VEND · SIREN 101 678 175 · cbdoux.fr · WhatsApp 07 67 98 25 63 · Réservé aux adultes · THC < 0,3 %")
+    canvas.drawCentredString(A4[0] / 2, 12 * mm, "CBDoux · SARL SMART VEND · SIREN 101 678 175 · WhatsApp 07 67 98 25 63 · Réservé aux adultes · THC < 0,3 %")
     canvas.drawRightString(A4[0] - 14 * mm, 7 * mm, f"Page {doc.page}")
     canvas.restoreState()
 

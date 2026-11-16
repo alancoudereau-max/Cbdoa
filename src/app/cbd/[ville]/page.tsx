@@ -13,7 +13,6 @@ import { buildMetadata, vendingMachineJsonLd } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
 
 export const dynamicParams = false;
-export const revalidate = 3600;
 
 export function generateStaticParams() {
   return cities.map((c) => ({ ville: c.slug }));

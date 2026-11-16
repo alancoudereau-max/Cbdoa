@@ -14,7 +14,6 @@ import { JsonLd } from "@/components/JsonLd";
 import { itemListJsonLd, buildMetadata } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
 
-export const revalidate = 300;
 
 export const metadata: Metadata = buildMetadata({
   title: "CBDoux — CBD premium du Haut-Doubs, livraison France 24/48 h",

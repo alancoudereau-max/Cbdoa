@@ -4,7 +4,11 @@
  *   automatiquement dans les mentions légales, CGV, emails, JSON-LD…
  */
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://cbdoux.fr").replace(/\/$/, "");
+/**
+ * Adresse publique du site. Elle est déterminée automatiquement au build dans next.config.ts
+ * (domaine principal Netlify / Vercel, ou variable NEXT_PUBLIC_SITE_URL) : ne mettez pas de domaine en dur ici.
+ */
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
 
 export const site = {
   name: "CBDoux",

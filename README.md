@@ -5,17 +5,16 @@ Site e-commerce professionnel de **CBDoux** (SARL SMART VEND, Haut-Doubs) : fleu
 - **Framework** : Next.js 15 (App Router, React 19, TypeScript) — rendu statique/ISR, ultra-rapide, SEO natif
 - **Style** : Tailwind CSS v4, identité noir profond & or champagne, polices auto-hébergées (Instrument Serif, Inter, JetBrains Mono)
 - **Commande** : le client compose son panier puis envoie le récapitulatif complet sur le WhatsApp du marchand en un clic (fallback email / copie). Facturation, lien de paiement (Shine) et expédition gérés par le marchand — aucune base de données, aucun back-office à maintenir.
-- **Hébergement** : Vercel ou Netlify — guide complet dans `DEPLOIEMENT.md`
+- **Hébergement** : Netlify (configuration incluse : `netlify.toml`), déploiement automatique à chaque modification du dépôt GitHub — guide complet dans `DEPLOIEMENT.md`
 
 ## Démarrer en local
 
 ```bash
 npm install
-cp .env.example .env.local   # puis renseigner les clés
 npm run dev                  # http://localhost:3000
 ```
 
-Une seule variable est utile : `NEXT_PUBLIC_SITE_URL` (URL publique du site). Le site est entièrement statique côté données : aucun service externe n'est requis.
+Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, sitemap, Open Graph) est détectée au build dans `next.config.ts` : domaine principal du projet sur Netlify ou Vercel, sinon `NEXT_PUBLIC_SITE_URL` si vous la définissez (voir `.env.example`). Aucun domaine n'est écrit en dur dans le code. Le site est entièrement statique côté données : aucun service externe n'est requis.
 
 ## Scripts
 

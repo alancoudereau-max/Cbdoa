@@ -14,7 +14,6 @@ import { formatDateFR } from "@/lib/utils";
 import { getAvailabilityMap } from "@/lib/stock";
 
 export const dynamicParams = false;
-export const revalidate = 3600;
 
 export function generateStaticParams() {
   return guides.map((g) => ({ slug: g.slug }));

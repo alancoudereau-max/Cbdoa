@@ -10,7 +10,6 @@ import { buildMetadata, itemListJsonLd } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
 import { cn } from "@/lib/utils";
 
-export const revalidate = 300;
 
 export const metadata: Metadata = buildMetadata({
   title: "Boutique CBD en ligne — fleurs, résines, huiles & vape",

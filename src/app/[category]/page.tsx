@@ -13,7 +13,6 @@ import { buildMetadata, itemListJsonLd } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
 import { categoryFaq } from "@/data/category-faq";
 
-export const revalidate = 300;
 export const dynamicParams = false;
 
 export function generateStaticParams() {

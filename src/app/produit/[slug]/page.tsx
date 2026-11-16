@@ -17,7 +17,6 @@ import { buildMetadata, productJsonLd } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
 import { categoryFaq } from "@/data/category-faq";
 
-export const revalidate = 120;
 export const dynamicParams = false;
 
 export function generateStaticParams() {
