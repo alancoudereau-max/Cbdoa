@@ -31,6 +31,8 @@ Dans Claude : **Paramètres → Connecteurs → GitHub → Connecter**, avec le 
 
 ## 3. Brancher votre domaine OVH — sans couper vos emails (15 min)
 
+> **Fait le 16/11/2026.** Domaine principal : `www.smart-vend.fr` (certificat HTTPS actif, `smart-vend.fr` y redirige). L'adresse technique `glistening-frangollo-fccb20.netlify.app` renvoie elle aussi vers le domaine : la règle est dans `netlify.toml`, à adapter si le projet Netlify est renommé ou si le domaine change. Les étapes ci-dessous restent utiles pour brancher un autre domaine.
+
 **Important :** ne changez PAS les « serveurs DNS » du domaine chez OVH et ne choisissez pas « Netlify DNS ». Vos emails (dont contact@smart-vend.fr) dépendent de la zone DNS OVH actuelle (enregistrements MX). On modifie seulement deux lignes.
 
 1. **Dans Netlify** : *Domain management → Add a domain* → saisissez `www.smart-vend.fr` → validez. Netlify ajoute aussi le domaine sans `www` et redirigera l'un vers l'autre. Gardez **`www`** comme domaine principal (*Primary domain*) : c'est la configuration recommandée par Netlify avec un DNS externe.

@@ -1,3 +1,5 @@
+"$schema" = "https://open-api.netlify.com/netlify.schema.json"
+
 # Configuration Netlify — rien à saisir à la main lors de l'import du dépôt.
 # Le module Next.js de Netlify (@netlify/plugin-nextjs) est déclaré explicitement ci-dessous :
 # sans lui, Netlify publie le dossier .next tel quel et toutes les pages renvoient « Page not found ».
@@ -13,3 +15,17 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# L'adresse technique du projet renvoie vers le vrai domaine (un seul site aux yeux de Google).
+# À adapter si le projet Netlify est renommé ou si le domaine principal change.
+[[redirects]]
+  from = "https://glistening-frangollo-fccb20.netlify.app/*"
+  to = "https://www.smart-vend.fr/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://glistening-frangollo-fccb20.netlify.app/*"
+  to = "https://www.smart-vend.fr/:splat"
+  status = 301
+  force = true
