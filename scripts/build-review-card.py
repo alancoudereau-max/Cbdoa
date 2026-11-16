@@ -51,7 +51,7 @@ body{{width:105mm;height:148mm;background:radial-gradient(120% 70% at 50% 0%,#24
 .logo svg{{height:14mm}}
 .orn{{display:flex;align-items:center;justify-content:center;gap:2mm;margin-top:3.5mm}}.orn i{{display:block;width:16mm;height:.2mm;background:linear-gradient(90deg,transparent,#d6ac4f)}}.orn i:last-child{{transform:scaleX(-1)}}.orn b{{display:block;width:1.3mm;height:1.3mm;background:#d6ac4f;transform:rotate(45deg)}}.orn svg{{width:4.6mm;height:4.6mm}}
 h1{{font:400 12.5mm/0.95 Instrument,serif;margin:6mm 0 0;letter-spacing:-.01em}}h1 em{{color:#f3dfa0}}
-p.t{{font:400 3.55mm/1.45 Inter;color:rgba(244,239,227,.85);margin:4mm auto 0;max-width:82mm}}
+p.t{{font:400 3.5mm/1.45 Inter;color:rgba(244,239,227,.85);margin:4mm auto 0;white-space:nowrap}}
 .qr{{width:48mm;height:48mm;margin:6mm auto 0;border-radius:4mm;background:#f7f2e6;padding:2.2mm;box-shadow:0 0 0 .35mm #d6ac4f,0 3mm 8mm rgba(0,0,0,.45)}}.qr svg{{width:100%;height:100%;display:block}}
 p.k{{font:500 2.7mm/1.5 Mono,monospace;letter-spacing:.28em;text-transform:uppercase;color:#f3dfa0;margin:5.5mm 0 0}}
 p.s{{font:400 2.9mm/1.5 Inter;color:rgba(244,239,227,.7);margin:2.2mm 0 0}}
@@ -61,7 +61,7 @@ p.s{{font:400 2.9mm/1.5 Inter;color:rgba(244,239,227,.7);margin:2.2mm 0 0}}
   <div class="logo">{logo}</div>
   <div class="orn"><i></i><b></b>{ros}<b></b><i></i></div>
   <h1>Votre avis <em>compte.</em></h1>
-  <p class="t">Trente secondes pour nous aider :<br>scannez ce code et laissez votre avis sur Google.</p>
+  <p class="t">Trente secondes pour nous aider :<br>scannez, puis laissez votre avis sur Google.</p>
   <div class="qr">{qr_svg}</div>
   <p class="k">Distributeur CBDoux · {PLACE}</p>
   <p class="s">Merci ! Une question ? WhatsApp 07 67 98 25 63</p>
