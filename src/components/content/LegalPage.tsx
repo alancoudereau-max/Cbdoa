@@ -3,9 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLegalDoc, legalDocs } from "@/data/legal";
 import { Blocks } from "@/components/content/Blocks";
-import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { PageHero } from "@/components/ui/PageHero";
 import { buildMetadata } from "@/lib/seo";
-import { formatDateFR } from "@/lib/utils";
+import { formatDateFR, fr } from "@/lib/utils";
 
 export function legalMetadata(slug: string): Metadata {
   const d = getLegalDoc(slug);
@@ -17,34 +17,29 @@ export function LegalPage({ slug }: { slug: string }) {
   const d = getLegalDoc(slug);
   if (!d) notFound();
   return (
-    <div className="mx-auto max-w-[1000px] px-5 sm:px-8 lg:px-12 py-10 sm:py-14">
-      <Breadcrumbs items={[{ name: d.title, path: `/${d.slug}` }]} className="mb-8" />
-      <header className="mb-10">
-        <p className="kicker mb-3">Informations légales</p>
-        <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1] mb-4">{d.title}</h1>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/50">Dernière mise à jour : {formatDateFR(d.updatedAt)}</p>
-        {d.intro && <p className="mt-6 text-base text-foreground/75 leading-relaxed max-w-3xl">{d.intro}</p>}
-      </header>
+    <div>
+      <PageHero crumbs={[{ name: d.title, path: `/${d.slug}` }]} title={d.title} titleClassName="max-w-[20ch] text-[clamp(2.3rem,5.4vw,4.4rem)]">
+        <p className="t-fine">Dernière mise à jour : {formatDateFR(d.updatedAt)}</p>
+        <nav aria-label="Autres documents" className="chip-rail mt-7">
+          {legalDocs.map((x) => (
+            <Link key={x.slug} href={`/${x.slug}`} data-active={x.slug === d.slug ? "true" : undefined} className="choice choice-pill px-4 py-2 text-[0.9375rem]">
+              {x.title}
+            </Link>
+          ))}
+        </nav>
+      </PageHero>
 
-      <nav aria-label="Autres documents" className="mb-10 flex flex-wrap gap-2">
-        {legalDocs.map((x) => (
-          <Link
-            key={x.slug}
-            href={`/${x.slug}`}
-            className={`rounded-full border px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] ${x.slug === d.slug ? "border-gold bg-gold/10 text-gold" : "border-foreground/15 text-foreground/70 hover:border-gold/50 hover:text-gold"}`}
-          >
-            {x.title}
-          </Link>
-        ))}
-      </nav>
-
-      <div className="prose-cbd">
-        {d.sections.map((s) => (
-          <section key={s.heading}>
-            <h2>{s.heading}</h2>
-            <Blocks blocks={s.blocks} />
-          </section>
-        ))}
+      <div className="wrap-narrow pb-24">
+        <div className="paper sheet prose-cbd">
+          {/* Le préambule ouvre le document, sur le papier : il se lit avant l'article 1. */}
+          {d.intro && <p className="mb-10 border-b border-foreground/25 pb-8 font-serif text-[1.1875rem] font-light leading-[1.5] sm:text-[1.3125rem]">{fr(d.intro)}</p>}
+          {d.sections.map((s) => (
+            <section key={s.heading}>
+              <h2>{fr(s.heading)}</h2>
+              <Blocks blocks={s.blocks} />
+            </section>
+          ))}
+        </div>
       </div>
     </div>
   );

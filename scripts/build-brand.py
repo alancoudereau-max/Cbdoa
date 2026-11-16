@@ -12,7 +12,8 @@ en tracés : aucune police supplémentaire n'est chargée par le site.
 Usage (depuis la racine du dépôt) :
     npm i --no-save @fontsource/playfair-display
     pip install fonttools brotli pillow playwright
-    python3 scripts/build-brand.py
+    python3 scripts/build-guilloche.py     # le guilloché sert de fond à l'image de partage
+    python3 scripts/build-brand.py         # CBDOUX_CHROME=/chemin/vers/chrome si Playwright n'a pas son Chromium
 
 Fichiers écrits :
     src/components/brand/logo-data.ts          tracés utilisés par <Logo /> et <Rosette />
@@ -58,7 +59,9 @@ RING_R, CENTRE_R = 46.2, 8.0
 STROKES = {"fine": (3.8, 2.4, 2.8), "bold": (4.8, 3.2, 3.6)}
 
 GOLD_DARK, GOLD_LIGHT, GOLD = "#b98a2e", "#f3dfa0", "#d6ac4f"
-INK, GREEN_DEEP, GREEN = "#0d0c0a", "#143524", "#1f4a37"
+# Verts du site (voir src/app/globals.css) : nuit, sapin, sapin relevé
+INK, GREEN_DEEP, GREEN = "#0a2219", "#12372a", "#1c4a39"
+PAPER = "#f2ead6"
 
 
 def nt(v: float) -> str:
@@ -169,15 +172,6 @@ def data_uri(svg: str) -> str:
     return "data:image/svg+xml;base64," + base64.b64encode(svg.encode()).decode()
 
 
-def font_face(name: str, file: Path, style="normal") -> str:
-    b64 = base64.b64encode(file.read_bytes()).decode()
-    return f'@font-face{{font-family:"{name}";font-style:{style};src:url(data:font/woff2;base64,{b64}) format("woff2")}}'
-
-
-HEX_BG = ("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='97' height='168' viewBox='0 0 48.5 84'>"
-          "<path d='M24.25 0L48.5 14V42L24.25 56L0 42V14Z M24.25 56V84' fill='none' stroke='%23d9b85c' stroke-width='1'/></svg>")
-
-
 def bandeau_html(L) -> str:
     return f"""<!doctype html><meta charset="utf-8"><style>
 html,body{{margin:0}}body{{width:1200px;height:400px;background:{INK};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}}
@@ -187,36 +181,40 @@ svg{{position:relative;height:170px}}</style><div class="band"></div>{logo_svg(L
 
 
 def og_html(L) -> str:
+    """Image de partage par défaut : le titre de l'accueil, le guilloché et une fleur dans le verre du cadran."""
+    guilloche = (BRAND / "guilloche-orge.svg").read_text(encoding="utf-8")
+    photo = base64.b64encode((ROOT / "public" / "images" / "products" / "orangello-hydroponie.jpg").read_bytes()).decode()
     return f"""<!doctype html><meta charset="utf-8"><style>
-{font_face("Instrument", SITE_FONTS / "instrument-serif-latin-400-normal.woff2")}
-{font_face("Instrument", SITE_FONTS / "instrument-serif-latin-400-italic.woff2", "italic")}
-{font_face("Inter", SITE_FONTS / "inter-latin-wght-normal.woff2")}
+@font-face{{font-family:"Fraunces";font-weight:300 500;src:url(data:font/woff2;base64,{base64.b64encode((SITE_FONTS / "fraunces-roman.woff2").read_bytes()).decode()}) format("woff2")}}
+@font-face{{font-family:"Hanken";font-weight:400 700;src:url(data:font/woff2;base64,{base64.b64encode((SITE_FONTS / "hanken-roman.woff2").read_bytes()).decode()}) format("woff2")}}
 html,body{{margin:0}}
-body{{width:1200px;height:630px;background:radial-gradient(900px 520px at 18% 0%,#1d3a2b 0%,rgba(13,12,10,0) 70%),radial-gradient(700px 500px at 100% 100%,rgba(201,168,76,.22),rgba(13,12,10,0) 70%),{INK};color:#f4efe3;font-family:Instrument,serif;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}}
-.hex{{position:absolute;inset:0;background:url("{HEX_BG}") 0 0/72px 125px;opacity:.13;-webkit-mask-image:radial-gradient(ellipse 75% 85% at 50% 50%,transparent 30%,#000 100%)}}
-.frame{{position:absolute;inset:26px;border:1px solid rgba(214,172,79,.4);border-radius:28px}}
-svg.logo{{height:200px;position:relative;filter:drop-shadow(0 8px 30px rgba(201,168,76,.28))}}
-.rule{{display:flex;align-items:center;gap:14px;margin-top:30px;position:relative}}.rule i{{display:block;width:150px;height:1px;background:linear-gradient(90deg,transparent,{GOLD})}}.rule i:last-child{{transform:scaleX(-1)}}.rule b{{display:block;width:9px;height:9px;transform:rotate(45deg);background:{GOLD}}}
-h1{{font-weight:400;font-size:64px;line-height:1;margin:26px 0 0;position:relative}}h1 em{{color:{GOLD_LIGHT}}}
-p{{font:500 22px/1 Inter,system-ui,sans-serif;letter-spacing:.34em;text-transform:uppercase;color:rgba(244,239,227,.72);margin:26px 0 0;position:relative}}
-</style><div class="hex"></div><div class="frame"></div>
-{logo_svg(L, "fine", ' class="logo"')}
-<div class="rule"><i></i><b></b><i></i></div>
-<h1>Le CBD premium du <em>Haut-Doubs</em></h1>
-<p>Fleurs · Résines · Huiles · Vape — Livraison France</p>"""
+body{{width:1200px;height:630px;background:radial-gradient(520px 520px at 915px 315px,{GREEN} 0%,{GREEN_DEEP} 100%);color:{PAPER};font-family:Hanken,sans-serif;position:relative;overflow:hidden}}
+.g{{position:absolute;left:465px;top:-135px;width:900px;height:900px;background:{GOLD};opacity:.42;-webkit-mask:url("{data_uri(guilloche)}") center/contain no-repeat}}
+.verre{{position:absolute;left:735px;top:135px;width:360px;height:360px;border-radius:50%;background:#e9dfc6 url(data:image/jpeg;base64,{photo}) center/cover;background-blend-mode:multiply;box-shadow:0 0 0 2px {GOLD},0 0 0 9px {GREEN_DEEP},0 0 0 10px rgba(215,181,101,.6)}}
+.rule{{position:absolute;left:0;right:0;height:4px;border-top:1px solid rgba(215,181,101,.85);border-bottom:1px solid rgba(215,181,101,.4)}}
+.in{{position:absolute;left:78px;top:92px;bottom:88px;width:640px;display:flex;flex-direction:column;justify-content:space-between}}
+svg.logo{{height:66px;align-self:flex-start}}
+h1{{font:300 98px/0.93 Fraunces,serif;letter-spacing:-0.035em;font-variation-settings:"SOFT" 100,"opsz" 144;margin:0}}
+p{{font:400 25px/1.35 Hanken,sans-serif;color:rgba(242,234,214,.82);margin:0}}
+</style><div class="g"></div><div class="verre"></div>
+<div class="rule" style="top:34px"></div><div class="rule" style="bottom:34px"></div>
+<div class="in">{logo_svg(L, "fine", ' class="logo"')}
+<h1>Du bon CBD.<br>À la bonne heure.</h1>
+<p>Fleurs, résines, huiles et vape analysés en laboratoire.<br>Livraison en France, distributeurs ouverts 24 h/24.</p></div>"""
 
 
 async def render(jobs):
     """jobs : liste de (html ou data-uri, largeur, hauteur, chemin, transparent)."""
     from playwright.async_api import async_playwright
     async with async_playwright() as p:
-        browser = await p.chromium.launch()
+        # CBDOUX_CHROME : chemin d'un Chrome déjà installé (sinon, le Chromium de Playwright)
+        browser = await p.chromium.launch(executable_path=os.environ.get("CBDOUX_CHROME") or None)
         for src, w, h, out, transparent in jobs:
             page = await browser.new_page(viewport={"width": w, "height": h})
             if src.lstrip().startswith("<svg"):
                 src = f'<!doctype html><style>html,body{{margin:0;background:transparent}}svg{{display:block;width:{w}px;height:{h}px}}</style>{src}'
             await page.set_content(src)
-            await page.wait_for_timeout(250)
+            await page.wait_for_timeout(600)
             await page.screenshot(path=str(out), omit_background=transparent, clip={"x": 0, "y": 0, "width": w, "height": h})
             await page.close()
         await browser.close()

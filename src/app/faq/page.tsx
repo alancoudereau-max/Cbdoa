@@ -3,8 +3,7 @@ import Link from "next/link";
 import { homeFaq, shippingFaq } from "@/data/faq";
 import { categoryFaq } from "@/data/category-faq";
 import { categories, categoryOrder } from "@/data/products";
-import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { PageHero } from "@/components/ui/PageHero";
 import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, faqJsonLd } from "@/lib/seo";
@@ -24,17 +23,28 @@ export default function FaqPage() {
   ];
   const all = groups.flatMap((g) => g.items);
   return (
-    <div className="mx-auto max-w-[1100px] px-5 sm:px-8 lg:px-12 py-10 sm:py-14">
+    <div>
       <JsonLd data={faqJsonLd(all)} />
-      <Breadcrumbs items={[{ name: "FAQ", path: "/faq" }]} className="mb-8" />
-      <SectionHeading as="h1" kicker="Questions fréquentes" title="Tout ce qu'il" italic="faut savoir." className="mb-12">
-        Vous ne trouvez pas votre réponse ? <Link href="/contact" className="text-gold underline underline-offset-2">Écrivez-nous</Link>, nous répondons 7 j/7.
-      </SectionHeading>
-      <div className="space-y-12">
+      <PageHero
+        crumbs={[{ name: "FAQ", path: "/faq" }]}
+        title="Tout ce qu'il faut savoir"
+        lead={
+          <>
+            Vous ne trouvez pas votre réponse ?{" "}
+            <Link href="/contact" className="link">
+              Écrivez-nous
+            </Link>
+            , nous répondons 7 jours sur 7.
+          </>
+        }
+      />
+      <div className="paper">
         {groups.map((g) => (
-          <section key={g.title}>
-            <h2 className="font-serif text-3xl mb-5">{g.title}</h2>
-            <Faq items={g.items} withJsonLd={false} />
+          <section key={g.title} className="wrap grid gap-6 border-b border-foreground/20 py-14 last:border-b-0 sm:py-20 lg:grid-cols-12 lg:gap-10">
+            <h2 className="t-h3 lg:col-span-4">{g.title}</h2>
+            <div className="lg:col-span-7 lg:col-start-6">
+              <Faq items={g.items} withJsonLd={false} />
+            </div>
           </section>
         ))}
       </div>

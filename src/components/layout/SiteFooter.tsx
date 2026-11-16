@@ -1,109 +1,72 @@
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
-import { MapPin, Clock, Mail, MessageCircle, ShieldCheck, Truck, Lock, FlaskConical } from "lucide-react";
 import { site, footerNav, company } from "@/data/site";
 
-const trust = [
-  { icon: Truck, t: "Expédition 24/48 h", d: "Partout en France, colis neutre" },
-  { icon: Lock, t: "Paiement sécurisé", d: "Lien de paiement CB (Shine) ou virement, après confirmation" },
-  { icon: FlaskConical, t: "Analyses labo", d: "THC < 0,3 %, COA consultables" },
-  { icon: ShieldCheck, t: "Vendeur français", d: "SARL SMART VEND · Haut-Doubs" },
-];
+const columns = [
+  { title: "Boutique", links: footerNav.boutique },
+  { title: "Infos pratiques", links: footerNav.infos },
+  { title: "La maison", links: footerNav.maison },
+  { title: "Légal", links: footerNav.legal },
+] as const;
 
 export function SiteFooter() {
   return (
-    <footer className="relative grain border-t border-foreground/10 bg-card/40 mt-24">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="orb orb-gold w-[400px] h-[400px] -bottom-32 -right-20 opacity-20" />
-        <div className="hex-lines" style={{ "--hex-x": "0%", "--hex-y": "100%" } as CSSProperties} />
-      </div>
+    <footer className="nuit relative overflow-hidden">
+      <div aria-hidden className="guilloche guilloche-rosace opacity-[0.1] w-[130vw] sm:w-[900px] -right-[60vw] sm:-right-72 -top-[30vw] sm:-top-64" />
 
-      {/* Réassurance */}
-      <div className="relative border-b border-foreground/10">
-        <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 py-8 grid grid-cols-2 lg:grid-cols-4 gap-6">
-          {trust.map(({ icon: Icon, t, d }) => (
-            <div key={t} className="flex items-start gap-3">
-              <Icon className="text-gold shrink-0 mt-0.5" size={20} />
-              <div>
-                <p className="text-sm font-medium">{t}</p>
-                <p className="text-xs text-foreground/55 mt-0.5">{d}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="relative wrap">
+        <div aria-hidden className="rule-double" />
       </div>
-
-      <div className="relative mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 py-16">
-        <div className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <Logo weight="fine" className="h-14 mb-6" />
-            <p className="font-serif text-3xl leading-[1] mb-4">
-              La douceur<br />
-              <span className="font-serif-italic text-foreground/55">du Haut-Doubs.</span>
+      <div className="relative wrap pt-20 sm:pt-28">
+        <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
+          <div className="lg:col-span-5">
+            <p className="t-h2">La douceur du Haut-Doubs.</p>
+            <p className="mt-6 measure text-foreground/75">
+              Du CBD choisi avec soin et analysé en laboratoire. Expédié partout en France en colis neutre, à retirer à Damprichard et au Russey, ou servi jour et nuit par nos distributeurs de Charquemont et du Russey.
             </p>
-            <p className="text-sm text-foreground/65 max-w-sm leading-relaxed">
-              CBD premium sélectionné et testé en laboratoire. Expédition discrète partout en France, retrait à Damprichard
-              et au Russey, distributeurs automatiques 24/7 à Charquemont et au Russey.
-            </p>
-            <div className="mt-6 space-y-2 text-xs text-foreground/55">
-              <p className="flex items-center gap-2">
-                <MapPin size={12} className="text-gold" /> Damprichard · Le Russey · Charquemont · Maîche
-              </p>
-              <p className="flex items-center gap-2">
-                <Clock size={12} className="text-gold" /> Distributeurs 24 h/24 — 7 j/7
-              </p>
-              <a href={`mailto:${site.email}`} className="flex items-center gap-2 hover:text-gold">
-                <Mail size={12} className="text-gold" /> {site.email}
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                WhatsApp {site.phoneDisplay}
               </a>
-              <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-gold">
-                <MessageCircle size={12} className="text-gold" /> WhatsApp · {site.phoneDisplay}
+              <a href={`mailto:${site.email}`} className="btn btn-ghost">
+                {site.email}
               </a>
             </div>
           </div>
 
-          <FooterColumn title="Boutique" links={footerNav.boutique} />
-          <FooterColumn title="Infos pratiques" links={footerNav.infos} />
-          <FooterColumn title="La maison" links={footerNav.maison} />
-          <FooterColumn title="Légal" links={footerNav.legal} />
+          <nav aria-label="Pied de page" className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4 lg:col-span-7 lg:pl-8">
+            {columns.map((col) => (
+              <div key={col.title}>
+                <h2 className="font-sans text-[0.9375rem] font-semibold tracking-normal text-or">{col.title}</h2>
+                <ul className="mt-4 space-y-2.5 text-[0.9375rem]">
+                  {col.links.map((l) => (
+                    <li key={l.href}>
+                      <Link href={l.href} className="text-foreground/75 transition-colors hover:text-foreground">
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
         </div>
 
-        <div className="mt-14 rounded-2xl border border-gold/20 bg-background/60 px-5 py-4 text-[11px] leading-relaxed text-foreground/55">
-          <strong className="text-foreground/75">Avertissement.</strong> Produits réservés aux personnes majeures (18+). Nos produits
-          contiennent moins de 0,3 % de THC conformément à la réglementation française. Ils ne sont pas des médicaments et ne sont
-          destinés ni à diagnostiquer, ni à traiter, ni à prévenir une quelconque maladie. Déconseillés aux femmes enceintes ou
-          allaitantes. Ne pas conduire après consommation. Fleurs et résines destinées à la vaporisation — non
-          destinées à la combustion ni à un usage alimentaire. Huiles à usage cutané exclusivement.
-        </div>
-
-        <div className="mt-8 pt-6 border-t border-foreground/10 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between font-mono text-[10px] uppercase tracking-[0.15em] text-foreground/45">
-          <p>
-            © {new Date().getFullYear()} {site.name} · {company.legalName} ({company.legalForm}) · SIREN {company.siren}
+        <div className="mt-16 border-t border-foreground/15 pt-8 grid gap-8 lg:grid-cols-12 lg:gap-10">
+          <p className="t-fine lg:col-span-7">
+            <strong className="text-foreground/90">Avertissement.</strong> Produits réservés aux personnes majeures. Ils contiennent moins de 0,3 % de THC, conformément à la réglementation française. Ils ne sont pas des médicaments et ne sont destinés ni à diagnostiquer, ni à traiter, ni à prévenir une quelconque maladie. Déconseillés aux femmes enceintes ou allaitantes. Ne pas conduire après usage. Fleurs et résines destinées à la vaporisation, non à la combustion ni à un usage alimentaire. Huiles à usage cutané exclusivement.
           </p>
-          <p>Commande par WhatsApp · Paiement par lien sécurisé CB ou virement</p>
+          <p className="t-fine lg:col-span-5 lg:pl-8">
+            Commande par WhatsApp, paiement par lien sécurisé (carte bancaire) ou virement, après confirmation.
+            <br />© {new Date().getFullYear()} {site.name}, nom commercial de {company.legalName} ({company.legalForm}), SIREN {company.siren}.
+          </p>
         </div>
       </div>
-      {/* Grand filigrane : le logo en version filaire */}
-      <div aria-hidden data-reveal="up" className="relative px-3 pb-20 sm:px-8 sm:pb-6 opacity-45">
-        <Logo outline weight="fine" className="mx-auto h-auto w-full max-w-[1300px]" />
+
+      {/* Le logo en grand, gravé au trait */}
+      <div aria-hidden className="relative wrap pt-14 pb-24 sm:pb-10 opacity-60">
+        <Logo outline weight="fine" className="h-auto w-full" />
       </div>
     </footer>
-  );
-}
-
-function FooterColumn({ title, links }: { title: string; links: ReadonlyArray<{ href: string; label: string }> }) {
-  return (
-    <div className="lg:col-span-2">
-      <h2 className="font-mono text-[10px] uppercase tracking-[0.22em] text-gold mb-5">{title}</h2>
-      <ul className="space-y-2.5 text-sm">
-        {links.map((l) => (
-          <li key={l.href}>
-            <Link href={l.href} className="text-foreground/75 hover:text-gold transition-colors">
-              {l.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }

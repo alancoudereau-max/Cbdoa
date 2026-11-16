@@ -69,11 +69,13 @@ Dans Claude : **Paramètres → Connecteurs → GitHub → Connecter**, avec le 
 
 ### Identité visuelle (logo, couleurs, animations)
 
-- **Logo** : redessiné en tracés vectoriels en novembre 2026 (« CBD », la rosace à huit pétales à la place du « o », « ux » en italique), sans fond : il se pose sur toutes les pages. Composants `Logo`, `Rosette`, `Ornament` et `HexOrnament` dans `src/components/brand/Logo.tsx`.
+- **Logo** : redessiné en tracés vectoriels en novembre 2026 (« CBD », la rosace à huit pétales à la place du « o », « ux » en italique), sans fond : il se pose sur toutes les pages. Composants `Logo` et `Rosette` dans `src/components/brand/Logo.tsx`.
 - **Tout régénérer** (logo, icônes d'onglet et d'application, image de partage, bandeau) : `python3 scripts/build-brand.py` (les réglages sont en tête du script). Ne pas modifier `src/components/brand/logo-data.ts` à la main.
 - **Fichiers du logo pour l'extérieur** (photo de profil, bandeau, planche de présentation) : `python3 scripts/build-brand-kit.py`. **Carte « Votre avis compte »** à coller sur un distributeur (QR code vers le formulaire d'avis Google) : `python3 scripts/build-review-card.py "<lien d'avis>" "<lieu>"` ; le lien d'avis est le champ `reviewUrl` de `src/data/site.ts`. Ces fichiers ne sont pas publiés sur le site.
-- **Codes repris de l'enseigne** : bandeau vert liseré d'or (`.band-green`, `.band-rules`), carte « écrin » verte (`.card-emerald`), alvéoles dorées (`.hex-lines`), bon de bienvenue (`.coupon`) ; le tout dans `src/app/globals.css`.
-- **Animations** : pilotées par `src/components/motion/MotionRoot.tsx`. Rien n'est masqué sans JavaScript, et le réglage « réduire les animations » du téléphone les coupe toutes.
+- **Direction « le cadran et l'étiquette »** (novembre 2026) : fond vert sapin de l'enseigne, papier crème de l'étiquette des flacons pour tout ce qui se lit ou se remplit (fiches produit, formulaires, bon de bienvenue), filets d'or, gravure « guilloché » des cadrans de montre en fond. Les couleurs et les tailles sont réglées en tête de `src/app/globals.css` ; le détail est dans le `README.md` (« Direction artistique »).
+- **Polices** : Fraunces (titres) et Hanken Grotesk (texte), hébergées sur le site (`src/fonts/`). L'apostrophe droite du clavier s'affiche d'elle-même en apostrophe typographique : rien à faire en écrivant les textes.
+- **Photos produit** : sur fond blanc, elles se fondent dans le papier de la fiche. Pour une photo prise sur un fond gris : `python3 -I scripts/normalize-product-photos.py public/images/products/ma-photo.jpg`, puis donner un nouveau nom au fichier.
+- **Animations** : une seule séquence d'ouverture, sur l'accueil (le titre monte, le cadran se pose, l'index rejoint l'heure réelle) ; ailleurs, le mouvement répond à un geste (menu, panier, jauge des forces). Feuille de style `src/app/globals.css`, déclencheurs dans `src/components/motion/`. Rien n'est masqué sans JavaScript, et le réglage « réduire les animations » du téléphone les coupe toutes.
 - **Photos des distributeurs** : `public/images/distributeurs/` (photos réelles, sans personne reconnaissable ni plaque d'immatriculation). **Vidéos en boucle** : `public/videos/loops/` (moins de 600 Ko chacune, sans son).
 
 ## 6. Au quotidien
@@ -90,4 +92,5 @@ Dans Claude : **Paramètres → Connecteurs → GitHub → Connecter**, avec le 
 
 - Aucune donnée client n'est stockée sur le site : le panier reste sur le téléphone du client, la commande vit dans WhatsApp et dans votre facturation.
 - Le code est sauvegardé sur GitHub avec tout son historique (y compris l'ancienne version avec paiement en ligne, si vous souhaitez y revenir un jour).
+- La présentation précédente du site (fond noir et or, jusqu'au 16/11/2026) est conservée dans cet historique : pour y revenir, demandez à Claude d'annuler la refonte « le cadran et l'étiquette » (une seule modification à défaire, les produits et les textes ne sont pas touchés).
 - Aucune clé ni mot de passe dans le dépôt.

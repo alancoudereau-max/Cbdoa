@@ -164,7 +164,7 @@ export const forceLabels: Record<Force, { label: string; short: string; descript
 
 const DRIVING = "Déconseillé avant de conduire ou d'utiliser des machines.";
 const MAXI_WARNING =
-  "Force Maxi — très petite quantité, attendez les effets avant toute nouvelle prise. Ne conduisez pas et n'utilisez pas de machines après usage.";
+  "Force Maxi : très petite quantité, attendez les effets avant toute nouvelle prise. Ne conduisez pas et n'utilisez pas de machines après usage.";
 
 /** Fabrique les variantes classiques fleur/résine : prix au gramme + prix 10 g pour chaque force. */
 function tiers(
@@ -237,7 +237,7 @@ export const products: Product[] = [
     aromas: "Citron vert acidulé, bonbon citron, Haze épicée, pointe diesel citronnée.",
     profile: "Profil vif et tonique, apprécié en journée pour un moment de détente lucide.",
     usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
-    image: "/images/products/super-lemon-haze-hydro-usa.jpg",
+    image: "/images/products/super-lemon-haze-hydro-usa-2.jpg",
     variants: tiers("SLH", [
       { force: 1, cbdInfo: "Indoor 24 % CBD", perGram: 600, per10g: 5500 },
       { force: 2, cbdInfo: "24 % + ~10 % CBD renforcé", perGram: 800, per10g: 7500 },
@@ -306,7 +306,7 @@ export const products: Product[] = [
     aromas: "Orange clémentine, fruits sucrés, crème dessert, floral Haze.",
     profile: "Profil gourmand et équilibré, pour un moment de détente positive.",
     usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
-    image: "/images/products/cali-fruit-indoor.jpg",
+    image: "/images/products/cali-fruit-indoor-2.jpg",
     variants: tiers("CALI", [
       { force: 1, cbdInfo: "Indoor 18 % CBD", perGram: 500, per10g: 4500 },
       { force: 2, cbdInfo: "18 % + ~10 % CBD renforcé", perGram: 650, per10g: 6000 },
@@ -329,7 +329,7 @@ export const products: Product[] = [
     aromas: "Fruits rouges mûrs, baies sucrées, citron acidulé, fond terreux boisé.",
     profile: "Profil doux et enveloppant, apprécié en fin de journée.",
     usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
-    image: "/images/products/critical-berry-indoor-usa.jpg",
+    image: "/images/products/critical-berry-indoor-usa-2.jpg",
     variants: tiers("CRB", [
       { force: 1, cbdInfo: "Indoor 21 % CBD", perGram: 500, per10g: 4500 },
       { force: 2, cbdInfo: "21 % + ~10 % CBD renforcé", perGram: 650, per10g: 6000 },
@@ -413,7 +413,7 @@ export const products: Product[] = [
     usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/californienne-indoor-small-buds.jpg",
     video: "/videos/californienne-indoor-small-buds.mp4",
-    variants: maxiTiers("CALSB", "Force Maxi — concentration maximale"),
+    variants: maxiTiers("CALSB", "Concentration maximale"),
     keywords: ["small buds cbd", "fleur cbd pas cher", "fleur cbd maxi", "petites têtes cbd"],
   },
   {
@@ -510,7 +510,7 @@ export const products: Product[] = [
     usage: "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/beldia.jpg",
     video: "/videos/beldia.mp4",
-    variants: maxiTiers("BELD", "Force Maxi — concentration maximale"),
+    variants: maxiTiers("BELD", "Concentration maximale"),
     keywords: ["beldia cbd", "résine cbd traditionnelle", "résine cbd maxi", "hash cbd puissant"],
   },
   {
@@ -530,9 +530,9 @@ export const products: Product[] = [
     aromas: "Résineux et rond ; profil précis variable selon le lot.",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
     usage: "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.",
-    image: "/images/products/piatella.jpg",
+    image: "/images/products/piatella-2.jpg",
     video: "/videos/piatella.mp4",
-    variants: maxiTiers("PIAT", "Force Maxi — concentration maximale"),
+    variants: maxiTiers("PIAT", "Concentration maximale"),
     keywords: ["piatella cbd", "résine cbd premium", "résine cbd maxi"],
   },
 
@@ -552,7 +552,7 @@ export const products: Product[] = [
     usage: "Application cutanée uniquement (massage ciblé, peau). Ne pas ingérer.",
     image: "/images/products/huile-full-spectrum-10.jpg",
     variants: [
-      { sku: "HUILE-10", tier: "unique", tierLabel: "Full Spectrum 10 %", force: 1, format: "Flacon 30 ml", grams: 80, priceCents: 1500, cbdInfo: "10 % Full Spectrum — usage cutané" },
+      { sku: "HUILE-10", tier: "unique", tierLabel: "Full Spectrum 10 %", force: 1, format: "Flacon 30 ml", grams: 80, priceCents: 1500, cbdInfo: "10 % Full Spectrum, usage cutané" },
     ],
     keywords: ["huile cbd 10", "huile cbd full spectrum 10", "huile cbd massage", "huile cbd 30 ml"],
   },
@@ -572,7 +572,7 @@ export const products: Product[] = [
     usage: "Application cutanée uniquement (massage ciblé, peau). Ne pas ingérer.",
     image: "/images/products/huile-full-spectrum-20.jpg",
     variants: [
-      { sku: "HUILE-20", tier: "unique", tierLabel: "Full Spectrum 20 %", force: 2, format: "Flacon 30 ml", grams: 80, priceCents: 3000, cbdInfo: "20 % Full Spectrum — usage cutané" },
+      { sku: "HUILE-20", tier: "unique", tierLabel: "Full Spectrum 20 %", force: 2, format: "Flacon 30 ml", grams: 80, priceCents: 3000, cbdInfo: "20 % Full Spectrum, usage cutané" },
     ],
     keywords: ["huile cbd 20", "huile cbd full spectrum 20", "huile cbd forte", "huile cbd massage"],
   },

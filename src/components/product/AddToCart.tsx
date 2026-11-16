@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Minus, Plus, ShoppingBag, AlertTriangle, Check, ShieldAlert } from "lucide-react";
+import { Minus, Plus, AlertTriangle } from "lucide-react";
 import { type Product, type Variant, forceLabels, type TierKey } from "@/data/products";
 import { useCart } from "@/lib/cart-store";
 import { formatEUR, cn } from "@/lib/utils";
@@ -80,131 +80,98 @@ export function AddToCart({ product, availability }: { product: Product; availab
   };
 
   return (
-    <div className="rounded-2xl border border-gold/25 bg-card/60 overflow-hidden">
-      {/* Choix de la force */}
-      {tiers.length > 1 && (
-        <div className="px-5 pt-5">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55 mb-2.5">Force</p>
-          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Force">
-            {tiers.map(([key, vs]) => {
-              const f = vs[0].force;
-              const active = key === tier;
+    <div className="paper paper-object">
+      <div className="space-y-6 p-5 sm:p-7">
+        {/* Choix de la force */}
+        {tiers.length > 1 && (
+          <div>
+            <p className="field-label">Force</p>
+            <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Force">
+              {tiers.map(([key, vs]) => {
+                const f = vs[0].force;
+                const active = key === tier;
+                return (
+                  <button key={key} type="button" role="radio" aria-checked={active} onClick={() => setTier(key)} className="choice choice-pill px-4 py-2 text-[0.9375rem]">
+                    <span className="font-medium">{forceLabels[f].label}</span>
+                    <span className="ml-2 text-[0.8125rem] opacity-70">{vs[0].cbdInfo}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Choix du format */}
+        <div>
+          <p className="field-label">Format</p>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="radiogroup" aria-label="Format">
+            {formats.map((v) => {
+              const active = v.sku === sku;
+              const ok = availability[v.sku] !== false;
+              const pg = v.grams > 1 && /g$/.test(v.format) ? v.priceCents / v.grams : null;
               return (
-                <button
-                  key={key}
-                  type="button"
-                  role="radio"
-                  aria-checked={active}
-                  onClick={() => setTier(key)}
-                  className={cn(
-                    "rounded-full border px-3.5 py-2 text-sm transition-colors",
-                    active ? "border-gold bg-gold/10 text-gold" : "border-foreground/15 text-foreground/75 hover:border-foreground/40",
-                  )}
-                >
-                  {forceLabels[f].label}
-                  <span className="ml-1.5 text-[11px] text-foreground/45">{vs[0].cbdInfo}</span>
+                <button key={v.sku} type="button" role="radio" aria-checked={active} disabled={!ok} onClick={() => setSku(v.sku)} className="choice t-num px-3.5 py-3">
+                  <span className="block font-medium">{v.format}</span>
+                  <span className="block">{formatEUR(v.priceCents)}</span>
+                  {pg !== null && <span className="block text-[0.75rem] opacity-70">{formatEUR(Math.round(pg))} le gramme</span>}
+                  {!ok && <span className="block text-[0.75rem] opacity-70">Épuisé</span>}
                 </button>
               );
             })}
           </div>
         </div>
-      )}
 
-      {/* Choix du format */}
-      <div className="px-5 pt-5">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55 mb-2.5">Format</p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2" role="radiogroup" aria-label="Format">
-          {formats.map((v) => {
-            const active = v.sku === sku;
-            const ok = availability[v.sku] !== false;
-            const pg = v.grams > 1 && /g$/.test(v.format) ? v.priceCents / v.grams : null;
-            return (
-              <button
-                key={v.sku}
-                type="button"
-                role="radio"
-                aria-checked={active}
-                disabled={!ok}
-                onClick={() => setSku(v.sku)}
-                className={cn(
-                  "rounded-xl border px-3 py-2.5 text-left transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
-                  active ? "border-gold bg-gold/10" : "border-foreground/15 hover:border-foreground/40",
-                )}
-              >
-                <span className="block text-sm font-medium">{v.format}</span>
-                <span className="block text-sm text-gold">{formatEUR(v.priceCents)}</span>
-                {pg !== null && <span className="block text-[10px] text-foreground/45">{formatEUR(Math.round(pg))}/g</span>}
-                {!ok && <span className="block text-[10px] text-foreground/45">Épuisé</span>}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Infos variante */}
-      <div className="px-5 pt-4 flex flex-wrap items-center gap-2">
-        <ForceBadge force={variant.force} size="xs" />
-        <span className="text-xs text-foreground/55">{variant.cbdInfo}</span>
-        <span className="text-xs text-foreground/55">· THC &lt; 0,3 %</span>
-      </div>
-      {variant.warning && (
-        <p className="mx-5 mt-3 inline-flex items-start gap-2 rounded-lg bg-danger-soft px-3 py-2 text-xs text-red-200 leading-snug">
-          <AlertTriangle size={14} className="shrink-0 mt-0.5" /> {variant.warning}
+        {/* Ce que contient la variante choisie */}
+        <p className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[0.875rem] text-foreground/80">
+          <ForceBadge force={variant.force} />
+          <span>{variant.cbdInfo}</span>
+          <span>THC &lt; 0,3 %</span>
         </p>
-      )}
 
-      {/* Prudence (produits forts) */}
-      {ackLoaded && strong && (
-        <label className={cn("mx-5 mt-4 flex items-start gap-3 rounded-xl border px-3.5 py-3 cursor-pointer transition-colors", ack ? "border-gold/40 bg-gold/5" : "border-red-400/40 bg-red-400/10")}>
-          <input type="checkbox" checked={ack} onChange={(e) => onAck(e.target.checked)} className="mt-0.5 h-4 w-4 accent-[oklch(0.82_0.14_80)]" />
-          <span className="text-xs leading-snug text-foreground/85 inline-flex items-start gap-1.5">
-            <ShieldAlert size={14} className="text-gold shrink-0 mt-0.5" />
-            <span>
+        {variant.warning && (
+          <p className="flex items-start gap-2.5 text-[0.875rem] leading-snug text-danger">
+            <AlertTriangle aria-hidden size={16} className="mt-0.5 shrink-0" /> <span>{variant.warning}</span>
+          </p>
+        )}
+
+        {/* Prudence (produits forts) */}
+        {ackLoaded && strong && (
+          <label className={cn("flex cursor-pointer items-start gap-3 rounded-[3px] border px-3.5 py-3 transition-colors", ack ? "border-foreground/30" : "border-danger bg-danger-soft")}>
+            <input type="checkbox" checked={ack} onChange={(e) => onAck(e.target.checked)} className="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 accent-[#12372a]" />
+            <span className="text-[0.875rem] leading-snug">
               J'ai lu les{" "}
-              <Link href="/conseils-prudence" className="underline decoration-gold/60 hover:text-gold">
+              <Link href="/conseils-prudence" className="link">
                 conseils de prudence
               </Link>{" "}
               : produit à concentration élevée, réservé aux adultes habitués, très petite quantité pour commencer, pas de conduite après usage.
             </span>
-          </span>
-        </label>
-      )}
+          </label>
+        )}
+      </div>
 
-      {/* Prix + quantité + CTA */}
-      <div className="mt-5 border-t border-gold/15 bg-background/40 px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-4">
-        <div className="flex-1">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/50">Total</p>
-          <p className="font-serif text-3xl text-gradient-gold leading-none mt-1">{formatEUR(variant.priceCents * qty)}</p>
-          {perGram !== null && <p className="text-[11px] text-foreground/45 mt-1">soit {formatEUR(Math.round(perGram))}/g</p>}
+      {/* Prix, quantité, ajout au panier */}
+      <div aria-hidden className="rule-double" />
+      <div className="p-5 sm:p-7">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <p className="t-fine">Total</p>
+            <p className="t-num mt-0.5 font-serif text-[2.25rem] font-light leading-none tracking-[-0.02em]">{formatEUR(variant.priceCents * qty)}</p>
+            {perGram !== null && <p className="t-fine t-num mt-1.5">soit {formatEUR(Math.round(perGram))} le gramme</p>}
+          </div>
+          <div className="inline-flex shrink-0 items-center rounded-full border border-foreground/35">
+            <button type="button" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Diminuer la quantité" className="flex h-12 w-11 items-center justify-center">
+              <Minus aria-hidden size={15} />
+            </button>
+            <span className="t-num w-7 text-center font-medium" aria-live="polite">
+              {qty}
+            </span>
+            <button type="button" onClick={() => setQty(Math.min(20, qty + 1))} aria-label="Augmenter la quantité" className="flex h-12 w-11 items-center justify-center">
+              <Plus aria-hidden size={15} />
+            </button>
+          </div>
         </div>
-        <div className="inline-flex items-center rounded-full border border-foreground/20 self-start sm:self-auto">
-          <button type="button" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Diminuer la quantité" className="h-11 w-11 flex items-center justify-center hover:text-gold">
-            <Minus size={14} />
-          </button>
-          <span className="w-8 text-center font-mono text-sm" aria-live="polite">{qty}</span>
-          <button type="button" onClick={() => setQty(Math.min(20, qty + 1))} aria-label="Augmenter la quantité" className="h-11 w-11 flex items-center justify-center hover:text-gold">
-            <Plus size={14} />
-          </button>
-        </div>
-        <button
-          type="button"
-          onClick={onAdd}
-          disabled={!available || needsAck}
-          className="btn-gold inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold min-w-[200px]"
-        >
-          {added ? (
-            <>
-              <Check size={16} /> Ajouté !
-            </>
-          ) : !available ? (
-            "Épuisé"
-          ) : needsAck ? (
-            "Cochez la case ci-dessus"
-          ) : (
-            <>
-              <ShoppingBag size={16} /> Ajouter au panier
-            </>
-          )}
+        <button type="button" onClick={onAdd} disabled={!available || needsAck} className="btn btn-primary mt-5 w-full">
+          {added ? "Ajouté au panier" : !available ? "Épuisé" : needsAck ? "Cochez la case ci-dessus" : "Ajouter au panier"}
         </button>
       </div>
     </div>

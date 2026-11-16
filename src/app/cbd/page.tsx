@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MapPin, ArrowUpRight } from "lucide-react";
 import { cities } from "@/data/cities";
-import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { PageHero } from "@/components/ui/PageHero";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -14,36 +12,42 @@ export const metadata: Metadata = buildMetadata({
 });
 
 const modeLabel: Record<string, string> = {
-  distributeur: "Distributeur 24/7",
-  retrait: "Retrait gratuit",
-  "livraison-locale": "Livraison à domicile",
-  expedition: "Expédition 24/48 h",
+  distributeur: "Distributeur 24 h/24",
+  retrait: "retrait gratuit",
+  "livraison-locale": "livraison à domicile",
+  expedition: "expédition 24/48 h",
 };
 
 export default function CbdIndexPage() {
   return (
-    <div className="mx-auto max-w-[1200px] px-5 sm:px-8 lg:px-12 py-10 sm:py-14">
-      <Breadcrumbs items={[{ name: "CBD près de chez vous", path: "/cbd" }]} className="mb-8" />
-      <SectionHeading as="h1" kicker="Haut-Doubs · Doubs · France" title="Du CBD premium," italic="près de chez vous." className="mb-12">
-        Distributeurs 24/7, retrait gratuit, livraison à domicile dans le Haut-Doubs et expédition partout en France en 24/48 h.
-      </SectionHeading>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {cities.map((c) => (
-          <Link key={c.slug} href={`/cbd/${c.slug}`} className="lift group rounded-2xl border border-foreground/10 bg-card/50 p-6 hover:border-gold/40 transition-colors">
-            <div className="flex items-center gap-2 text-gold mb-3"><MapPin size={16} /><span className="font-mono text-[10px] uppercase tracking-[0.18em]">{c.postalCode} · {c.department}</span></div>
-            <h2 className="font-serif text-3xl leading-tight mb-3 group-hover:text-gold transition-colors">CBD à {c.name}</h2>
-            <div className="flex flex-wrap gap-1.5 mb-4">
-              {c.modes.map((m) => (
-                <span key={m} className="rounded-full border border-foreground/15 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.15em] text-foreground/65">{modeLabel[m]}</span>
-              ))}
-            </div>
-            <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/50 group-hover:text-gold">Voir <ArrowUpRight size={12} className="group-hover:rotate-45 transition-transform" /></span>
+    <div>
+      <PageHero
+        crumbs={[{ name: "CBD près de chez vous", path: "/cbd" }]}
+        title="Du CBD premium, près de chez vous"
+        lead="Distributeurs ouverts jour et nuit, retrait gratuit, livraison à domicile dans le Haut-Doubs et expédition partout en France en 24/48 h."
+      />
+      <section className="wrap pb-24">
+        <ul>
+          {cities.map((c) => (
+            <li key={c.slug} className="border-t border-foreground/15 last:border-b">
+              <Link href={`/cbd/${c.slug}`} className="group grid gap-x-10 gap-y-1.5 py-5 sm:grid-cols-[1fr_auto] sm:items-baseline sm:py-6">
+                <h2 className="softens t-h3">CBD à {c.name}</h2>
+                <p className="t-num text-[0.9375rem] text-foreground/70 sm:text-right">
+                  {c.postalCode}, {c.department}
+                </p>
+                <p className="text-[0.9375rem] text-foreground/75 sm:col-span-2 first-letter:uppercase">{c.modes.map((m) => modeLabel[m]).join(", ")}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-10 measure-wide text-foreground/75">
+          Votre ville n'est pas listée ? Nous expédions partout en France métropolitaine :{" "}
+          <Link href="/livraison" className="link">
+            voir les modes et tarifs de livraison
           </Link>
-        ))}
-      </div>
-      <p className="mt-10 text-sm text-foreground/60 max-w-2xl">
-        Votre ville n'est pas listée ? Nous expédions partout en France métropolitaine : <Link href="/livraison" className="text-gold underline underline-offset-2">voir les modes et tarifs de livraison</Link>.
-      </p>
+          .
+        </p>
+      </section>
     </div>
   );
 }

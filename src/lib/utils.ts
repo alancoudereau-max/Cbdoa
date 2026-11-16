@@ -4,6 +4,19 @@ export function cn(...classes: Array<string | false | null | undefined>): string
   return classes.filter(Boolean).join(" ");
 }
 
+/** Typographie française : pas de retour à la ligne avant « ? ! : ; » ni entre un nombre et son unité. */
+export function fr(text: string): string {
+  return text
+    .replace(/ ([?!:;»])/g, "\u00a0$1")
+    .replace(/« /g, "«\u00a0")
+    .replace(/(\d) (%|€|h\b|g\b|km\b|°C|ml\b|min\b)/g, "$1\u00a0$2");
+}
+
+/** Les énumérations « A · B » des données s'affichent « A, B ». */
+export function commas(text: string): string {
+  return text.replace(/\s·\s/g, ", ");
+}
+
 export function formatEUR(cents: number): string {
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",

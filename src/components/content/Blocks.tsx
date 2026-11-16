@@ -1,5 +1,6 @@
 import type { GuideBlock } from "@/data/guides";
 import type { LegalBlock } from "@/data/legal";
+import { fr } from "@/lib/utils";
 
 type AnyBlock = GuideBlock | LegalBlock;
 
@@ -10,12 +11,12 @@ export function Blocks({ blocks }: { blocks: AnyBlock[] }) {
       {blocks.map((b, i) => {
         switch (b.type) {
           case "p":
-            return <p key={i}>{b.text}</p>;
+            return <p key={i}>{fr(b.text)}</p>;
           case "ul":
             return (
               <ul key={i}>
                 {b.items.map((it) => (
-                  <li key={it}>{it}</li>
+                  <li key={it}>{fr(it)}</li>
                 ))}
               </ul>
             );
@@ -23,12 +24,12 @@ export function Blocks({ blocks }: { blocks: AnyBlock[] }) {
             return (
               <ol key={i}>
                 {b.items.map((it) => (
-                  <li key={it}>{it}</li>
+                  <li key={it}>{fr(it)}</li>
                 ))}
               </ol>
             );
           case "quote":
-            return <blockquote key={i}>{b.text}</blockquote>;
+            return <blockquote key={i}>{fr(b.text)}</blockquote>;
           case "table":
             return (
               <div key={i} className="overflow-x-auto max-w-full">
@@ -36,7 +37,7 @@ export function Blocks({ blocks }: { blocks: AnyBlock[] }) {
                   <thead>
                     <tr>
                       {b.headers.map((h, j) => (
-                        <th key={j}>{h}</th>
+                        <th key={j}>{fr(h)}</th>
                       ))}
                     </tr>
                   </thead>
@@ -44,7 +45,7 @@ export function Blocks({ blocks }: { blocks: AnyBlock[] }) {
                     {b.rows.map((r, j) => (
                       <tr key={j}>
                         {r.map((c, k) => (
-                          <td key={k}>{c}</td>
+                          <td key={k}>{fr(c)}</td>
                         ))}
                       </tr>
                     ))}

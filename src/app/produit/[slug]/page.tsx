@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowRight, FlaskConical, Truck, Lock, Leaf, ShieldAlert, Package } from "lucide-react";
 import { getProduct, visibleProducts, categories, forceLabels, formatPrice, maxForce } from "@/data/products";
 import { guides } from "@/data/guides";
 import { coas } from "@/data/coa";
@@ -10,11 +8,11 @@ import { AddToCart } from "@/components/product/AddToCart";
 import { ProductCard } from "@/components/product/ProductCard";
 import { ProductMedia } from "@/components/product/ProductMedia";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { ForceBadge } from "@/components/ui/ForceBadge";
 import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, productJsonLd, productSeoTitle } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
+import { commas, fr } from "@/lib/utils";
 import { categoryFaq } from "@/data/category-faq";
 
 export const dynamicParams = false;
@@ -50,161 +48,166 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const strongest = maxForce(p);
 
   return (
-    <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 py-8 sm:py-12">
+    <div>
       <JsonLd data={productJsonLd(p, { available: anyAvailable })} />
-      <Breadcrumbs
-        items={[
-          { name: "Boutique", path: "/boutique" },
-          { name: cat.name, path: `/${cat.slug}` },
-          { name: p.name, path: `/produit/${p.slug}` },
-        ]}
-        className="mb-6"
-      />
 
-      <div className="grid lg:grid-cols-12 gap-8 lg:gap-14">
-        {/* Média */}
-        <div className="lg:col-span-6">
-          <ProductMedia product={p} />
-          <ul className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-foreground/60">
-            <li className="rounded-xl border border-foreground/10 bg-card/40 px-3 py-2.5 flex items-center gap-2"><FlaskConical size={13} className="text-gold" /> THC &lt; 0,3 %</li>
-            <li className="rounded-xl border border-foreground/10 bg-card/40 px-3 py-2.5 flex items-center gap-2"><Truck size={13} className="text-gold" /> Expédié sous 24 h</li>
-            <li className="rounded-xl border border-foreground/10 bg-card/40 px-3 py-2.5 flex items-center gap-2"><Package size={13} className="text-gold" /> Colis neutre</li>
-            <li className="rounded-xl border border-foreground/10 bg-card/40 px-3 py-2.5 flex items-center gap-2"><Lock size={13} className="text-gold" /> Paiement sécurisé</li>
-          </ul>
-        </div>
+      <section className="wrap pb-16 pt-7 sm:pt-9 lg:pb-24">
+        <Breadcrumbs
+          items={[
+            { name: "Boutique", path: "/boutique" },
+            { name: cat.name, path: `/${cat.slug}` },
+            { name: p.name, path: `/produit/${p.slug}` },
+          ]}
+        />
 
-        {/* Infos & achat */}
-        <div className="lg:col-span-6">
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <Link href={`/${cat.slug}`} className="kicker hover:underline">{cat.name}</Link>
-            {p.origin && <span className="text-foreground/30">·</span>}
-            {p.origin && <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55">{p.origin}</span>}
-            {p.badge && <span className="ml-auto rounded-full border border-gold/40 bg-gold/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-gold">{p.badge}</span>}
-          </div>
-          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[0.95] mb-4">
-            <span className="text-gradient-gold">{p.name}</span>
-          </h1>
-          <p className="text-base sm:text-lg text-foreground/85 leading-relaxed mb-5">{p.short}</p>
-          <div className="flex flex-wrap items-center gap-2 mb-6">
-            {Array.from(new Set(p.variants.map((v) => v.force))).map((f) => (
-              <ForceBadge key={String(f)} force={f} />
-            ))}
+        <div className="mt-7 grid gap-9 sm:mt-10 lg:grid-cols-12 lg:gap-10">
+          {/* Média */}
+          <div className="lg:col-span-6">
+            <div className="lg:sticky lg:top-28">
+              <ProductMedia product={p} />
+              <ul className="mt-5 grid grid-cols-2 text-[0.875rem] text-foreground/80">
+                {["THC inférieur à 0,3 %", "Expédié sous 24 h", "Colis neutre", "Paiement par lien sécurisé"].map((t, n) => (
+                  <li key={t} className={`border-t border-foreground/15 py-3 ${n % 2 ? "border-l pl-4" : "pr-4"} ${n >= 2 ? "border-b" : ""}`}>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          <AddToCart product={p} availability={availability} />
+          {/* Infos & achat */}
+          <div className="lg:col-span-5 lg:col-start-8">
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.9375rem] text-foreground/75">
+              <Link href={`/${cat.slug}`} className="link">
+                {cat.name}
+              </Link>
+              {p.origin && <span>{commas(p.origin)}</span>}
+              {p.badge && <span className="pastille ml-auto">{p.badge}</span>}
+            </p>
+            <h1 className="mt-4 font-serif text-[clamp(2.3rem,5.6vw,4rem)] font-light leading-[1] tracking-[-0.03em]">{p.name}</h1>
+            <p className="t-lead mt-5">{fr(p.short)}</p>
 
-          <dl className="mt-8 grid gap-5">
-            <div>
-              <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-gold mb-1.5">Arômes</dt>
-              <dd className="text-sm text-foreground/75 leading-relaxed">{p.aromas}</dd>
+            <div className="mt-8">
+              <AddToCart product={p} availability={availability} />
             </div>
-            <div>
-              <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-gold mb-1.5">Profil</dt>
-              <dd className="text-sm text-foreground/75 leading-relaxed">{p.profile}</dd>
-            </div>
-            <div>
-              <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-gold mb-1.5">Utilisation</dt>
-              <dd className="text-sm text-foreground/75 leading-relaxed">{p.usage}</dd>
-            </div>
-          </dl>
 
-          {coa && (
-            <Link href="/analyses-laboratoires" className="mt-6 flex items-center gap-4 rounded-2xl border border-foreground/10 bg-card/40 p-4 hover:border-gold/40 transition-colors">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-gold/10 text-gold"><FlaskConical size={18} /></span>
-              <span className="flex-1 text-sm">
-                <span className="block font-medium">Analyse de laboratoire disponible</span>
-                <span className="block text-foreground/60 text-xs mt-0.5">
-                  {coa.name} · CBD {coa.cbd} · THC {coa.thc} · {coa.lab} ({coa.date})
+            <dl className="mt-9">
+              {[
+                ["Arômes", p.aromas],
+                ["Profil", p.profile],
+                ["Utilisation", p.usage],
+              ].map(([term, text]) => (
+                <div key={term} className="grid gap-x-6 gap-y-1 border-t border-foreground/15 py-4 last:border-b sm:grid-cols-[7.5rem_1fr]">
+                  <dt className="font-medium">{term}</dt>
+                  <dd className="text-[0.9688rem] leading-relaxed text-foreground/80">{fr(text)}</dd>
+                </div>
+              ))}
+            </dl>
+
+            {coa && (
+              <p className="mt-6 text-[0.9375rem]">
+                <Link href="/analyses-laboratoires" className="link font-medium">
+                  Voir l'analyse de laboratoire
+                </Link>
+                <span className="t-fine mt-1.5 block">
+                  {coa.name}, CBD {coa.cbd}, THC {coa.thc}. {coa.lab}, {coa.date}.
                 </span>
-              </span>
-              <ArrowRight size={16} className="text-gold" />
-            </Link>
-          )}
+              </p>
+            )}
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Description longue + tableau prix (SEO) */}
-      <section className="mt-16 grid lg:grid-cols-12 gap-10">
-        <div className="lg:col-span-7 prose-cbd">
-          <h2>{p.name} : la fiche complète</h2>
-          {p.description.map((para) => (
-            <p key={para}>{para}</p>
-          ))}
-          <div className="not-prose mt-6 rounded-2xl border border-red-400/30 bg-red-400/5 p-5 flex gap-3">
-            <ShieldAlert size={18} className="text-red-300 shrink-0 mt-0.5" />
-            <p className="text-xs text-foreground/70 leading-relaxed">
-              Produit réservé aux adultes. Ne pas conduire ni utiliser de machines après usage. Déconseillé aux femmes enceintes ou allaitantes et aux personnes sous traitement sans avis médical. {forceLabels[strongest].label} : {forceLabels[strongest].description} Ce produit n'est pas un médicament. <Link href="/conseils-prudence" className="underline">Conseils & prudence</Link>.
+      {/* La notice : description longue et tarifs, sur papier */}
+      <section className="wrap">
+        <div className="paper sheet grid gap-12 lg:grid-cols-12 lg:gap-10">
+          <div className="prose-cbd lg:col-span-7">
+            <h2>{fr(`${p.name} : la fiche complète`)}</h2>
+            {p.description.map((para) => (
+              <p key={para}>{fr(para)}</p>
+            ))}
+            <p className="mt-7 flex items-start gap-3 rounded-[3px] bg-danger-soft px-4 py-3.5 text-[0.875rem] leading-relaxed text-foreground">
+              <span>
+                Produit réservé aux adultes. Ne pas conduire ni utiliser de machines après usage. Déconseillé aux femmes enceintes ou allaitantes et aux personnes sous traitement sans avis médical. {forceLabels[strongest].label} : {fr(forceLabels[strongest].description)} Ce produit n'est pas un médicament. <Link href="/conseils-prudence">Conseils et prudence</Link>.
+              </span>
             </p>
           </div>
-        </div>
-        <aside className="lg:col-span-5">
-          <h2 className="font-serif text-2xl mb-4">Formats & tarifs</h2>
-          <div className="overflow-hidden rounded-2xl border border-foreground/10">
-            <table className="w-full text-sm">
-              <thead className="bg-card/60">
-                <tr className="text-left font-mono text-[10px] uppercase tracking-[0.15em] text-gold">
-                  <th className="px-4 py-3">Force</th>
-                  <th className="px-4 py-3">Format</th>
-                  <th className="px-4 py-3 text-right">Prix</th>
+          <aside className="lg:col-span-5">
+            <h2 className="t-h3">Formats et tarifs</h2>
+            <table className="mt-5 w-full text-[0.9375rem]">
+              <thead>
+                <tr className="border-b border-foreground/50 text-left text-[0.875rem]">
+                  <th className="py-2.5 pr-2 font-semibold sm:pr-3">Force</th>
+                  <th className="py-2.5 pr-2 font-semibold sm:pr-3">Format</th>
+                  <th className="py-2.5 text-right font-semibold">Prix</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-foreground/10">
+              <tbody>
                 {p.variants.map((v) => (
-                  <tr key={v.sku} className={availability[v.sku] === false ? "opacity-50" : ""}>
-                    <td className="px-4 py-3">
+                  <tr key={v.sku} className={`border-b border-foreground/20 align-top ${availability[v.sku] === false ? "opacity-50" : ""}`}>
+                    <td className="py-3 pr-2 sm:pr-3">
                       <span className="block">{v.tierLabel}</span>
-                      <span className="block text-[11px] text-foreground/50">{v.cbdInfo}</span>
+                      <span className="block text-[0.8125rem] text-foreground/65">{v.cbdInfo}</span>
                     </td>
-                    <td className="px-4 py-3">{v.format}{availability[v.sku] === false && <span className="ml-2 text-[10px] text-foreground/50">épuisé</span>}</td>
-                    <td className="px-4 py-3 text-right text-gold font-medium whitespace-nowrap">
+                    <td className="py-3 pr-2 sm:pr-3">
+                      {v.format}
+                      {availability[v.sku] === false && <span className="block text-[0.8125rem] text-foreground/65">épuisé</span>}
+                    </td>
+                    <td className="whitespace-nowrap py-3 text-right font-medium">
                       {formatPrice(v.priceCents)}
-                      {v.grams > 1 && /g$/.test(v.format) && <span className="block text-[10px] text-foreground/45 font-normal">{formatPrice(Math.round(v.priceCents / v.grams))}/g</span>}
+                      {v.grams > 1 && /g$/.test(v.format) && <span className="block text-[0.8125rem] font-normal text-foreground/65">{formatPrice(Math.round(v.priceCents / v.grams))} le gramme</span>}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-          <div className="mt-5 rounded-2xl border border-foreground/10 bg-card/40 p-5 text-sm text-foreground/70 space-y-2">
-            <p className="flex items-center gap-2"><Truck size={14} className="text-gold" /> Port Colissimo offert dès 60 € · Chronopost 24 h disponible</p>
-            <p className="flex items-center gap-2"><Leaf size={14} className="text-gold" /> Retrait gratuit à Damprichard & Le Russey</p>
-            <p className="flex items-center gap-2"><Lock size={14} className="text-gold" /> Commande par WhatsApp, paiement par lien sécurisé CB ou virement</p>
-          </div>
-        </aside>
+            <ul className="mt-6 space-y-2 text-[0.9375rem] text-foreground/85">
+              <li>Port Colissimo offert dès 60 €, Chronopost 24 h disponible.</li>
+              <li>Retrait gratuit à Damprichard et au Russey.</li>
+              <li>Commande par WhatsApp, paiement par lien sécurisé (carte) ou virement.</li>
+            </ul>
+          </aside>
+        </div>
       </section>
 
       {/* FAQ catégorie */}
-      <section className="mt-16 grid lg:grid-cols-12 gap-10">
-        <div className="lg:col-span-5">
-          <h2 className="font-serif text-3xl sm:text-4xl">Questions fréquentes<br /><span className="font-serif-italic text-foreground/55">sur nos {cat.name.charAt(0).toLowerCase() + cat.name.slice(1)}.</span></h2>
+      <section className="wrap section grid gap-10 lg:grid-cols-12 lg:gap-10">
+        <div className="lg:col-span-4">
+          <h2 className="t-h2">Questions fréquentes sur nos {cat.name.charAt(0).toLowerCase() + cat.name.slice(1)}</h2>
         </div>
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-7 lg:col-start-6">
           <Faq items={categoryFaq[p.category]} withJsonLd={false} />
         </div>
       </section>
 
       {relatedGuides.length > 0 && (
-        <section className="mt-16">
-          <h2 className="font-serif text-3xl mb-6">Nos guides pour bien choisir</h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            {relatedGuides.map((g) => (
-              <Link key={g.slug} href={`/guides/${g.slug}`} className="lift group rounded-2xl border border-foreground/10 bg-card/50 p-6 hover:border-gold/40 transition-colors">
-                <p className="kicker mb-2">{g.category}</p>
-                <h3 className="font-serif text-xl leading-tight group-hover:text-gold transition-colors">{g.title}</h3>
-                <p className="text-sm text-foreground/60 mt-2 line-clamp-2">{g.description}</p>
-              </Link>
-            ))}
+        <section className="wrap section border-t border-foreground/15 grid gap-10 lg:grid-cols-12 lg:gap-10">
+          <div className="lg:col-span-4">
+            <h2 className="t-h2">Nos guides pour bien choisir</h2>
           </div>
+          <ul className="lg:col-span-7 lg:col-start-6">
+            {relatedGuides.map((g) => (
+              <li key={g.slug} className="border-t border-foreground/15 last:border-b">
+                <Link href={`/guides/${g.slug}`} className="group block py-5">
+                  <p className="t-fine">{g.category}</p>
+                  <h3 className="softens t-title mt-1.5">{fr(g.title)}</h3>
+                  <p className="mt-2 text-[0.9375rem] text-foreground/75 line-clamp-2">{g.description}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 
       {related.length > 0 && (
-        <section className="mt-16">
-          <div className="flex items-end justify-between gap-4 mb-6">
-            <h2 className="font-serif text-3xl">À découvrir aussi</h2>
-            <Link href={`/${cat.slug}`} className="font-mono text-[10px] uppercase tracking-[0.18em] text-gold hover:underline">Toute la catégorie →</Link>
+        <section className="wrap section border-t border-foreground/15">
+          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+            <h2 className="t-h2">À découvrir aussi</h2>
+            <Link href={`/${cat.slug}`} className="link">
+              Toute la catégorie
+            </Link>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
             {related.map((r) => (
               <ProductCard key={r.slug} product={r} available={r.variants.some((v) => availability[v.sku] !== false)} />
             ))}

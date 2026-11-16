@@ -4,8 +4,8 @@
   "description": "Boutique CBD premium : fleurs, résines, huiles, vape. Livraison France 24/48 h.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0c0a",
-  "theme_color": "#0d0c0a",
+  "background_color": "#12372a",
+  "theme_color": "#12372a",
   "lang": "fr",
   "icons": [
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },

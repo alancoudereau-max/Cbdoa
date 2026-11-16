@@ -2,143 +2,173 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, type CSSProperties } from "react";
-import { Menu, X, ArrowUpRight, MessageCircle } from "lucide-react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { mainNav, site } from "@/data/site";
 import { CartButton } from "@/components/cart/CartButton";
 import { Logo } from "@/components/brand/Logo";
-import { cn } from "@/lib/utils";
+
+/** Liens secondaires du menu plein écran (les rayons de la boutique sont au-dessus, en grand). */
+const secondaryNav = [
+  { href: "/livraison", label: "Livraison et retrait" },
+  { href: "/guides", label: "Guides" },
+  { href: "/analyses-laboratoires", label: "Analyses de laboratoire" },
+  { href: "/faq", label: "Questions fréquentes" },
+  { href: "/a-propos", label: "À propos" },
+  { href: "/contact", label: "Contact" },
+];
+const primaryNav = [{ href: "/boutique", label: "Toute la boutique" }, ...mainNav.filter((l) => !["/boutique", "/livraison", "/guides"].includes(l.href))];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const openButton = useRef<HTMLButtonElement | null>(null);
+  const closeButton = useRef<HTMLButtonElement | null>(null);
+  const panel = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  useEffect(() => setOpen(false), [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    // masque le bouton WhatsApp flottant tant que le menu est ouvert (il a son propre bouton WhatsApp)
+    // masque le bouton WhatsApp flottant tant que le menu est ouvert (le menu a le sien)
     document.documentElement.toggleAttribute("data-menu-open", open);
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        openButton.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    const t = window.setTimeout(() => closeButton.current?.focus(), 80);
     return () => {
+      window.removeEventListener("keydown", onKey);
+      window.clearTimeout(t);
       document.body.style.overflow = "";
       document.documentElement.removeAttribute("data-menu-open");
     };
   }, [open]);
 
-  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const openMenu = () => {
+    // le menu s'ouvre en cercle depuis le bouton : on lui donne le centre exact du bouton
+    const r = openButton.current?.getBoundingClientRect();
+    if (r && panel.current) {
+      panel.current.style.setProperty("--mx", `${r.left + r.width / 2}px`);
+      panel.current.style.setProperty("--my", `${r.top + r.height / 2}px`);
+    }
+    setOpen(true);
+  };
+
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`));
 
   return (
     <>
-      {/* Bandeau promotionnel */}
-      <div className="band-green text-center font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.1em] sm:tracking-[0.2em] px-3 sm:px-4 py-2">
-        <div className="ticker">
-          <ul>
-            <li><Link href="/livraison" className="hover:underline underline-offset-2">Port offert dès 60 € · Expédition 24/48 h</Link></li>
-            <li><Link href="/distributeurs" className="hover:underline underline-offset-2">Distributeurs 24/7 : Charquemont et Le Russey</Link></li>
-            <li><Link href="/boutique" className="hover:underline underline-offset-2">Code BIENVENUE10 : 10 € offerts dès 100 €</Link></li>
-            <li aria-hidden><Link href="/livraison" tabIndex={-1} className="hover:underline underline-offset-2">Port offert dès 60 € · Expédition 24/48 h</Link></li>
-          </ul>
+      {/* Bandeau d'information */}
+      <div className="nuit text-[0.8125rem] leading-none">
+        <div className="wrap flex h-9 items-center justify-between gap-6">
+          <Link href="/livraison" className="truncate text-foreground/80 hover:text-foreground transition-colors">
+            Port offert dès 60 €, expédition en 24/48 h
+          </Link>
+          <Link href="/distributeurs" className="hidden md:inline-flex shrink-0 items-center gap-2.5 text-foreground/80 hover:text-foreground transition-colors">
+            <span className="live-dot" aria-hidden /> Distributeurs ouverts 24 h/24 à Charquemont et au Russey
+          </Link>
         </div>
       </div>
 
-      <header
-        className={cn(
-          "sticky top-0 z-50 transition-all duration-300 border-b",
-          scrolled || open ? "border-foreground/10 bg-background/85 backdrop-blur-xl" : "border-transparent bg-background/40 backdrop-blur-sm",
-        )}
-      >
-        <div className="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-12">
-          <div className="flex h-16 sm:h-20 items-center justify-between gap-3">
-            <Link href="/" className="flex items-center group shrink-0" aria-label="CBDoux — accueil">
-              <Logo className="h-8 sm:h-10 xl:h-9 2xl:h-10 drop-shadow-[0_0_18px_rgba(201,168,76,0.35)]" />
-            </Link>
+      <header className="site-header" data-scrolled={scrolled}>
+        <div className="wrap flex h-[var(--header-h)] items-center justify-between gap-4">
+          <Link href="/" className="group shrink-0" aria-label="CBDoux, retour à l'accueil">
+            <Logo className="h-[1.9rem] sm:h-9" />
+          </Link>
 
-            <nav aria-label="Navigation principale" className="hidden xl:flex items-center gap-0.5">
-              {mainNav.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className={cn(
-                    "px-2.5 2xl:px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] 2xl:tracking-[0.18em] whitespace-nowrap transition-colors",
-                    isActive(l.href) ? "text-gold" : "text-foreground/70 hover:text-gold",
-                  )}
-                >
-                  {l.label}
-                </Link>
-              ))}
-            </nav>
-
-            <div className="flex items-center gap-2">
-              <a
-                href={site.whatsapp}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group hidden md:inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-foreground px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] 2xl:tracking-[0.18em] text-background hover:bg-gold transition-colors"
-              >
-                <MessageCircle size={13} /> {site.phoneDisplay}
-                <ArrowUpRight size={12} className="group-hover:rotate-45 transition-transform" />
-              </a>
-              <CartButton />
-              <button
-                type="button"
-                onClick={() => setOpen((v) => !v)}
-                className="xl:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-foreground/20 text-foreground hover:border-gold hover:text-gold transition-colors"
-                aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
-                aria-expanded={open}
-                aria-controls="menu-mobile"
-              >
-                {open ? <X size={20} /> : <Menu size={20} />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Menu mobile */}
-        <div
-          id="menu-mobile"
-          className={cn(
-            "xl:hidden overflow-hidden transition-[max-height] duration-500 ease-out border-t border-foreground/10",
-            open ? "menu-open max-h-[85vh] overflow-y-auto" : "max-h-0 border-t-0",
-          )}
-        >
-          <nav aria-label="Navigation mobile" className="mx-auto max-w-[1400px] px-4 sm:px-8 py-4 flex flex-col gap-0.5">
-            {[{ href: "/", label: "Accueil" }, ...mainNav, { href: "/a-propos", label: "À propos" }, { href: "/contact", label: "Contact" }].map((l, idx) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                style={{ "--i": idx } as CSSProperties}
-                className={cn(
-                  "menu-item px-4 py-3 rounded-xl font-serif text-2xl transition-colors",
-                  isActive(l.href) && l.href !== "/" ? "text-gold bg-card" : pathname === l.href ? "text-gold bg-card" : "text-foreground/80 hover:bg-card",
-                )}
-              >
+          <nav aria-label="Navigation principale" className="hidden xl:flex items-center gap-6 2xl:gap-8">
+            {mainNav.map((l) => (
+              <Link key={l.href} href={l.href} className="nav-link" aria-current={isActive(l.href) ? "page" : undefined}>
                 {l.label}
               </Link>
             ))}
-            <a
-              href={site.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center justify-between gap-2 rounded-full bg-foreground px-5 py-3.5 font-mono text-xs uppercase tracking-[0.18em] text-background"
-            >
-              <span className="inline-flex items-center gap-2">
-                <MessageCircle size={14} /> WhatsApp · {site.phoneDisplay}
-              </span>
-              <ArrowUpRight size={14} />
-            </a>
           </nav>
+
+          <div className="flex items-center gap-2.5">
+            <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="nav-link t-num hidden md:inline-block mr-2 lg:mr-4" aria-label={`Écrire à CBDoux sur WhatsApp au ${site.phoneDisplay}`}>
+              WhatsApp {site.phoneDisplay}
+            </a>
+            <CartButton />
+            <button ref={openButton} type="button" onClick={openMenu} className="btn-round xl:hidden" aria-label="Ouvrir le menu" aria-expanded={open} aria-controls="menu">
+              <svg aria-hidden width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+                <path d="M1 1.5h16M1 10.5h16" />
+              </svg>
+            </button>
+          </div>
         </div>
+        {/* le double filet doré de l'enseigne */}
+        <div className="rule-double" aria-hidden />
       </header>
+
+      {/* Menu plein écran */}
+      <div
+        ref={panel}
+        id="menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        className="menu-panel nuit xl:hidden"
+        data-open={open}
+        style={{ "--mx": "calc(100% - 2.6rem)", "--my": "2.6rem" } as CSSProperties}
+      >
+        <div aria-hidden className="guilloche guilloche-rosace opacity-[0.13] w-[150vw] max-w-[820px] -right-[55vw] sm:-right-56 -bottom-[38vw] sm:-bottom-60" />
+        <div className="relative wrap flex min-h-full flex-col pb-10">
+          <div className="flex h-[var(--header-h)] shrink-0 items-center justify-between gap-4">
+            <Link href="/" aria-label="CBDoux, retour à l'accueil" tabIndex={open ? 0 : -1}>
+              <Logo className="h-[1.9rem] sm:h-9" />
+            </Link>
+            <button ref={closeButton} type="button" onClick={() => setOpen(false)} className="btn-round" aria-label="Fermer le menu">
+              <svg aria-hidden width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+                <path d="M1 1l12 12M13 1L1 13" />
+              </svg>
+            </button>
+          </div>
+
+          <nav aria-label="Menu principal" className="mt-6 sm:mt-10 flex-1">
+            <ul>
+              {primaryNav.map((l, idx) => (
+                <li key={l.href} className="menu-item border-b border-foreground/15 first:border-t" style={{ "--i": idx } as CSSProperties}>
+                  <Link
+                    href={l.href}
+                    aria-current={isActive(l.href) ? "page" : undefined}
+                    className="group flex items-baseline justify-between gap-4 py-3.5 font-serif font-light text-[clamp(1.85rem,8.4vw,3rem)] leading-[1.08] tracking-[-0.025em] aria-[current=page]:text-or"
+                  >
+                    <span className="softens">{l.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <ul className="menu-item mt-8 grid grid-cols-2 gap-x-6 gap-y-3 text-[0.9688rem]" style={{ "--i": primaryNav.length + 1 } as CSSProperties}>
+              {secondaryNav.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="text-foreground/80 hover:text-foreground aria-[current=page]:text-or" aria-current={isActive(l.href) ? "page" : undefined}>
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="menu-item mt-10" style={{ "--i": primaryNav.length + 3 } as CSSProperties}>
+            <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-primary w-full sm:w-auto">
+              Écrire sur WhatsApp, {site.phoneDisplay}
+            </a>
+            <p className="t-fine mt-4">Une vraie personne vous répond, 7 jours sur 7.</p>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

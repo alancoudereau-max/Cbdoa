@@ -1,10 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, PlayCircle } from "lucide-react";
 import { type Product, startingPriceLabel, maxForce, categories } from "@/data/products";
 import { ForceBadge } from "@/components/ui/ForceBadge";
-import { cn } from "@/lib/utils";
+import { cn, commas } from "@/lib/utils";
 
+/**
+ * Le nom tel qu'il s'imprime sur l'étiquette : sans tiret. La précision de rayon tombe quand la ligne
+ * du dessous la donne déjà (« Beldia — Résine » devient « Beldia »), sinon elle suit le nom
+ * (« Californienne Indoor — Small Buds » devient « Californienne Indoor Small Buds »).
+ * Le nom complet reste celui de la fiche, du panier et du lien (aria-label).
+ */
+function labelName(name: string): string {
+  const [main, suffix] = name.split(/\s+[—–]\s+/);
+  if (!suffix) return name;
+  return /^résines?$/i.test(suffix) ? main : `${main} ${suffix}`;
+}
+
+/**
+ * Carte produit en forme d'étiquette : papier crème, photo fondue dans le papier,
+ * double filet doré, nom, origine, force et prix d'appel — comme sur le flacon.
+ */
 export function ProductCard({
   product: p,
   priority = false,
@@ -21,46 +36,30 @@ export function ProductCard({
 }) {
   const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
-    <article data-reveal="up" className={cn("lift spotlight group relative flex flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-card/60 hover:border-gold/50 transition-colors", className)}>
-      <Link href={`/produit/${p.slug}`} className="absolute inset-0 z-10" aria-label={`Voir ${p.name}`} />
-      <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-black via-card-2 to-black">
+    <article className={cn("paper etiquette group", className)}>
+      <Link href={`/produit/${p.slug}`} className="absolute inset-0 z-10 rounded-[3px]" aria-label={`Voir ${p.name}`} />
+      <div className="etiquette-photo">
         <Image
           src={p.image}
           alt={`${p.name} — ${categories[p.category].name} CBDoux`}
           fill
           priority={priority}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          className={cn("on-paper object-cover", !available && "opacity-60 grayscale")}
         />
-        <div className="absolute inset-x-0 top-0 flex items-start justify-between p-3">
-          <div className="flex flex-col gap-1.5">
-            {p.badge && (
-              <span className="rounded-full bg-background/80 backdrop-blur px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-gold border border-gold/30">
-                {p.badge}
-              </span>
-            )}
-            {!available && (
-              <span className="rounded-full bg-background/85 backdrop-blur px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-foreground/70 border border-foreground/20">
-                Épuisé
-              </span>
-            )}
-          </div>
-          {p.video && <PlayCircle size={20} className="text-gold/80 drop-shadow" aria-label="Vidéo disponible" />}
+        <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2.5 sm:p-3">
+          {!available ? <span className="pastille bg-sapin text-etiquette">Épuisé</span> : p.badge ? <span className="pastille">{p.badge}</span> : <span />}
+          {p.video && <span className="pastille bg-etiquette/90 text-sapin font-medium">Vidéo</span>}
         </div>
       </div>
-      <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-gold mb-1.5">{p.origin ?? categories[p.category].name}</p>
-        <Heading className="font-serif text-xl sm:text-2xl leading-tight">{p.name}</Heading>
-        <div className="mt-2">
-          <ForceBadge force={maxForce(p)} size="xs" />
+      <div aria-hidden className="rule-double" />
+      <div className="flex flex-1 flex-col px-3.5 pb-3.5 pt-3 sm:px-5 sm:pb-5 sm:pt-4">
+        <Heading className="softens font-serif text-[1.1875rem] font-normal leading-[1.14] tracking-[-0.012em] sm:text-[1.4rem]">{labelName(p.name)}</Heading>
+        <p className="mt-1.5 text-[0.8125rem] leading-snug text-foreground/70">{commas(p.origin ?? categories[p.category].name)}</p>
+        <div className="mt-auto flex flex-wrap items-end justify-between gap-x-3 gap-y-1.5 pt-4 sm:pt-5">
+          <ForceBadge force={maxForce(p)} />
+          <p className="t-num whitespace-nowrap text-[0.9375rem] font-semibold">{startingPriceLabel(p)}</p>
         </div>
-        <p className="mt-2.5 text-sm text-foreground/65 line-clamp-2">{p.short}</p>
-        <div className="mt-auto pt-4"><div className="flex items-center justify-between border-t border-foreground/10 pt-3.5">
-          <span className="font-serif text-lg text-gold">{startingPriceLabel(p)}</span>
-          <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.15em] text-foreground/50 group-hover:text-gold transition-colors">
-            Voir <ArrowUpRight size={12} className="group-hover:rotate-45 transition-transform" />
-          </span>
-        </div></div>
       </div>
     </article>
   );

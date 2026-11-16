@@ -1,12 +1,10 @@
-import type { CSSProperties } from "react";
-import { MessageCircle } from "lucide-react";
 import { site } from "@/data/site";
 import { cn } from "@/lib/utils";
-import { HexOrnament, Logo, Ornament } from "./Logo";
+import { Logo } from "./Logo";
 
 /**
  * Plaque « Pour nous rejoindre sur WhatsApp » : la version du site de l'affichette
- * posée sur les distributeurs (fond vert profond, liseré or, alvéoles).
+ * posée sur les distributeurs (vert profond, filets dorés, gravure en fond).
  */
 export function WhatsAppPlaque({ className }: { className?: string }) {
   return (
@@ -15,22 +13,16 @@ export function WhatsAppPlaque({ className }: { className?: string }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Écrire à CBDoux sur WhatsApp au ${site.phoneDisplay}`}
-      className={cn("card-emerald spotlight group relative flex flex-col items-center justify-between gap-8 overflow-hidden rounded-2xl px-6 py-9 text-center transition-colors hover:border-gold", className)}
+      className={cn("nuit group relative block overflow-hidden rounded-[3px] px-7 py-12 text-center ring-1 ring-or/55 ring-offset-[5px] ring-offset-sapin", className)}
     >
-      <span aria-hidden className="hex-lines" style={{ "--hex-x": "50%", "--hex-y": "110%" } as CSSProperties} />
+      <span aria-hidden className="guilloche guilloche-rosace opacity-[0.14] left-1/2 top-1/2 w-[34rem] -translate-x-1/2 -translate-y-1/2" />
       <span className="relative block">
-        <Logo weight="fine" className="mx-auto h-12" />
-        <Ornament className="mt-4" />
+        <Logo weight="fine" className="mx-auto h-11" />
+        <span aria-hidden className="rule-double mx-auto mt-6 block w-20" />
+        <span className="mt-7 block text-foreground/80">Pour nous rejoindre sur WhatsApp</span>
+        <span className="softens t-num mt-3 block whitespace-nowrap font-serif text-[clamp(2.2rem,8vw,3rem)] font-light leading-none tracking-[-0.02em]">{site.phoneDisplay}</span>
+        <span className="t-fine mx-auto mt-5 block max-w-[22rem]">Conseil, commande, suivi de colis : une vraie personne vous répond, 7 jours sur 7.</span>
       </span>
-      <span className="relative block">
-        <span className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.28em] text-gold-light/85">Pour nous rejoindre sur WhatsApp</span>
-        <span className="mt-4 flex items-center justify-center gap-3">
-          <MessageCircle aria-hidden className="h-8 w-8 shrink-0 text-gold" />
-          <span className="font-serif text-[2.6rem] leading-none text-gradient-gold whitespace-nowrap">{site.phoneDisplay}</span>
-        </span>
-        <span className="mt-4 block text-sm text-foreground/70">Conseil, commande, suivi de colis : une vraie personne vous répond, 7 j/7.</span>
-      </span>
-      <HexOrnament className="relative w-52 text-gold/55 transition-colors group-hover:text-gold/80" />
     </a>
   );
 }

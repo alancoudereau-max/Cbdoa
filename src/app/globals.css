@@ -1,440 +1,446 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   CBDoux — direction artistique « Le cadran et l'étiquette » (novembre 2026)
+
+   Deux objets tirés du monde de la marque portent tout le site :
+     · le cadran 24 h — le pays horloger, les distributeurs ouverts jour et nuit, l'expédition en 24/48 h ;
+     · l'étiquette — le papier crème du flacon : tout ce qui est « imprimé » (fiches produit, bons, notices).
+   Un fond (le vert sapin de l'enseigne), un papier (crème), un métal (l'or, en filets seulement).
+   Deux familles de caractères : Fraunces (titres, dont l'axe SOFT passe du net au doux) et Hanken Grotesk (texte).
+   Alignement à gauche sur une grille de 12 colonnes ; aucun contenu n'attend un défilement ou un script pour être lisible.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @theme {
-  /* Palette — noir profond légèrement chaud + or champagne */
-  --color-background: oklch(0.115 0.006 80);
-  --color-background-soft: oklch(0.14 0.007 80);
-  --color-foreground: oklch(0.96 0.012 85);
-  --color-card: oklch(0.155 0.008 80);
-  --color-card-2: oklch(0.19 0.009 80);
-  --color-muted: oklch(0.72 0.015 85);
-  --color-muted-2: oklch(0.55 0.012 85);
-  --color-border: oklch(0.32 0.02 85 / 45%);
+  /* Palette nommée */
+  --color-sapin: #12372a;
+  --color-nuit: #0a2219;
+  --color-etiquette: #f2ead6;
+  --color-or: #d7b565;
+  --color-or-clair: #ecd9a0;
+  --color-laiton: #7a5c1a;
+  --color-braise: #b5482a;
 
-  --color-gold: oklch(0.82 0.14 80);
-  --color-gold-light: oklch(0.92 0.1 88);
-  --color-gold-dark: oklch(0.6 0.13 70);
-  --color-gold-deep: oklch(0.45 0.1 70);
-  --color-leaf: oklch(0.45 0.08 145);
-  --color-leaf-light: oklch(0.72 0.12 145);
+  /* Rôles — valeurs par défaut : le fond vert. Les blocs .paper et .nuit les redéfinissent localement,
+     si bien que tous les utilitaires (text-foreground/70, bg-card, text-gold…) s'adaptent au support. */
+  --color-background: #12372a;
+  --color-background-soft: #0f3024;
+  --color-foreground: #f2ead6;
+  --color-card: #184335;
+  --color-card-2: #1f5140;
+  --color-muted: #cfc8b4;
+  --color-muted-2: #a9a892;
+  --color-border: rgb(242 234 214 / 0.16);
+  --color-gold: #d7b565;
+  --color-gold-light: #ecd9a0;
+  --color-gold-dark: #b8943f;
+  --color-gold-deep: #8a6a1f;
+  --color-leaf: #2f6b51;
+  --color-leaf-light: #8fc7a6;
+  --color-danger: #f0a184;
+  --color-danger-soft: rgb(240 161 132 / 0.13);
+  --color-success: #8fd3a8;
 
-  --color-danger: oklch(0.6 0.2 25);
-  --color-danger-soft: oklch(0.6 0.2 25 / 15%);
-  --color-success: oklch(0.72 0.15 150);
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: var(--font-fraunces), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-mono: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
 
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-serif: var(--font-instrument), "Cormorant Garamond", Georgia, serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.45, 0, 0.15, 1);
 
-  --radius-xl2: 1.25rem;
-  --radius-xl3: 1.75rem;
+  --shadow-paper: 0 1px 0 rgb(4 20 14 / 0.18), 0 22px 44px -26px rgb(3 14 10 / 0.85);
+  --shadow-deep: 0 34px 70px -34px rgb(3 14 10 / 0.9);
+  --shadow-gold: 0 10px 30px -14px rgb(215 181 101 / 0.5);
 
-  --shadow-gold: 0 10px 40px -10px oklch(0.82 0.14 80 / 0.35);
-  --shadow-deep: 0 30px 80px -30px oklch(0 0 0 / 0.7);
+  --animate-fade-up: rise-in 0.6s var(--ease-out) both;
 
-  --animate-shimmer: shimmer 7s linear infinite;
-  --animate-float: float 14s ease-in-out infinite;
-  --animate-float-slow: float 22s ease-in-out infinite;
-  --animate-marquee: marquee 40s linear infinite;
-  --animate-fade-up: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(20px, -30px) scale(1.06); }
-  }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-100%); }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes rise-in {
+    from { opacity: 0; transform: translate3d(0, 12px, 0); }
+    to { opacity: 1; transform: none; }
   }
 }
 
+/* ───────────────────────────── Supports ───────────────────────────── */
+:root {
+  --header-h: 4.25rem;
+  --gutter: clamp(1.25rem, 4.2vw, 3.5rem);
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.07  0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0.11 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+@media (min-width: 640px) { :root { --header-h: 5rem; } }
+
+/* Papier crème : étiquettes, bons, notices, formulaires */
+.paper {
+  --color-background: #f2ead6;
+  --color-background-soft: #ece3cc;
+  --color-foreground: #12372a;
+  --color-card: #e9dfc6;
+  --color-card-2: #e0d5b8;
+  --color-muted: #41594d;
+  --color-muted-2: #5f7268;
+  --color-border: rgb(18 55 42 / 0.2);
+  --color-gold: #7a5c1a;
+  --color-gold-light: #7a5c1a;
+  --color-gold-dark: #7a5c1a;
+  --color-gold-deep: #5f4712;
+  --color-leaf: #2f6b51;
+  --color-leaf-light: #2f6b51;
+  --color-danger: #9c3a20;
+  --color-danger-soft: rgb(181 72 42 / 0.1);
+  --color-success: #23654a;
+  background-color: var(--color-background);
+  background-image: var(--grain);
+  color: var(--color-foreground);
+}
+/* Nuit : le vert le plus profond (pied de page, bloc « jour et nuit », menu) */
+.nuit {
+  --color-background: #0a2219;
+  --color-background-soft: #081c15;
+  --color-card: #0f2c21;
+  --color-card-2: #153a2c;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
 @layer base {
+  /* Une colonne de grille ne s'élargit jamais pour son contenu : c'est le contenu qui se plie.
+     (Sans cela, un champ ou une ligne insécable pousse la colonne hors de la marge sur petit écran.) */
+  .grid > * { min-width: 0; }
+
   * { border-color: var(--color-border); }
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; background: var(--color-nuit); scroll-padding-top: calc(var(--header-h) + 1.5rem); }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
+    font-size: 1rem;
+    line-height: 1.62;
+    font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
-    letter-spacing: -0.02em;
-    font-weight: 400;
+    font-weight: 300;
+    font-variation-settings: "SOFT" 100;
+    letter-spacing: -0.022em;
+    line-height: 1.04;
     text-wrap: balance;
   }
-  p { text-wrap: pretty; }
-  ::selection { background: oklch(0.82 0.14 80 / 0.35); color: var(--color-foreground); }
-  :focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 4px; }
+  p, li, dd { text-wrap: pretty; }
+  strong, b { font-weight: 600; }
+  /* Les italiques sont des fichiers séparés, chargés à la demande (voir app/layout.tsx) */
+  em, i, cite { font-family: var(--font-hanken-italic), var(--font-sans); font-style: italic; }
+  h1 em, h2 em, h3 em, h4 em, .font-serif em, .font-serif i, blockquote { font-family: var(--font-fraunces-italic), var(--font-serif); }
+  ::selection { background: var(--color-or); color: var(--color-nuit); }
+  :focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; border-radius: 2px; }
+  input, textarea, select, button { font: inherit; }
   input, textarea, select { color-scheme: dark; }
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .paper input, .paper textarea, .paper select { color-scheme: light; }
+  summary { cursor: pointer; }
+  details > summary { list-style: none; }
+  details > summary::-webkit-details-marker { display: none; }
+  address { font-style: normal; }
+  table { font-variant-numeric: tabular-nums; }
+}
+
+/* ───────────────────────────── Composants ───────────────────────────── */
+@layer components {
+  /* Mise en page */
+  .wrap { width: 100%; max-width: 86rem; margin-inline: auto; padding-inline: var(--gutter); }
+  .wrap-narrow { width: 100%; max-width: 64rem; margin-inline: auto; padding-inline: var(--gutter); }
+  .section { padding-block: clamp(4.5rem, 9.5vw, 9rem); }
+  .section-tight { padding-block: clamp(3rem, 6vw, 5.5rem); }
+
+  .product-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+  @media (min-width: 640px) { .product-grid { gap: 1.25rem; } }
+  @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; } }
+
+  /* Typographie */
+  .font-serif { font-variation-settings: "SOFT" 100; }
+  .t-hero { font-family: var(--font-serif); font-weight: 300; font-size: clamp(2.9rem, 16.2vw, 8.5rem); line-height: 0.9; letter-spacing: -0.04em; }
+  @media (min-width: 1024px) { .t-hero { font-size: min(9.1rem, 10vw); } }
+  .t-h1 { font-family: var(--font-serif); font-weight: 300; font-size: clamp(2.75rem, 7.4vw, 6rem); line-height: 0.96; letter-spacing: -0.032em; }
+  .t-h2 { font-family: var(--font-serif); font-weight: 300; font-size: clamp(2.2rem, 5vw, 4.25rem); line-height: 1; letter-spacing: -0.028em; }
+  .t-h3 { font-family: var(--font-serif); font-weight: 300; font-size: clamp(1.65rem, 2.7vw, 2.4rem); line-height: 1.06; letter-spacing: -0.02em; }
+  .t-title { font-family: var(--font-serif); font-weight: 400; font-size: clamp(1.25rem, 1.6vw, 1.5rem); line-height: 1.14; letter-spacing: -0.012em; }
+  .t-lead { font-size: clamp(1.0625rem, 1.3vw, 1.3rem); line-height: 1.52; color: color-mix(in oklab, var(--color-foreground) 82%, transparent); }
+  .t-fine { font-size: 0.8125rem; line-height: 1.5; color: color-mix(in oklab, var(--color-foreground) 68%, transparent); }
+  .t-note { font-family: var(--font-fraunces-italic), var(--font-serif); font-style: italic; font-weight: 300; }
+  .t-num { font-variant-numeric: tabular-nums lining-nums; }
+  .measure { max-width: 34rem; }
+  .measure-wide { max-width: 44rem; }
+
+  /* Le geste de la marque : un titre net qui devient doux au survol / au focus du lien qui le contient */
+  .softens { font-variation-settings: "SOFT" 0; transition: font-variation-settings 0.7s var(--ease-soft), color 0.3s; }
+  a:hover .softens, a:focus-visible .softens, .softens:hover, .group:hover .softens { font-variation-settings: "SOFT" 100; }
+
+  /* Liens de texte : soulignés d'un filet, jamais de flèche */
+  .link {
+    text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.28em;
+    text-decoration-color: color-mix(in oklab, var(--color-gold) 75%, transparent);
+    transition: text-decoration-color 0.25s, color 0.25s;
   }
-}
+  .link:hover { text-decoration-color: currentColor; color: var(--color-gold-light); }
+  .paper .link:hover { color: var(--color-gold); }
 
-@utility font-serif-italic {
-  font-family: var(--font-serif);
-  font-style: italic;
-}
-
-@utility text-gradient-gold {
-  background: linear-gradient(135deg, var(--color-gold-dark), var(--color-gold-light), var(--color-gold));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-@utility bg-gradient-gold {
-  background: linear-gradient(135deg, var(--color-gold-dark), var(--color-gold-light), var(--color-gold));
-}
-
-@utility gold-shimmer {
-  background: linear-gradient(110deg, var(--color-gold-dark) 20%, var(--color-gold-light) 45%, var(--color-gold) 60%, var(--color-gold-dark) 80%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: var(--animate-shimmer);
-}
-
-@utility btn-gold {
-  background: linear-gradient(135deg, var(--color-gold-dark), var(--color-gold-light), var(--color-gold));
-  color: oklch(0.115 0.006 80);
-  box-shadow: 0 10px 30px -12px oklch(0.82 0.14 80 / 0.45);
-  transition: transform 0.3s, box-shadow 0.4s, filter 0.3s;
-  &:hover { transform: translateY(-2px); box-shadow: 0 18px 45px -12px oklch(0.82 0.14 80 / 0.6); filter: brightness(1.05); }
-  &:disabled { opacity: 0.5; transform: none; filter: none; cursor: not-allowed; }
-}
-
-@utility btn-outline {
-  border: 1px solid oklch(0.96 0.012 85 / 0.22);
-  color: var(--color-foreground);
-  transition: border-color 0.3s, color 0.3s, background-color 0.3s;
-  &:hover { border-color: var(--color-gold); color: var(--color-gold); }
-}
-
-@utility grain {
-  position: relative;
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.06;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  /* Boutons « pastille » */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+    min-height: 3.25rem; padding: 0.85rem 1.6rem; border-radius: 999px;
+    font-size: 0.9688rem; font-weight: 500; line-height: 1.1; letter-spacing: 0.002em; text-align: center;
+    border: 1px solid transparent; cursor: pointer;
+    transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out), border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
   }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled, .btn[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn-sm { min-height: 2.6rem; padding: 0.55rem 1.15rem; font-size: 0.9rem; }
+  .btn-primary { background: var(--color-etiquette); color: var(--color-sapin); }
+  .btn-primary:hover:not(:disabled) { background: var(--color-or-clair); }
+  .paper .btn-primary { background: var(--color-sapin); color: var(--color-etiquette); }
+  .paper .btn-primary:hover:not(:disabled) { background: var(--color-nuit); }
+  .btn-ghost { border-color: color-mix(in oklab, var(--color-foreground) 34%, transparent); color: var(--color-foreground); }
+  .btn-ghost:hover { border-color: var(--color-foreground); background: color-mix(in oklab, var(--color-foreground) 8%, transparent); }
+
+  /* Bouton rond (panier, menu, fermer) */
+  .btn-round {
+    display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--color-foreground) 30%, transparent); color: var(--color-foreground);
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+  .btn-round:hover { background: var(--color-foreground); color: var(--color-background); border-color: var(--color-foreground); }
+
+  /* Filets dorés */
+  .rule-double { height: 4px; border: 0; border-top: 1px solid color-mix(in oklab, var(--color-gold) 70%, transparent); border-bottom: 1px solid color-mix(in oklab, var(--color-gold) 35%, transparent); }
+
+  /* Objets en papier */
+  .paper-object { border-radius: 3px; box-shadow: var(--shadow-paper); }
+  .sheet { border-radius: 3px; box-shadow: var(--shadow-paper); padding: clamp(1.5rem, 4.5vw, 4rem); }
+
+  /* Étiquette produit */
+  .etiquette { position: relative; display: flex; flex-direction: column; border-radius: 3px; box-shadow: var(--shadow-paper); transition: transform 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out); }
+  .etiquette-photo { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: 3px 3px 0 0; background: #e9dfc6; }
+  .etiquette-photo img { transition: transform 1.1s var(--ease-out); }
+  /* les photos sur fond blanc se fondent dans le papier */
+  .on-paper { mix-blend-mode: multiply; }
+  @media (hover: hover) {
+    .etiquette:hover { transform: translate3d(0, -5px, 0); box-shadow: 0 1px 0 rgb(4 20 14 / 0.18), 0 34px 54px -28px rgb(3 14 10 / 0.95); }
+    .etiquette:hover .etiquette-photo img { transform: scale(1.045); }
+  }
+
+  /* Pastille dorée (mentions : nouveauté, meilleure vente…) */
+  .pastille {
+    display: inline-flex; align-items: center; padding: 0.3rem 0.65rem; border-radius: 999px;
+    background: var(--color-or); color: var(--color-nuit); font-size: 0.75rem; font-weight: 600; line-height: 1.1; letter-spacing: 0.01em;
+  }
+
+  /* Jauge de force : quatre points */
+  .pips { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; font-weight: 500; }
+  .pips > span:first-child { display: inline-flex; gap: 3px; }
+  .pips i { width: 7px; height: 7px; border-radius: 999px; border: 1px solid currentColor; }
+  .pips i[data-on] { background: currentColor; }
+
+  /* Bon (ticket) : papier à bords dentelés */
+  .ticket {
+    position: relative; border-radius: 3px;
+    -webkit-mask: radial-gradient(circle at 0 50%, transparent 11px, #000 11.5px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 11px, #000 11.5px) right / 51% 100% no-repeat;
+    mask: radial-gradient(circle at 0 50%, transparent 11px, #000 11.5px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 11px, #000 11.5px) right / 51% 100% no-repeat;
+  }
+
+  /* Carte postale (photos des distributeurs) */
+  .postcard { padding: clamp(0.5rem, 1.1vw, 0.85rem); padding-bottom: 0; border-radius: 3px; box-shadow: var(--shadow-deep); transform: rotate(var(--tilt, 0deg)); }
+  .postcard figcaption { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: 1rem; row-gap: 0.1rem; padding: 0.7rem 0.15rem 0.8rem; }
+  .postcard figcaption > * { white-space: nowrap; }
+
+  /* Formulaires */
+  .field {
+    width: 100%; border-radius: 3px; border: 1px solid color-mix(in oklab, var(--color-foreground) 32%, transparent);
+    background: color-mix(in oklab, var(--color-foreground) 4%, transparent); color: var(--color-foreground);
+    padding: 0.8rem 0.95rem; font-size: 1rem; line-height: 1.3; transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  }
+  .field::placeholder { color: color-mix(in oklab, var(--color-foreground) 50%, transparent); }
+  .field:focus { outline: none; border-color: var(--color-foreground); box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-gold) 35%, transparent); }
+  .field[aria-invalid="true"] { border-color: var(--color-danger); }
+  .field-label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.4rem; }
+
+  /* Choix (force, format, livraison) : cases à cocher visuelles */
+  .choice {
+    border: 1px solid color-mix(in oklab, var(--color-foreground) 26%, transparent); border-radius: 3px; text-align: left;
+    transition: border-color 0.2s, background-color 0.2s, color 0.2s; cursor: pointer;
+  }
+  .choice:hover { border-color: color-mix(in oklab, var(--color-foreground) 60%, transparent); }
+  .choice[aria-checked="true"], .choice[aria-selected="true"], .choice[data-active="true"] { border-color: var(--color-foreground); background: var(--color-foreground); color: var(--color-background); }
+  .choice:disabled { opacity: 0.4; cursor: not-allowed; }
+  .choice-pill { border-radius: 999px; }
+  /* Rangée de filtres : à la ligne sur grand écran ; sur téléphone, une seule ligne qui défile du doigt
+     et sort du cadre à droite (le choix coupé signale qu'il y en a d'autres), pour laisser monter les produits. */
+  .chip-rail { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  @media (max-width: 639px) {
+    .chip-rail {
+      flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none;
+      margin-inline: calc(var(--gutter) * -1); padding: 3px var(--gutter);
+      scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter);
+    }
+    .chip-rail::-webkit-scrollbar { display: none; }
+    .chip-rail > * { flex: none; scroll-snap-align: start; }
+    /* le choix en cours passe en tête : il reste visible sans faire défiler */
+    .chip-rail > [data-active="true"], .chip-rail > [aria-current="page"] { order: -1; }
+  }
+
+  /* Listes à filets (fiche technique, réassurance) */
+  .rows > * { border-top: 1px solid var(--color-border); }
+  .rows > *:last-child { border-bottom: 1px solid var(--color-border); }
+
+  /* Questions fréquentes */
+  .faq > details { border-top: 1px solid var(--color-border); }
+  .faq > details:last-child { border-bottom: 1px solid var(--color-border); }
+  .faq summary { display: flex; align-items: baseline; justify-content: space-between; gap: 1.5rem; padding: 1.15rem 0; }
+  .faq summary h3, .faq summary span.q { font-family: var(--font-serif); font-weight: 400; font-variation-settings: "SOFT" 100; font-size: clamp(1.125rem, 1.5vw, 1.375rem); line-height: 1.25; letter-spacing: -0.01em; }
+  .faq .mark { position: relative; flex: none; width: 0.9rem; height: 0.9rem; transform: translateY(0.1rem); }
+  .faq .mark::before, .faq .mark::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: currentColor; transition: transform 0.4s var(--ease-out); }
+  .faq .mark::after { transform: rotate(90deg); }
+  .faq details[open] .mark::after { transform: rotate(0deg); }
+  .faq .answer { padding: 0 2.5rem 1.4rem 0; color: color-mix(in oklab, var(--color-foreground) 78%, transparent); max-width: 44rem; }
+  .faq details[open] .answer { animation: rise-in 0.45s var(--ease-out); }
+
+  /* Texte long (guides, pages légales) — toujours posé sur papier */
+  .prose-cbd { font-size: 1.0625rem; line-height: 1.72; }
+  .prose-cbd h2 { font-size: clamp(1.65rem, 2.6vw, 2.25rem); line-height: 1.1; margin-top: 2.75rem; margin-bottom: 1rem; }
+  .prose-cbd > :first-child h2, .prose-cbd > h2:first-child { margin-top: 0; }
+  .prose-cbd h3 { font-size: 1.4rem; font-weight: 400; line-height: 1.2; margin-top: 2rem; margin-bottom: 0.6rem; }
+  .prose-cbd p { color: color-mix(in oklab, var(--color-foreground) 86%, transparent); margin-bottom: 1.1rem; max-width: 44rem; }
+  .prose-cbd ul, .prose-cbd ol { color: color-mix(in oklab, var(--color-foreground) 86%, transparent); margin: 0 0 1.2rem 1.2rem; max-width: 42rem; }
+  .prose-cbd ul { list-style: disc; }
+  .prose-cbd ol { list-style: decimal; }
+  .prose-cbd li { margin-bottom: 0.4rem; padding-left: 0.2rem; }
+  .prose-cbd li::marker { color: var(--color-gold); }
+  .prose-cbd a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.25em; text-decoration-color: color-mix(in oklab, var(--color-gold) 80%, transparent); }
+  .prose-cbd a:hover { text-decoration-color: currentColor; }
+  .prose-cbd strong { font-weight: 600; color: var(--color-foreground); }
+  .prose-cbd blockquote { border-left: 1px solid var(--color-gold); padding: 0.2rem 0 0.2rem 1.25rem; margin: 1.75rem 0; font-family: var(--font-serif); font-style: italic; font-weight: 300; font-size: 1.4rem; line-height: 1.35; }
+  .prose-cbd table { width: 100%; font-size: 0.9375rem; border-collapse: collapse; margin: 1.5rem 0; }
+  .prose-cbd th, .prose-cbd td { text-align: left; padding: 0.7rem 0.9rem 0.7rem 0; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  .prose-cbd th { font-weight: 600; font-size: 0.875rem; border-bottom-color: color-mix(in oklab, var(--color-foreground) 55%, transparent); }
+
+  /* Logo et rosace */
+  .logo { display: block; height: 2.25rem; width: auto; }
+  .rosette { display: block; }
+  /* la rosace du logo fait un quart de tour au survol */
+  .logo-rosette { transform-box: fill-box; transform-origin: center; transition: transform 1.4s var(--ease-out); }
+  a:hover .logo-rosette, a:focus-visible .logo-rosette { transform: rotate(90deg); }
+  /* version filaire (pied de page) : tous les traits à un pixel, quelle que soit la taille */
+  .logo-outline .logo-letters, .logo-outline .logo-rosette > * { stroke-width: 1px; vector-effect: non-scaling-stroke; }
+
+  /* Guillochés : gravures dorées posées en image de fond ; leur présence se règle avec l'opacité de l'élément */
+  .guilloche { position: absolute; pointer-events: none; aspect-ratio: 1; background: var(--g) center / contain no-repeat; }
+  .guilloche-orge { --g: url("/images/brand/guilloche-orge.svg"); }
+  .guilloche-rosace { --g: url("/images/brand/guilloche-rosace.svg"); }
+  /* Autour du cadran : la gravure laisse un cartouche vide sous l'inscription « Il est … » (ellipse fixe,
+     les gravures tournent dessous) et, sur petit écran, s'efface avant d'atteindre le texte courant. */
+  .dial-cartouche {
+    -webkit-mask-image: radial-gradient(ellipse 34% 11% at 50% 81%, transparent 62%, #000 100%);
+    mask-image: radial-gradient(ellipse 34% 11% at 50% 81%, transparent 62%, #000 100%);
+  }
+  @media (max-width: 1023px) {
+    .dial-engraving {
+      -webkit-mask-image: radial-gradient(circle closest-side, #000 58%, transparent 90%);
+      mask-image: radial-gradient(circle closest-side, #000 58%, transparent 90%);
+    }
+  }
+
+  /* En-tête */
+  .site-header { position: sticky; top: 0; z-index: 50; background: var(--color-sapin); transition: background-color 0.4s, box-shadow 0.4s; }
+  .site-header[data-scrolled="true"] { box-shadow: 0 18px 40px -30px rgb(3 14 10 / 0.9); }
+  .nav-link { position: relative; padding: 0.4rem 0; font-size: 0.9375rem; color: color-mix(in oklab, var(--color-foreground) 82%, transparent); transition: color 0.25s; white-space: nowrap; }
+  .nav-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--color-or); transform: scaleX(0); transform-origin: 0 50%; transition: transform 0.45s var(--ease-out); }
+  .nav-link:hover, .nav-link[aria-current="page"] { color: var(--color-foreground); }
+  .nav-link:hover::after, .nav-link[aria-current="page"]::after { transform: scaleX(1); }
+
+  /* Menu plein écran : s'ouvre en cercle depuis le bouton (le cadran, encore) */
+  .menu-panel { position: fixed; inset: 0; z-index: 60; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; visibility: hidden; clip-path: circle(0 at var(--mx) var(--my)); transition: clip-path 0.7s var(--ease-soft), visibility 0s 0.7s; }
+  .menu-panel[data-open="true"] { visibility: visible; clip-path: circle(150vmax at var(--mx) var(--my)); transition: clip-path 0.95s var(--ease-soft), visibility 0s; }
+  .menu-panel .menu-item { opacity: 0; transform: translate3d(0, 1.2rem, 0); }
+  .menu-panel[data-open="true"] .menu-item { opacity: 1; transform: none; transition: opacity 0.6s var(--ease-out), transform 0.8s var(--ease-out); transition-delay: calc(var(--i, 0) * 45ms + 220ms); }
+
+  /* Vidéos en boucle : l'image d'attente reste dessous, la vidéo apparaît quand elle joue */
+  .loop { position: relative; overflow: hidden; background: var(--color-nuit); }
+  .loop > img, .loop > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .loop > video { opacity: 0; transition: opacity 0.7s; }
+  .loop > video[data-ready="1"] { opacity: 1; }
+
+  /* Téléphone (exemple de commande par WhatsApp) */
+  .phone { border-radius: 2.4rem; border: 8px solid var(--color-nuit); background: #efe6d0; color: var(--color-sapin); box-shadow: var(--shadow-deep), 0 0 0 1px color-mix(in oklab, var(--color-or) 45%, transparent); overflow: hidden; }
+  .bubble { border-radius: 1.05rem; padding: 0.65rem 0.85rem; font-size: 0.875rem; line-height: 1.42; max-width: 84%; }
+  .bubble.me { margin-left: auto; background: var(--color-sapin); color: var(--color-etiquette); border-bottom-right-radius: 0.25rem; }
+  .bubble.them { background: #fbf6e8; border-bottom-left-radius: 0.25rem; box-shadow: 0 1px 0 rgb(18 55 42 / 0.08); }
+
+  /* Point « en direct » */
+  .live-dot { position: relative; display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 999px; background: var(--color-success); }
+  .live-dot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: inherit; animation: pulse-ring 2.4s var(--ease-out) infinite; }
+
+  /* Vérification d'âge : plein écran, se referme en cercle */
+  .gate { position: fixed; inset: 0; z-index: 100; overflow-y: auto; clip-path: circle(150vmax at 50% 46%); }
+  .gate[data-leaving="true"] { animation: gate-out 0.95s var(--ease-soft) forwards; pointer-events: none; }
+
+  /* Bouton WhatsApp flottant */
+  html[data-menu-open] .wa-fab, html[data-gate] .wa-fab { opacity: 0; pointer-events: none; }
 }
 
-@utility orb {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  pointer-events: none;
-  opacity: 0.45;
-}
-@utility orb-gold { background: radial-gradient(circle, oklch(0.82 0.14 80 / 0.55), transparent 70%); }
-@utility orb-leaf { background: radial-gradient(circle, oklch(0.55 0.1 150 / 0.35), transparent 70%); }
+/* ───────────────────────────── Mouvement ───────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin-back { to { transform: rotate(-360deg); } }
+@keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2.7); opacity: 0; } }
+@keyframes line-up { from { transform: translate3d(0, 108%, 0); } to { transform: none; } }
+@keyframes soften { from { font-variation-settings: "SOFT" 0; } to { font-variation-settings: "SOFT" 100; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes settle { from { opacity: 0; transform: translate3d(0, 1.1rem, 0); } to { opacity: 1; transform: none; } }
+@keyframes dial-in { from { opacity: 0; transform: scale(0.9) rotate(-18deg); } to { opacity: 1; transform: none; } }
+@keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes gate-out { to { clip-path: circle(0 at 50% 46%); } }
+@keyframes bubble-in { from { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.96); } to { opacity: 1; transform: none; } }
 
-@utility luxe-panel {
-  background:
-    linear-gradient(180deg, oklch(0.18 0.012 80 / 0.92), oklch(0.12 0.008 80 / 0.98)),
-    linear-gradient(135deg, oklch(0.82 0.14 80 / 0.08), transparent 42%);
-  border: 1px solid oklch(0.82 0.14 80 / 0.18);
-  box-shadow: 0 30px 90px -40px oklch(0 0 0 / 0.85), inset 0 1px 0 oklch(0.92 0.1 88 / 0.08);
-}
+.spin-slow { animation: spin 420s linear infinite; }
+.spin-slow-back { animation: spin-back 300s linear infinite; }
 
-@utility lift {
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s;
-  &:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -30px oklch(0.82 0.14 80 / 0.35); }
-}
+/* Entrée de page : un simple fondu (rejoué par app/template.tsx) */
+.page-enter { animation: page-in 0.5s ease both; }
 
-@utility marquee {
-  display: flex;
-  overflow: hidden;
-  user-select: none;
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-}
-@utility marquee-track {
-  display: flex;
-  gap: 3rem;
-  animation: var(--animate-marquee);
-  flex-shrink: 0;
-  min-width: 100%;
-  padding-right: 3rem;
-}
+/* Séquence d'ouverture de l'accueil — le seul moment orchestré du site :
+   les lignes du titre montent, puis le caractère s'adoucit pendant que le cadran se pose. */
+.seq-line { display: block; overflow: hidden; padding-bottom: 0.12em; margin-bottom: -0.12em; white-space: nowrap; }
+.seq-line > span { display: block; animation: line-up 1.15s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 110ms + 80ms); }
+/* L'adoucissement du titre fait glisser l'axe SOFT de la police du net au doux. Comme la largeur des lettres
+   change avec lui, le navigateur recompose le titre à chaque image : sur téléphone et tablette, on avance donc
+   par seize paliers (moins d'un pixel chacun, invisibles) plutôt qu'à soixante images par seconde,
+   pour laisser l'appareil charger la page ; sur ordinateur, le mouvement est continu. */
+.seq-soften { animation: soften 1.9s steps(16, end) both; animation-delay: 0.85s; }
+@media (min-width: 1024px) { .seq-soften { animation-timing-function: var(--ease-soft); } }
+.seq-in { animation: settle 1s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 110ms + 520ms); }
+.seq-dial { animation: dial-in 1.6s var(--ease-out) both; animation-delay: 0.25s; }
 
-@utility kicker {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.25em;
-  color: var(--color-gold);
-}
+/* Dévoilement des grandes images au défilement (classes posées par MotionRoot ; sans script, tout reste visible) */
+html.js .unveil { clip-path: inset(0 0 100% 0); }
+html.js .unveil > * { transform: scale(1.12); }
+html.js .unveil.is-in { clip-path: inset(0); transition: clip-path 1.25s var(--ease-soft); }
+html.js .unveil.is-in > * { transform: none; transition: transform 1.7s var(--ease-out); }
+html.js .unveil.no-anim, html.js .unveil.no-anim > * { transition: none; }
+html.js .chat .bubble { opacity: 0; }
+html.js .chat.is-in .bubble { animation: bubble-in 0.6s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 700ms + 200ms); }
+html.js .draws { stroke-dashoffset: var(--len, 1000); }
+html.js .draws.is-in, html.js .is-in .draws { stroke-dashoffset: 0; transition: stroke-dashoffset 1.8s var(--ease-soft); }
 
-@utility hairline {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, oklch(0.82 0.14 80 / 0.5), transparent);
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  .spin-slow, .spin-slow-back, .live-dot::after { animation: none !important; }
+  html.js .unveil, html.js .unveil > * { clip-path: none !important; transform: none !important; }
+  html.js .chat .bubble { opacity: 1 !important; }
+  html.js .draws { stroke-dashoffset: 0 !important; }
+  .softens { font-variation-settings: "SOFT" 100; }
 }
-
-@utility prose-cbd {
-  & h2 { font-size: 1.875rem; line-height: 1.15; margin-top: 2.5rem; margin-bottom: 1rem; }
-  & h3 { font-size: 1.375rem; line-height: 1.2; margin-top: 2rem; margin-bottom: 0.75rem; }
-  & p { color: oklch(0.96 0.012 85 / 0.78); line-height: 1.75; margin-bottom: 1.1rem; }
-  & ul, & ol { color: oklch(0.96 0.012 85 / 0.78); line-height: 1.7; margin: 0 0 1.1rem 1.25rem; }
-  & ul { list-style: disc; }
-  & ol { list-style: decimal; }
-  & li { margin-bottom: 0.35rem; }
-  & a { color: var(--color-gold); text-decoration: underline; text-decoration-color: oklch(0.82 0.14 80 / 0.4); text-underline-offset: 3px; }
-  & a:hover { text-decoration-color: var(--color-gold); }
-  & strong { color: var(--color-foreground); font-weight: 600; }
-  & blockquote { border-left: 2px solid var(--color-gold); padding-left: 1rem; font-family: var(--font-serif); font-style: italic; font-size: 1.25rem; color: oklch(0.96 0.012 85 / 0.85); margin: 1.5rem 0; }
-  & table { width: 100%; font-size: 0.9rem; border-collapse: collapse; margin: 1.25rem 0; }
-  & th, & td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--color-border); }
-  & th { color: var(--color-gold); font-weight: 600; font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; }
-}
-
-@utility input-dark {
-  width: 100%;
-  border-radius: 0.75rem;
-  border: 1px solid oklch(0.32 0.02 85 / 55%);
-  background: oklch(0.17 0.008 80);
-  padding: 0.8rem 0.95rem;
-  font-size: 0.95rem;
-  color: var(--color-foreground);
-  transition: border-color 0.2s, box-shadow 0.2s;
-  &::placeholder { color: oklch(0.55 0.012 85); }
-  &:focus { outline: none; border-color: var(--color-gold); box-shadow: 0 0 0 3px oklch(0.82 0.14 80 / 0.18); }
-  &[aria-invalid="true"] { border-color: var(--color-danger); }
-}
-
-details > summary { list-style: none; }
-details > summary::-webkit-details-marker { display: none; }
-details[open] > div { animation: fadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
 
 @media print {
   header, footer, nav, .no-print { display: none !important; }
   body { background: #fff !important; color: #111 !important; }
-  .print-area * { color: #111 !important; background: transparent !important; box-shadow: none !important; }
-  .print-area h1, .print-area h2, .print-area h3 { color: #8a6a16 !important; -webkit-text-fill-color: #8a6a16 !important; }
+  .print-area, .print-area * { color: #111 !important; background: transparent !important; box-shadow: none !important; }
 }
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   Mouvement & habillage (refonte de novembre 2026)
-   Principe : tout est lisible sans JavaScript et sans animation ; le script
-   <MotionRoot /> ne masque que les blocs situés sous la ligne de flottaison,
-   puis les fait apparaître au défilement. « prefers-reduced-motion » coupe tout.
-   ═══════════════════════════════════════════════════════════════════════════ */
-:root {
-  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --emerald: oklch(0.36 0.07 165);
-  --emerald-light: oklch(0.66 0.12 165);
-}
-
-@keyframes rise { from { opacity: 0; transform: translate3d(0, 105%, 0) rotate(1.5deg); } to { opacity: 1; transform: none; } }
-@keyframes soft-in { from { opacity: 0; transform: translate3d(0, 18px, 0); } to { opacity: 1; transform: none; } }
-@keyframes aurora-drift {
-  0% { transform: translate3d(-5%, -3%, 0) rotate(0deg) scale(1); }
-  50% { transform: translate3d(4%, 4%, 0) rotate(7deg) scale(1.12); }
-  100% { transform: translate3d(-2%, 6%, 0) rotate(-5deg) scale(1.05); }
-}
-@keyframes marquee-back { from { transform: translateX(-100%); } to { transform: translateX(0); } }
-@keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.85; } 100% { transform: scale(2.6); opacity: 0; } }
-@keyframes bob { 0%, 100% { transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg)); } 50% { transform: translate3d(0, -12px, 0) rotate(var(--tilt, 0deg)); } }
-@keyframes sheen { from { transform: translateX(-130%) skewX(-18deg); } to { transform: translateX(230%) skewX(-18deg); } }
-@keyframes page-in { from { opacity: 0; transform: translate3d(0, 12px, 0); } to { opacity: 1; transform: none; } }
-@keyframes bubble-in { from { opacity: 0; transform: translate3d(0, 14px, 0) scale(0.95); } to { opacity: 1; transform: none; } }
-@keyframes ticker { 0%, 28% { transform: translateY(0); } 33%, 61% { transform: translateY(-25%); } 66%, 94% { transform: translateY(-50%); } 100% { transform: translateY(-75%); } }
-@keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(400%); } }
-@keyframes menu-in { from { opacity: 0; transform: translate3d(0, 16px, 0); } to { opacity: 1; transform: none; } }
-
-/* Transition d'entrée de page (src/app/template.tsx) */
-.page-enter { position: relative; isolation: isolate; animation: page-in 0.55s var(--ease-expo) both; }
-
-/* Barre de progression de lecture */
-.scroll-progress {
-  position: fixed; inset: 0 0 auto 0; height: 2px; z-index: 70; pointer-events: none;
-  transform-origin: 0 50%; transform: scaleX(var(--progress, 0));
-  background: linear-gradient(90deg, var(--color-gold-dark), var(--color-gold-light), var(--color-gold));
-}
-
-/* Apparitions au défilement (classes posées par MotionRoot) */
-.rv-wait { opacity: 0; transform: translate3d(0, 30px, 0); }
-.rv-wait[data-reveal="left"] { transform: translate3d(-40px, 0, 0); }
-.rv-wait[data-reveal="right"] { transform: translate3d(40px, 0, 0); }
-.rv-wait[data-reveal="scale"] { transform: scale(0.93); }
-.rv-wait[data-reveal="blur"] { filter: blur(14px); transform: translate3d(0, 14px, 0); }
-.rv-in {
-  transition: opacity 0.95s var(--ease-expo), transform 0.95s var(--ease-expo), filter 0.95s var(--ease-expo) !important;
-  transition-delay: calc(var(--rv-delay, 0ms) + var(--rv-extra, 0ms)) !important;
-}
-
-/* Fond « aurore » : halos or et émeraude en mouvement lent */
-.aurora {
-  position: absolute; inset: -25%; pointer-events: none; opacity: 0.6; filter: blur(80px) saturate(1.25);
-  background:
-    radial-gradient(38% 34% at 18% 28%, oklch(0.82 0.14 80 / 0.5), transparent 70%),
-    radial-gradient(34% 40% at 82% 18%, oklch(0.42 0.1 165 / 0.6), transparent 70%),
-    radial-gradient(44% 40% at 62% 88%, oklch(0.6 0.13 70 / 0.4), transparent 70%);
-  animation: aurora-drift 20s ease-in-out infinite alternate; will-change: transform;
-}
-
-/* Titre cinétique : chaque ligne monte depuis un masque */
-.kinetic .line { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
-.kinetic .line > span { display: block; animation: rise 1s var(--ease-expo) both; animation-delay: calc(var(--i, 0) * 120ms + 60ms); }
-.hero-in { animation: soft-in 0.9s var(--ease-expo) both; animation-delay: calc(var(--i, 0) * 90ms + 320ms); }
-
-/* Verre dépoli */
-.glass {
-  background: oklch(0.16 0.01 80 / 0.58);
-  -webkit-backdrop-filter: blur(18px) saturate(1.3); backdrop-filter: blur(18px) saturate(1.3);
-  border: 1px solid oklch(0.96 0.012 85 / 0.12);
-}
-
-/* Reflet qui traverse les boutons dorés au survol */
-.btn-gold { position: relative; overflow: hidden; isolation: isolate; }
-.btn-gold::after {
-  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: linear-gradient(100deg, transparent 30%, oklch(1 0 0 / 0.5) 50%, transparent 70%);
-  transform: translateX(-130%) skewX(-18deg);
-}
-.btn-gold:hover::after { animation: sheen 0.9s ease; }
-
-/* Halo qui suit le curseur sur les cartes (variables --mx / --my posées par MotionRoot) */
-.spotlight { position: relative; }
-.spotlight::before {
-  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 2;
-  opacity: 0; transition: opacity 0.45s;
-  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), oklch(0.82 0.14 80 / 0.2), transparent 46%);
-}
-@media (hover: hover) { .spotlight:hover::before { opacity: 1; } }
-
-/* Pastille « en direct » */
-.live-dot { position: relative; display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: var(--color-success); }
-.live-dot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: inherit; animation: pulse-ring 2.2s var(--ease-expo) infinite; }
-.live-dot.gold { background: var(--color-gold); }
-
-/* Éléments flottants du visuel d'accueil */
-.bob { animation: bob 7s ease-in-out infinite; }
-.bob-slow { animation: bob 10s ease-in-out infinite; animation-delay: -3s; }
-
-/* Défilement de texte en sens inverse */
-.marquee-track.reverse { animation: marquee-back 52s linear infinite; }
-
-/* Bandeau d'annonces tournant (3 messages) */
-.ticker { height: 1.1rem; overflow: hidden; }
-.ticker > ul { animation: ticker 12s var(--ease-expo) infinite; }
-.ticker li { height: 1.1rem; line-height: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-/* Carrousel horizontal sans barre de défilement */
-@media (max-width: 1023.98px) {
-  .snap-row { display: flex; gap: 0.9rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 0.25rem; }
-  .snap-row::-webkit-scrollbar { display: none; }
-  .snap-row > * { scroll-snap-align: center; flex: 0 0 auto; }
-}
-
-/* Cartes vidéo verticales */
-.reel { position: relative; overflow: hidden; border-radius: 1.75rem; border: 1px solid oklch(0.82 0.14 80 / 0.28); background: #000; aspect-ratio: 9 / 16; box-shadow: 0 40px 90px -40px oklch(0 0 0 / 0.9), 0 0 0 1px oklch(0 0 0 / 0.4); }
-.reel video, .reel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.reel video { opacity: 0; transition: opacity 0.6s; }
-.reel video[data-ready="1"] { opacity: 1; }
-.reel::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, oklch(0 0 0 / 0.28) 0%, transparent 28%, transparent 52%, oklch(0 0 0 / 0.82) 100%); }
-
-/* Téléphone illustrant la commande par WhatsApp */
-.phone { position: relative; border-radius: 2.6rem; border: 9px solid oklch(0.2 0.008 80); background: oklch(0.13 0.012 160); box-shadow: 0 50px 110px -40px oklch(0 0 0 / 0.9), inset 0 0 0 1px oklch(0.96 0.012 85 / 0.08); overflow: hidden; }
-.bubble { border-radius: 1.1rem; padding: 0.7rem 0.9rem; font-size: 0.8rem; line-height: 1.45; max-width: 86%; }
-.bubble.me { margin-left: auto; background: oklch(0.42 0.09 160); border-bottom-right-radius: 0.3rem; }
-.bubble.them { background: oklch(0.23 0.01 80); border-bottom-left-radius: 0.3rem; }
-html.js .chat .bubble { opacity: 0; }
-html.js .chat.is-in .bubble { animation: bubble-in 0.6s var(--ease-expo) both; animation-delay: calc(var(--i, 0) * 650ms + 250ms); }
-
-/* Ligne de balayage de la caméra (bloc distributeurs) */
-.scanline { position: absolute; inset: 0 0 auto 0; height: 22%; pointer-events: none; background: linear-gradient(180deg, transparent, oklch(0.82 0.14 80 / 0.16), transparent); animation: scan 4.5s linear infinite; }
-
-/* Texte géant en contour (pied de page) */
-.text-outline { color: transparent; -webkit-text-stroke: 1px oklch(0.82 0.14 80 / 0.4); }
-
-/* Menu mobile : entrée échelonnée des liens */
-.menu-open .menu-item { animation: menu-in 0.5s var(--ease-expo) both; animation-delay: calc(var(--i, 0) * 45ms + 60ms); }
-
-@media (prefers-reduced-motion: reduce) {
-  .rv-wait { opacity: 1 !important; transform: none !important; filter: none !important; }
-  .aurora, .bob, .bob-slow, .scanline, .ticker > ul, .marquee-track, .marquee-track.reverse { animation: none !important; }
-  html.js .chat .bubble { opacity: 1; }
-}
-
-/* ── Identité CBDoux : rosace, alvéoles dorées, bandeau vert (reprise des visuels de la marque) ── */
-/* Taille par défaut du logo, dans la couche « components » pour que les utilitaires (h-8, w-full…) gardent la main */
-@layer components {
-  .logo { display: block; height: 2.25rem; width: auto; }
-  .rosette, .hex-ornament { display: block; }
-}
-@keyframes rosette-in { from { opacity: 0; transform: rotate(-140deg) scale(0.6); } to { opacity: 1; transform: none; } }
-@keyframes spin { to { transform: rotate(360deg); } }
-/* La rosace du logo tourne sur elle-même : à l'arrivée, puis d'un quart de tour au survol */
-.logo-rosette { transform-box: fill-box; transform-origin: center; transition: transform 1.4s var(--ease-expo); animation: rosette-in 1.3s var(--ease-expo) both; }
-a:hover .logo .logo-rosette, .logo:hover .logo-rosette { transform: rotate(90deg); }
-/* Version filaire : tous les traits à un pixel, quelle que soit la taille */
-.logo-outline .logo-letters, .logo-outline .logo-rosette > * { stroke-width: 1px; vector-effect: non-scaling-stroke; }
-.logo-outline .logo-rosette { animation: none; }
-.rosette-spin { animation: spin 80s linear infinite; }
-.rosette-spin.fast { animation-duration: 28s; }
-
-/* Alvéoles dorées (nid d'abeille), à poser en calque absolu ; le masque les fait disparaître en fondu */
-.hex-lines {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0.16;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48.5' height='84' viewBox='0 0 48.5 84'><path d='M24.25 0L48.5 14V42L24.25 56L0 42V14Z M24.25 56V84' fill='none' stroke='%23d9b85c' stroke-width='1'/></svg>");
-  background-size: 48.5px 84px;
-  -webkit-mask-image: radial-gradient(ellipse 70% 80% at var(--hex-x, 100%) var(--hex-y, 0%), #000 0%, transparent 70%);
-  mask-image: radial-gradient(ellipse 70% 80% at var(--hex-x, 100%) var(--hex-y, 0%), #000 0%, transparent 70%);
-}
-
-/* Rosace en image de fond : pour les répétitions (bandeau défilant), sans alourdir la page */
-.rosette-mark { display: inline-block; background: url("/images/brand/cbdoux-rosace.svg") center / contain no-repeat; }
-
-/* Filigrane de haut de page (posé par app/template.tsx, sous le contenu) */
-.hex-lines.page-hex { inset: 0 0 auto 0; height: 640px; z-index: -1; opacity: 0.14; }
-
-/* Bandeau vert profond liseré d'or (rappel du bandeau de l'enseigne) */
-.band-green {
-  background: linear-gradient(90deg, oklch(0.23 0.045 162), oklch(0.31 0.065 162) 50%, oklch(0.23 0.045 162));
-  color: var(--color-gold-light);
-  border-bottom: 1px solid oklch(0.82 0.14 80 / 0.35);
-}
-/* Variante haute : double filet doré en haut et en bas, comme sur l'enseigne */
-.band-rules { position: relative; border-top: 1px solid oklch(0.82 0.14 80 / 0.55); border-bottom: 1px solid oklch(0.82 0.14 80 / 0.55); }
-.band-rules::before, .band-rules::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: oklch(0.82 0.14 80 / 0.28); pointer-events: none; }
-.band-rules::before { top: 4px; }
-.band-rules::after { bottom: 4px; }
-/* Carte « écrin » : vert profond, liseré or, alvéoles en filigrane */
-.card-emerald {
-  background:
-    radial-gradient(120% 90% at 0% 0%, oklch(0.33 0.07 162 / 0.9), transparent 60%),
-    linear-gradient(160deg, oklch(0.22 0.04 162), oklch(0.15 0.02 150));
-  border: 1px solid oklch(0.82 0.14 80 / 0.35);
-}
-html[data-menu-open] .wa-fab { opacity: 0; pointer-events: none; }
-
-/* Bon de bienvenue : billet doré légèrement incliné */
-.coupon {
-  position: relative; overflow: hidden; text-align: center;
-  padding: 1.5rem 2.25rem 1.25rem; border-radius: 1.25rem;
-  color: oklch(0.2 0.03 80);
-  background: linear-gradient(135deg, #b98a2e 0%, #f3dfa0 42%, #e3c275 60%, #c59a3d 100%);
-  box-shadow: 0 30px 60px -25px oklch(0 0 0 / 0.7), inset 0 0 0 1px oklch(1 0 0 / 0.35), inset 0 0 0 6px oklch(0.2 0.03 80 / 0.06);
-  transform: rotate(var(--tilt, 0deg));
-}
-.coupon::before, .coupon::after { content: ""; position: absolute; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 9999px; background: oklch(0.2 0.04 162); }
-.coupon::before { left: -11px; }
-.coupon::after { right: -11px; }
-@media (prefers-reduced-motion: reduce) { .logo-rosette, .rosette-spin { animation: none !important; transition: none !important; } }

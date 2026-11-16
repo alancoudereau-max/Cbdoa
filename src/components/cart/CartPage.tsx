@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Minus, Plus, Trash2, ShoppingBag, Truck, Lock, Package } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { useCart, cartSubtotalCents } from "@/lib/cart-store";
 import { FREE_SHIPPING_FROM_CENTS } from "@/lib/shipping";
-import { formatEUR } from "@/lib/utils";
+import { formatEUR, commas } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export function CartPage() {
@@ -14,82 +14,95 @@ export function CartPage() {
   const remaining = Math.max(0, FREE_SHIPPING_FROM_CENTS - subtotal);
 
   return (
-    <div className="mx-auto max-w-[1100px] px-5 sm:px-8 py-10 sm:py-14">
-      <Breadcrumbs items={[{ name: "Panier", path: "/panier" }]} className="mb-8" />
-      <h1 className="font-serif text-4xl sm:text-6xl mb-10">
-        Votre <span className="font-serif-italic text-gradient-gold">panier</span>
-      </h1>
+    <div className="wrap pb-24 pt-7 sm:pt-9">
+      <Breadcrumbs items={[{ name: "Panier", path: "/panier" }]} />
+      <h1 className="t-h1 mt-9 sm:mt-12">Votre panier</h1>
 
       {!hydrated ? (
-        <p className="text-foreground/50">Chargement…</p>
+        <p className="mt-10 text-foreground/70">Chargement…</p>
       ) : lines.length === 0 ? (
-        <div className="rounded-3xl border border-foreground/10 bg-card/40 p-12 text-center">
-          <ShoppingBag size={40} className="mx-auto text-gold/50 mb-4" />
-          <p className="font-serif text-2xl mb-2">Votre panier est vide.</p>
-          <p className="text-sm text-foreground/60 mb-6">Fleurs, résines, huiles, vape : découvrez la sélection CBDoux.</p>
-          <Link href="/boutique" className="btn-gold inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold">
-            Voir la boutique <ArrowRight size={14} />
+        <div className="mt-10 border-t border-foreground/15 pt-10">
+          <p className="t-h3">Votre panier est vide.</p>
+          <p className="mt-3 text-foreground/75">Fleurs, résines, huiles, vape : découvrez la sélection CBDoux.</p>
+          <Link href="/boutique" className="btn btn-primary mt-7">
+            Voir la boutique
           </Link>
         </div>
       ) : (
-        <div className="grid lg:grid-cols-12 gap-8">
-          <ul className="lg:col-span-8 space-y-3">
+        <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:gap-10">
+          <ul className="lg:col-span-7">
             {lines.map((l) => (
-              <li key={l.sku} className="flex gap-4 rounded-2xl border border-foreground/10 bg-card/50 p-4">
-                <Link href={`/produit/${l.slug}`} className="relative shrink-0 overflow-hidden rounded-xl bg-black/40" style={{ width: 96, height: 96 }}>
-                  <Image src={l.image} alt={l.name} fill sizes="96px" className="object-cover" />
+              <li key={l.sku} className="flex gap-4 border-t border-foreground/15 py-5 last:border-b sm:gap-6">
+                <Link href={`/produit/${l.slug}`} className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[3px] bg-[#e9dfc6] sm:h-28 sm:w-28">
+                  <Image src={l.image} alt={l.name} fill sizes="112px" className="on-paper object-cover" />
                 </Link>
-                <div className="flex-1 min-w-0">
-                  <Link href={`/produit/${l.slug}`} className="font-serif text-xl leading-tight hover:text-gold">{l.name}</Link>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-gold mt-1">{l.variantLabel}</p>
-                  <p className="text-sm text-foreground/70 mt-1">{formatEUR(l.unitPriceCents)} l'unité</p>
-                  <div className="mt-3 flex items-center gap-4">
-                    <div className="inline-flex items-center rounded-full border border-foreground/15">
-                      <button type="button" onClick={() => setQuantity(l.sku, l.quantity - 1)} aria-label="Diminuer" className="h-9 w-9 flex items-center justify-center hover:text-gold"><Minus size={13} /></button>
-                      <span className="w-7 text-center text-sm font-mono">{l.quantity}</span>
-                      <button type="button" onClick={() => setQuantity(l.sku, l.quantity + 1)} aria-label="Augmenter" className="h-9 w-9 flex items-center justify-center hover:text-gold"><Plus size={13} /></button>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <Link href={`/produit/${l.slug}`} className="softens t-title">
+                      {l.name}
+                    </Link>
+                    <p className="t-num whitespace-nowrap text-[1.0625rem] font-medium">{formatEUR(l.unitPriceCents * l.quantity)}</p>
+                  </div>
+                  <p className="t-fine mt-1">
+                    {commas(l.variantLabel)}, {formatEUR(l.unitPriceCents)} l'unité
+                  </p>
+                  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+                    <div className="inline-flex items-center rounded-full border border-foreground/30">
+                      <button type="button" onClick={() => setQuantity(l.sku, l.quantity - 1)} aria-label="Diminuer la quantité" className="flex h-10 w-10 items-center justify-center">
+                        <Minus aria-hidden size={14} />
+                      </button>
+                      <span className="t-num w-7 text-center">{l.quantity}</span>
+                      <button type="button" onClick={() => setQuantity(l.sku, l.quantity + 1)} aria-label="Augmenter la quantité" className="flex h-10 w-10 items-center justify-center">
+                        <Plus aria-hidden size={14} />
+                      </button>
                     </div>
-                    <button type="button" onClick={() => remove(l.sku)} className="inline-flex items-center gap-1.5 text-xs text-foreground/50 hover:text-danger">
-                      <Trash2 size={13} /> Retirer
+                    <button type="button" onClick={() => remove(l.sku)} className="link text-[0.9375rem]">
+                      Retirer
                     </button>
                   </div>
                 </div>
-                <p className="font-serif text-xl text-gold whitespace-nowrap">{formatEUR(l.unitPriceCents * l.quantity)}</p>
               </li>
             ))}
           </ul>
 
-          <aside className="lg:col-span-4">
-            <div className="lg:sticky lg:top-28 rounded-3xl border border-gold/25 bg-card/60 p-6">
-              <h2 className="font-serif text-2xl mb-5">Récapitulatif</h2>
-              <div className="flex items-baseline justify-between text-sm mb-2">
-                <span className="text-foreground/65">Sous-total</span>
-                <span>{formatEUR(subtotal)}</span>
+          <aside className="lg:col-span-4 lg:col-start-9">
+            <div className="paper paper-object lg:sticky lg:top-28">
+              <div className="p-6 sm:p-7">
+                <h2 className="t-h3">Récapitulatif</h2>
+                <dl className="mt-5 space-y-2.5 text-[0.9688rem]">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <dt className="text-foreground/75">Sous-total</dt>
+                    <dd className="t-num">{formatEUR(subtotal)}</dd>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-4">
+                    <dt className="text-foreground/75">Livraison</dt>
+                    <dd className="text-right">{remaining === 0 ? "Colissimo offert" : "calculée à l'étape suivante"}</dd>
+                  </div>
+                </dl>
+                {remaining > 0 && (
+                  <p className="mt-4 text-[0.875rem] text-foreground/80">
+                    Plus que <strong className="t-num">{formatEUR(remaining)}</strong> pour le port Colissimo offert.
+                  </p>
+                )}
               </div>
-              <div className="flex items-baseline justify-between text-sm mb-4">
-                <span className="text-foreground/65">Livraison</span>
-                <span className="text-foreground/65">{remaining === 0 ? <span className="text-gold">Colissimo offert</span> : "calculée à l'étape suivante"}</span>
+              <div aria-hidden className="rule-double" />
+              <div className="p-6 sm:p-7">
+                <div className="flex items-baseline justify-between gap-4">
+                  <span>Total estimé</span>
+                  <span className="t-num font-serif text-[2.25rem] font-light leading-none tracking-[-0.02em]">{formatEUR(subtotal)}</span>
+                </div>
+                <Link href="/commande" className="btn btn-primary mt-6 w-full">
+                  Finaliser ma commande
+                </Link>
+                <ul className="t-fine mt-6 space-y-1.5">
+                  <li>Commande envoyée sur WhatsApp, paiement par lien sécurisé (carte).</li>
+                  <li>Colis neutre, expédié sous 24 h ouvrées.</li>
+                  <li>Code BIENVENUE10 : 10 € offerts dès 100 €.</li>
+                </ul>
+                <Link href="/boutique" className="link mt-6 block text-center text-[0.9375rem]">
+                  Continuer mes achats
+                </Link>
               </div>
-              {remaining > 0 && (
-                <p className="rounded-xl bg-gold/10 border border-gold/30 px-3 py-2 text-xs text-foreground/80 mb-4 flex items-center gap-2">
-                  <Truck size={14} className="text-gold shrink-0" /> Plus que <strong className="text-gold">{formatEUR(remaining)}</strong> pour le port Colissimo offert.
-                </p>
-              )}
-              <div className="flex items-baseline justify-between border-t border-foreground/10 pt-4 mb-5">
-                <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-foreground/60">Total estimé</span>
-                <span className="font-serif text-3xl text-gradient-gold">{formatEUR(subtotal)}</span>
-              </div>
-              <Link href="/commande" className="btn-gold w-full inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold">
-                Finaliser ma commande <ArrowRight size={16} />
-              </Link>
-              <ul className="mt-5 space-y-2 text-[11px] text-foreground/55">
-                <li className="flex items-center gap-2"><Lock size={12} className="text-gold" /> Commande envoyée sur WhatsApp, paiement par lien sécurisé CB</li>
-                <li className="flex items-center gap-2"><Package size={12} className="text-gold" /> Colis neutre, expédié sous 24 h ouvrées</li>
-                <li className="flex items-center gap-2"><Truck size={12} className="text-gold" /> Code BIENVENUE10 : 10 € offerts dès 100 €</li>
-              </ul>
-              <Link href="/boutique" className="mt-4 block text-center text-xs text-foreground/60 hover:text-gold">
-                ← Continuer mes achats
-              </Link>
             </div>
           </aside>
         </div>

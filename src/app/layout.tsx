@@ -11,32 +11,40 @@ import { JsonLd } from "@/components/JsonLd";
 import { MotionRoot } from "@/components/motion/MotionRoot";
 import { organizationJsonLd, websiteJsonLd, storeJsonLd } from "@/lib/seo";
 
-const inter = localFont({
-  src: [
-    { path: "../fonts/inter-latin-wght-normal.woff2", style: "normal" },
-    { path: "../fonts/inter-latin-ext-wght-normal.woff2", style: "normal" },
-  ],
-  variable: "--font-inter",
+/**
+ * Deux familles, auto-hébergées :
+ *  - Fraunces (titres) : police variable dont l'axe SOFT fait passer les lettres du net au doux, le geste de la marque ;
+ *  - Hanken Grotesk (texte et interface).
+ * Seuls les romains sont préchargés ; les italiques ne sont téléchargés que lorsqu'une page s'en sert.
+ */
+const fraunces = localFont({
+  src: [{ path: "../fonts/fraunces-roman.woff2", style: "normal", weight: "300 500" }],
+  variable: "--font-fraunces",
   display: "swap",
-  weight: "100 900",
+  adjustFontFallback: "Times New Roman",
 });
 
-const instrument = localFont({
-  src: [
-    { path: "../fonts/instrument-serif-latin-400-normal.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/instrument-serif-latin-400-italic.woff2", weight: "400", style: "italic" },
-    { path: "../fonts/instrument-serif-latin-ext-400-normal.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/instrument-serif-latin-ext-400-italic.woff2", weight: "400", style: "italic" },
-  ],
-  variable: "--font-instrument",
+const frauncesItalic = localFont({
+  src: [{ path: "../fonts/fraunces-italic.woff2", style: "italic", weight: "300" }],
+  variable: "--font-fraunces-italic",
   display: "swap",
+  preload: false,
+  adjustFontFallback: "Times New Roman",
 });
 
-const jetbrains = localFont({
-  src: [{ path: "../fonts/jetbrains-mono-latin-wght-normal.woff2", style: "normal" }],
-  variable: "--font-jetbrains",
+const hanken = localFont({
+  src: [{ path: "../fonts/hanken-roman.woff2", style: "normal", weight: "400 700" }],
+  variable: "--font-hanken",
   display: "swap",
-  weight: "100 800",
+  adjustFontFallback: "Arial",
+});
+
+const hankenItalic = localFont({
+  src: [{ path: "../fonts/hanken-italic.woff2", style: "italic", weight: "400 600" }],
+  variable: "--font-hanken-italic",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: "Arial",
 });
 
 export const metadata: Metadata = {
@@ -77,11 +85,11 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
   },
   manifest: "/manifest.webmanifest",
-  other: { "theme-color": "#0d0c0a" },
+  other: { "theme-color": "#12372a" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0d0c0a",
+  themeColor: "#12372a",
   width: "device-width",
   initialScale: 1,
   colorScheme: "dark",
@@ -89,13 +97,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${inter.variable} ${instrument.variable} ${jetbrains.variable}`}>
+    <html lang="fr" className={`${fraunces.variable} ${frauncesItalic.variable} ${hanken.variable} ${hankenItalic.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
         <JsonLd data={[organizationJsonLd(), websiteJsonLd(), storeJsonLd()]} />
         <MotionRoot />
         <a
           href="#contenu"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-gold focus:px-4 focus:py-2 focus:text-background"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-etiquette focus:px-4 focus:py-2 focus:text-sapin"
         >
           Aller au contenu
         </a>

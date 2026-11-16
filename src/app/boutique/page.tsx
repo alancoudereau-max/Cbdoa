@@ -3,7 +3,6 @@ import { categories, categoryOrder, visibleProducts, getProductsByCategory, type
 import { ProductCard } from "@/components/product/ProductCard";
 import { BoutiqueCatalog, type CatalogEntry, type CatalogGroup } from "@/components/product/BoutiqueCatalog";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { SectionHeading } from "@/components/ui/SectionHeading";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, itemListJsonLd } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
@@ -43,40 +42,45 @@ export default function BoutiquePage() {
   }));
 
   return (
-    <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 py-10 sm:py-14">
+    <div>
       <JsonLd data={itemListJsonLd("Catalogue CBDoux", visibleProducts.map((p) => ({ name: p.name, path: `/produit/${p.slug}`, image: p.image })))} />
-      <Breadcrumbs items={[{ name: "Boutique", path: "/boutique" }]} className="mb-8" />
 
       <BoutiqueCatalog
         entries={entries}
         groups={groups}
         cards={cards}
+        crumbs={<Breadcrumbs items={[{ name: "Boutique", path: "/boutique" }]} />}
         heading={
-          <SectionHeading as="h1" kicker="Catalogue" title="La boutique" italic="CBDoux.">
-            {visibleProducts.length} références sélectionnées et analysées. Prix au gramme, port offert dès 60 €, expédition sous 24 h ouvrées.
-          </SectionHeading>
+          <>
+            <h1 className="t-h1">La boutique</h1>
+            <p className="t-lead mt-6 measure-wide">
+              {visibleProducts.length} références sélectionnées et analysées. Prix au gramme, port offert dès 60&nbsp;€, expédition sous 24&nbsp;h ouvrées.
+            </p>
+          </>
         }
       />
 
-      {/* Texte de présentation */}
-      <section className="mt-4 grid lg:grid-cols-2 gap-10 rounded-3xl border border-foreground/10 bg-card/30 p-7 sm:p-10">
-        <div>
-          <h2 className="font-serif text-3xl mb-4">Acheter du CBD en ligne, en toute confiance</h2>
-          <p className="text-sm sm:text-base text-foreground/70 leading-relaxed mb-4">
-            CBDoux est une boutique française indépendante installée dans le Haut-Doubs. Nous sélectionnons des fleurs de chanvre indoor, hydroponie et greenhouse, des résines filtrées et pressées, des huiles Full Spectrum à usage cutané et des solutions de vape, tous conformes à la réglementation française (THC inférieur à 0,3 %).
-          </p>
-          <p className="text-sm sm:text-base text-foreground/70 leading-relaxed">
-            Chaque lot est accompagné d'une analyse de laboratoire indépendante que vous pouvez consulter avant d'acheter. Les prix sont affichés au gramme et par 10 g, sans surprise : ce que vous voyez est ce que vous payez.
-          </p>
-        </div>
-        <div>
-          <h2 className="font-serif text-3xl mb-4">Livraison rapide et discrète partout en France</h2>
-          <p className="text-sm sm:text-base text-foreground/70 leading-relaxed mb-4">
-            Commande avant 13 h, colis expédié le jour même en Lettre suivie, Colissimo 48 h (offert dès 60 €) ou Chronopost Express 24 h. Emballage neutre, sachets hermétiques inodores, suivi en temps réel. Dans le Haut-Doubs, retrait gratuit à Damprichard et au Russey ou livraison à domicile par nos soins.
-          </p>
-          <p className="text-sm sm:text-base text-foreground/70 leading-relaxed">
-            Une question avant de commander ? Notre équipe répond sur WhatsApp 7 j/7 pour vous orienter vers la force et la variété qui vous conviennent.
-          </p>
+      {/* Texte de présentation, sur papier */}
+      <section className="wrap section-tight">
+        <div className="paper sheet grid gap-10 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <h2 className="t-h3">Acheter du CBD en ligne, en toute confiance</h2>
+            <p className="mt-5 text-foreground/85">
+              CBDoux est une boutique française indépendante installée dans le Haut-Doubs. Nous sélectionnons des fleurs de chanvre indoor, hydroponie et greenhouse, des résines filtrées et pressées, des huiles Full Spectrum à usage cutané et des solutions de vape, tous conformes à la réglementation française (THC inférieur à 0,3 %).
+            </p>
+            <p className="mt-4 text-foreground/85">
+              Chaque lot est accompagné d'une analyse de laboratoire indépendante que vous pouvez consulter avant d'acheter. Les prix sont affichés au gramme et par 10 g, sans surprise : ce que vous voyez est ce que vous payez.
+            </p>
+          </div>
+          <div>
+            <h2 className="t-h3">Livraison rapide et discrète partout en France</h2>
+            <p className="mt-5 text-foreground/85">
+              Commande avant 13 h, colis expédié le jour même en Lettre suivie, Colissimo 48 h (offert dès 60 €) ou Chronopost Express 24 h. Emballage neutre, sachets hermétiques inodores, suivi en temps réel. Dans le Haut-Doubs, retrait gratuit à Damprichard et au Russey ou livraison à domicile par nos soins.
+            </p>
+            <p className="mt-4 text-foreground/85">
+              Une question avant de commander ? Notre équipe répond sur WhatsApp 7 j/7 pour vous orienter vers la force et la variété qui vous conviennent.
+            </p>
+          </div>
         </div>
       </section>
     </div>

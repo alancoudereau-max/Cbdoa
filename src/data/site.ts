@@ -114,7 +114,7 @@ export const locations = {
       id: "le-russey",
       city: "Le Russey",
       postalCode: "25210",
-      place: "Hôtel du Commerce — en face de la mairie",
+      place: "Hôtel du Commerce, en face de la mairie",
       details:
         "Distributeur installé au cœur du village, à l'abri dans son chalet en bois. Accès simple et discret à toute heure. Produits conservés à 20 °C en sachets de conservation biphase.",
       hours: "24 h/24 — 7 j/7",
