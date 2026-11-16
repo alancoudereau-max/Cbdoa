@@ -1,6 +1,7 @@
 # Configuration Netlify — rien à saisir à la main lors de l'import du dépôt.
-# Netlify détecte Next.js et installe automatiquement son adaptateur (pages statiques,
-# optimisation des images, redirections et en-têtes définis dans next.config.ts).
+# Le module Next.js de Netlify (@netlify/plugin-nextjs) est déclaré explicitement ci-dessous :
+# sans lui, Netlify publie le dossier .next tel quel et toutes les pages renvoient « Page not found ».
+# Il gère les pages, l'optimisation des images, les redirections et les en-têtes de next.config.ts.
 
 [build]
   command = "npm run build"
@@ -9,3 +10,6 @@
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

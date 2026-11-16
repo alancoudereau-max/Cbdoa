@@ -22,8 +22,9 @@ Dans Claude : **Paramètres → Connecteurs → GitHub → Connecter**, avec le 
 
 1. Sur **app.netlify.com** : *Sign up* → **GitHub** (même compte).
 2. **Add new project → Import an existing project → GitHub**. Autorisez Netlify à accéder au dépôt **Cbdoa**, puis sélectionnez-le.
-3. Ne changez aucun réglage : le fichier `netlify.toml` du dépôt contient déjà la configuration (commande `npm run build`, dossier `.next`, Node 22). Cliquez **Deploy**.
+3. Ne changez aucun réglage : le fichier `netlify.toml` du dépôt contient déjà la configuration (commande `npm run build`, dossier `.next`, Node 22, module Next.js `@netlify/plugin-nextjs`). Cliquez **Deploy**.
 4. Après 2 à 3 minutes, le déploiement est terminé sur une adresse provisoire `quelque-chose.netlify.app`. **À ce stade le site est privé** : depuis juillet 2026, Netlify protège les nouveaux projets, et vous seul pouvez le voir (connecté à Netlify). Vérifiez-le sur votre téléphone.
+   Si toutes les pages affichent « Page not found », c'est que le module Next.js de Netlify n'a pas tourné : vérifiez que `netlify.toml` contient bien le bloc `[[plugins]]` avec `@netlify/plugin-nextjs`, puis relancez un déploiement.
 5. Cliquez **Make public** pour l'ouvrir à tout le monde (ou *Project configuration → General → Visitor access → Project visibility*).
 6. Si un petit badge « Powered by Netlify » apparaît sur le site : *Project configuration → General → Powered by Netlify badge* → désactivez-le.
 7. Facultatif : *Project configuration → Change project name* pour obtenir une adresse provisoire plus lisible (ex. `cbdoux.netlify.app`).
