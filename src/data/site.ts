@@ -41,7 +41,17 @@ export const company = {
   siren: "101 678 175",
   siret: "101 678 175 00015",
   rcs: "RCS Paris 101 678 175",
-  vat: "FR92101678175",
+  /**
+   * TVA : la société relève de la franchise en base (confirmé par l'exploitant le 16/11/2026).
+   * La mention ci-dessous est celle en vigueur jusqu'au 31/12/2026. Au 01/01/2027, la référence légale
+   * passe au code des impositions sur les biens et services (CIBS) ; l'ancienne mention reste admise
+   * pendant la période transitoire. Vérifier alors le numéro d'article avant de la remplacer.
+   * Si la société devient redevable de la TVA : passer vatExempt à false et renseigner vatNumber
+   * (numéro attribué par le service des impôts), puis remettre « TTC » sur les prix.
+   */
+  vatExempt: true,
+  vatMention: "TVA non applicable, article 293 B du CGI",
+  vatNumber: "",
   address: {
     street: "50 avenue des Champs-Élysées",
     postalCode: "75008",

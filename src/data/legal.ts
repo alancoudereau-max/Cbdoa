@@ -22,7 +22,14 @@ const ul = (items: string[]): LegalBlock => ({ type: "ul", items });
 const ol = (items: string[]): LegalBlock => ({ type: "ol", items });
 const table = (headers: string[], rows: string[][]): LegalBlock => ({ type: "table", headers, rows });
 
-const vendeur = `${company.legalName}, ${company.legalForm} au capital de ${company.capital}, immatriculée au ${company.rcs} (SIRET ${company.siret}, TVA intracommunautaire ${company.vat}), dont le siège social est situé ${company.address.street}, ${company.address.postalCode} ${company.address.city}, ${company.address.country}`;
+/** Mention TVA de l'identité légale : franchise en base, ou numéro de TVA intracommunautaire si la société y est assujettie. */
+const tvaIdentite = company.vatExempt || !company.vatNumber ? company.vatMention : `TVA intracommunautaire ${company.vatNumber}`;
+/** Phrase TVA de l'article « Prix » des CGV. */
+const tvaPrix = company.vatExempt
+  ? `${company.vatMention}. Les prix affichés sont nets : aucune TVA n'est facturée en sus.`
+  : "Les prix s'entendent toutes taxes comprises (TVA française incluse).";
+
+const vendeur = `${company.legalName}, ${company.legalForm} au capital de ${company.capital}, immatriculée au ${company.rcs} (SIRET ${company.siret} — ${tvaIdentite}), dont le siège social est situé ${company.address.street}, ${company.address.postalCode} ${company.address.city}, ${company.address.country}`;
 
 const shippingTable = table(
   ["Mode", "Zone", "Délai indicatif", "Tarif"],
@@ -138,6 +145,7 @@ export const legalDocs: LegalDoc[] = [
         heading: "Article 4 — Prix",
         blocks: [
           p("Les prix sont indiqués en euros et correspondent au montant total à payer par le Client pour les produits, hors frais de livraison. Les frais de livraison sont indiqués avant la validation définitive de la commande et récapitulés à l'article 7. Le Vendeur se réserve le droit de modifier ses prix à tout moment ; les produits sont facturés sur la base des tarifs en vigueur au moment de la validation de la commande."),
+          p(tvaPrix),
           p("Les codes promotionnels ne sont pas cumulables entre eux sauf mention contraire, et s'appliquent dans les conditions indiquées (montant minimum, durée de validité, première commande)."),
         ],
       },

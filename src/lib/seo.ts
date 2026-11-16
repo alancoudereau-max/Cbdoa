@@ -60,7 +60,7 @@ export function organizationJsonLd() {
     email: site.email,
     telephone: site.phoneE164,
     foundingDate: String(site.foundingYear),
-    vatID: company.vat,
+    ...(company.vatExempt || !company.vatNumber ? {} : { vatID: company.vatNumber }),
     address: {
       "@type": "PostalAddress",
       streetAddress: company.address.street,
