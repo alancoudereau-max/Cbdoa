@@ -15,7 +15,7 @@ export function ContactForm() {
   const mailUrl = `mailto:${site.email}?subject=${encodeURIComponent(`Contact CBDoux — ${name.trim()}`)}&body=${encodeURIComponent(body)}`;
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="paper sheet space-y-5">
+    <form onSubmit={(e) => e.preventDefault()} className="panel sheet space-y-5">
       <div>
         <label htmlFor="contact-nom" className="field-label">
           Votre nom

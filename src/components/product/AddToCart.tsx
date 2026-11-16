@@ -80,7 +80,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
   };
 
   return (
-    <div className="paper paper-object">
+    <div className="panel paper-object">
       <div className="space-y-6 p-5 sm:p-7">
         {/* Choix de la force */}
         {tiers.length > 1 && (
@@ -137,7 +137,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
         {/* Prudence (produits forts) */}
         {ackLoaded && strong && (
           <label className={cn("flex cursor-pointer items-start gap-3 rounded-[3px] border px-3.5 py-3 transition-colors", ack ? "border-foreground/30" : "border-danger bg-danger-soft")}>
-            <input type="checkbox" checked={ack} onChange={(e) => onAck(e.target.checked)} className="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 accent-[#12372a]" />
+            <input type="checkbox" checked={ack} onChange={(e) => onAck(e.target.checked)} className="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 accent-[#d7b565]" />
             <span className="text-[0.875rem] leading-snug">
               J'ai lu les{" "}
               <Link href="/conseils-prudence" className="link">

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { labelImage } from "@/lib/etiquettes";
 import { useEffect } from "react";
 import { X, Minus, Plus } from "lucide-react";
 import { useCart, cartSubtotalCents } from "@/lib/cart-store";
@@ -32,7 +33,7 @@ export function CartDrawer() {
         role="dialog"
         aria-modal="true"
         aria-label="Votre panier"
-        className={`paper absolute right-0 top-0 flex h-full w-full flex-col shadow-deep transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:max-w-[27rem] ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+        className={`nuit absolute right-0 top-0 flex h-full w-full flex-col shadow-deep transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:max-w-[27rem] ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex items-center justify-between gap-4 px-5 py-4 sm:px-6">
           <div>
@@ -75,7 +76,7 @@ export function CartDrawer() {
               {lines.map((l) => (
                 <li key={l.sku} className="flex gap-4 border-t border-foreground/20 py-4">
                   <Link href={`/produit/${l.slug}`} onClick={() => setOpen(false)} className="relative h-[4.75rem] w-[4.75rem] shrink-0 overflow-hidden rounded-[3px] bg-[#e9dfc6]" tabIndex={isOpen ? 0 : -1}>
-                    <Image src={l.image} alt={l.name} fill sizes="76px" className="on-paper object-cover" />
+                    <Image src={labelImage(l.image)} alt={l.name} fill sizes="76px" className="object-cover" />
                   </Link>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-baseline justify-between gap-3">

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { labelImage } from "@/lib/etiquettes";
 import { useState } from "react";
 import type { Product } from "@/data/products";
 
@@ -14,7 +15,7 @@ export function ProductMedia({ product: p }: { product: Product }) {
         {mode === "video" && p.video ? (
           <video src={p.video} controls autoPlay playsInline preload="metadata" poster={p.image} className="absolute inset-0 h-full w-full bg-nuit object-contain" aria-label={`Vidéo de présentation, ${p.name}`} />
         ) : (
-          <Image src={p.image} alt={`${p.name}, photo CBDoux`} fill priority sizes="(max-width: 1024px) 100vw, 640px" className="on-paper object-cover" />
+          <Image src={labelImage(p.image)} alt={`${p.name}, photo CBDoux`} fill priority sizes="(max-width: 1024px) 100vw, 640px" className="object-cover" />
         )}
       </div>
       {p.video && (

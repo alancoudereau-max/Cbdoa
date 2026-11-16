@@ -52,7 +52,7 @@ export default function LivraisonPage() {
 
       {/* Tarifs, sur papier */}
       <section className="wrap section">
-        <div className="paper sheet">
+        <div className="panel sheet">
           <h2 className="t-h2">Modes, délais et tarifs</h2>
           {/* Un vrai tableau sur grand écran ; sur téléphone, chaque mode devient une fiche :
               le nom et le tarif en tête, le délai dessous, puis le détail sur toute la largeur. */}
@@ -129,7 +129,7 @@ export default function LivraisonPage() {
       </section>
 
       {/* FAQ */}
-      <section className="paper section">
+      <section className="nuit section">
         <div className="wrap grid gap-10 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-4">
             <h2 className="t-h2">Livraison : vos questions</h2>

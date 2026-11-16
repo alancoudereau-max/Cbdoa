@@ -64,7 +64,7 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
 
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", background: `radial-gradient(circle at 78% 50%, #1c4a39 0%, ${SAPIN} 55%)`, color: PAPIER, fontFamily: "Hanken, sans-serif", position: "relative" }}>
+      <div style={{ width: "100%", height: "100%", display: "flex", background: "radial-gradient(circle at 78% 50%, #241f15 0%, #0c0b09 58%)", color: PAPIER, fontFamily: "Hanken, sans-serif", position: "relative" }}>
         {/* le double filet doré de l'enseigne, en haut et en bas */}
         {[34, 592].map((top) => (
           <div key={top} style={{ position: "absolute", left: 0, right: 0, top, height: 4, borderTop: "1px solid rgba(215,181,101,0.85)", borderBottom: "1px solid rgba(215,181,101,0.4)", display: "flex" }} />

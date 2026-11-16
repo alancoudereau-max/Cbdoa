@@ -38,7 +38,7 @@ export default function FaqPage() {
           </>
         }
       />
-      <div className="paper">
+      <div>
         {groups.map((g) => (
           <section key={g.title} className="wrap grid gap-6 border-b border-foreground/20 py-14 last:border-b-0 sm:py-20 lg:grid-cols-12 lg:gap-10">
             <h2 className="t-h3 lg:col-span-4">{g.title}</h2>

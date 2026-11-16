@@ -57,7 +57,7 @@ export function AgeGate() {
   if (!visible) return null;
 
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby="agegate-title" className="gate bg-sapin" data-leaving={leaving}>
+    <div role="dialog" aria-modal="true" aria-labelledby="agegate-title" className="gate bg-noir" data-leaving={leaving}>
       <div aria-hidden className="guilloche guilloche-rosace spin-slow opacity-[0.16] left-1/2 top-[46%] w-[170vmin] max-w-[1150px] -translate-x-1/2 -translate-y-1/2" />
       <div className="relative mx-auto flex min-h-full max-w-xl flex-col items-center justify-center px-6 py-14 text-center">
         <Logo weight="fine" className="h-12 sm:h-14" />

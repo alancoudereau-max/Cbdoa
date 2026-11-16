@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { labelImage } from "@/lib/etiquettes";
 import { useEffect, useMemo, useState } from "react";
 import { useCart, cartSubtotalCents } from "@/lib/cart-store";
 import { availableShippingMethods, type ShippingMethodId } from "@/lib/shipping";
@@ -218,7 +219,7 @@ export function CheckoutForm() {
       )}
 
       <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
-        <form onSubmit={(e) => e.preventDefault()} className="paper sheet lg:col-span-7" noValidate>
+        <form onSubmit={(e) => e.preventDefault()} className="panel sheet lg:col-span-7" noValidate>
           <Section n={1} title="Vos coordonnées">
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Prénom" error={errors.firstName}>
@@ -321,7 +322,7 @@ export function CheckoutForm() {
         </form>
 
         <aside className="lg:col-span-5">
-          <div className="paper paper-object lg:sticky lg:top-28">
+          <div className="panel paper-object lg:sticky lg:top-28">
             <div className="space-y-6 p-6 sm:p-7">
               <div>
                 <h2 className="t-h3">Récapitulatif</h2>
@@ -331,7 +332,7 @@ export function CheckoutForm() {
                 {lines.map((l) => (
                   <li key={l.sku} className="flex gap-3.5 border-t border-foreground/20 py-3 text-[0.9375rem] last:border-b">
                     <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-[3px] bg-[#e9dfc6]">
-                      <Image src={l.image} alt="" fill sizes="56px" className="on-paper object-cover" />
+                      <Image src={labelImage(l.image)} alt="" fill sizes="56px" className="object-cover" />
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-medium">{l.name}</span>
@@ -442,7 +443,7 @@ function Field({ label, hint, error, children }: { label: string; hint?: string;
 function Check({ checked, onChange, error, children }: { checked: boolean; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; error?: string; children: React.ReactNode }) {
   return (
     <label className={cn("flex cursor-pointer items-start gap-3 rounded-[3px] border p-4 transition-colors", error ? "border-danger bg-danger-soft" : checked ? "border-foreground/60" : "border-foreground/25 hover:border-foreground/50")}>
-      <input type="checkbox" checked={checked} onChange={onChange} className="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 accent-[#12372a]" />
+      <input type="checkbox" checked={checked} onChange={onChange} className="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 accent-[#d7b565]" />
       <span className="text-[0.9375rem] leading-snug">
         {children}
         {error && <span className="mt-1 block text-[0.875rem] text-danger">{error}</span>}

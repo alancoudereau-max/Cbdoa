@@ -74,7 +74,7 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
       </section>
 
       <section className="wrap-narrow section">
-        <div className="paper sheet prose-cbd">
+        <div className="panel sheet prose-cbd">
           {c.body.map((para) => (
             <p key={para}>{fr(para)}</p>
           ))}

@@ -24,7 +24,7 @@ export default function GuidesPage() {
         titleClassName="max-w-[18ch]"
         lead="Des réponses claires et sourcées, sans promesse miracle : la loi, les produits, les bons gestes."
       />
-      <div className="paper">
+      <div>
         {guideCategories.map((cat) => {
           const items = guides.filter((g) => g.category === cat);
           return (

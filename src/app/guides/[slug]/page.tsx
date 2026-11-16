@@ -52,7 +52,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
       </PageHero>
 
       <div className="wrap grid gap-12 pb-24 lg:grid-cols-12 lg:gap-10">
-        <div className="paper sheet min-w-0 lg:col-span-8">
+        <div className="panel sheet min-w-0 lg:col-span-8">
           <nav aria-label="Sommaire" className="mb-10 border-b border-foreground/25 pb-8">
             <p className="font-medium">Sommaire</p>
             <ol className="mt-3 space-y-1.5 text-[0.9688rem]">

@@ -188,7 +188,7 @@ def og_html(L) -> str:
 @font-face{{font-family:"Fraunces";font-weight:300 500;src:url(data:font/woff2;base64,{base64.b64encode((SITE_FONTS / "fraunces-roman.woff2").read_bytes()).decode()}) format("woff2")}}
 @font-face{{font-family:"Hanken";font-weight:400 700;src:url(data:font/woff2;base64,{base64.b64encode((SITE_FONTS / "hanken-roman.woff2").read_bytes()).decode()}) format("woff2")}}
 html,body{{margin:0}}
-body{{width:1200px;height:630px;background:radial-gradient(520px 520px at 915px 315px,{GREEN} 0%,{GREEN_DEEP} 100%);color:{PAPER};font-family:Hanken,sans-serif;position:relative;overflow:hidden}}
+body{{width:1200px;height:630px;background:radial-gradient(560px 560px at 915px 315px,#241f15 0%,#0c0b09 100%);color:{PAPER};font-family:Hanken,sans-serif;position:relative;overflow:hidden}}
 .g{{position:absolute;left:465px;top:-135px;width:900px;height:900px;background:{GOLD};opacity:.42;-webkit-mask:url("{data_uri(guilloche)}") center/contain no-repeat}}
 .verre{{position:absolute;left:735px;top:135px;width:360px;height:360px;border-radius:50%;background:#e9dfc6 url(data:image/jpeg;base64,{photo}) center/cover;background-blend-mode:multiply;box-shadow:0 0 0 2px {GOLD},0 0 0 9px {GREEN_DEEP},0 0 0 10px rgba(215,181,101,.6)}}
 .rule{{position:absolute;left:0;right:0;height:4px;border-top:1px solid rgba(215,181,101,.85);border-bottom:1px solid rgba(215,181,101,.4)}}

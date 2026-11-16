@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { labelImage } from "@/lib/etiquettes";
 import { Minus, Plus } from "lucide-react";
 import { useCart, cartSubtotalCents } from "@/lib/cart-store";
 import { FREE_SHIPPING_FROM_CENTS } from "@/lib/shipping";
@@ -34,7 +35,7 @@ export function CartPage() {
             {lines.map((l) => (
               <li key={l.sku} className="flex gap-4 border-t border-foreground/15 py-5 last:border-b sm:gap-6">
                 <Link href={`/produit/${l.slug}`} className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[3px] bg-[#e9dfc6] sm:h-28 sm:w-28">
-                  <Image src={l.image} alt={l.name} fill sizes="112px" className="on-paper object-cover" />
+                  <Image src={labelImage(l.image)} alt={l.name} fill sizes="112px" className="object-cover" />
                 </Link>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-4">
@@ -66,7 +67,7 @@ export function CartPage() {
           </ul>
 
           <aside className="lg:col-span-4 lg:col-start-9">
-            <div className="paper paper-object lg:sticky lg:top-28">
+            <div className="panel paper-object lg:sticky lg:top-28">
               <div className="p-6 sm:p-7">
                 <h2 className="t-h3">Récapitulatif</h2>
                 <dl className="mt-5 space-y-2.5 text-[0.9688rem]">

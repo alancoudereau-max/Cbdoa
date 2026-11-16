@@ -13,7 +13,6 @@ import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, itemListJsonLd } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
 import { categoryFaq } from "@/data/category-faq";
-import { categoryVisual } from "@/data/category-visuals";
 import { commas, fr } from "@/lib/utils";
 
 export const dynamicParams = false;
@@ -41,7 +40,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   const faq = categoryFaq[cat.key];
   const related = guides.filter((g) => g.relatedProducts.some((slug) => products.some((p) => p.slug === slug))).slice(0, 3);
   const others = categoryOrder.filter((c) => c !== cat.key);
-  const visual = categoryVisual[cat.key];
 
   return (
     <div>
@@ -57,9 +55,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         guilloche={false}
         aside={
           <div className="relative mx-auto aspect-square w-[min(72vw,19rem)] lg:ml-auto lg:mr-0 lg:w-[21rem]">
-            <div aria-hidden className="guilloche guilloche-orge opacity-[0.28] left-1/2 top-1/2 w-[215%] -translate-x-1/2 -translate-y-1/2" />
-            <div className={`relative h-full overflow-hidden rounded-full ring-1 ring-or/60 ring-offset-[6px] ring-offset-sapin ${visual.blend ? "bg-[#e9dfc6]" : "bg-sapin"}`}>
-              <Image src={visual.src} alt={cat.name} fill sizes="(max-width: 1024px) 72vw, 340px" className={`object-cover ${visual.blend ? "on-paper" : ""}`} priority />
+            <div aria-hidden className="guilloche guilloche-orge spin-slow opacity-[0.3] left-[-57.5%] top-[-57.5%] w-[215%]" />
+            <div className="relative h-full overflow-hidden rounded-full bg-card ring-1 ring-or/60 ring-offset-[6px] ring-offset-noir [clip-path:circle(50%)]">
+              <Image src={cat.image} alt={cat.name} fill sizes="(max-width: 1024px) 72vw, 340px" className="object-cover" priority />
             </div>
           </div>
         }
@@ -100,7 +98,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
 
       {/* Texte de présentation et questions, sur papier */}
       <section className={`wrap ${cat.key === "fleurs" || cat.key === "resines" ? "" : "section pb-0"}`}>
-        <div className="paper sheet grid gap-12 lg:grid-cols-12 lg:gap-10">
+        <div className="panel sheet grid gap-12 lg:grid-cols-12 lg:gap-10">
           <div className="prose-cbd lg:col-span-7">
             <h2>{fr(`${cat.name} : notre sélection, nos critères`)}</h2>
             {cat.intro.slice(1).map((p) => (

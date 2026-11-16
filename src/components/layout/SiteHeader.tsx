@@ -71,7 +71,7 @@ export function SiteHeader() {
   return (
     <>
       {/* Bandeau d'information */}
-      <div className="nuit text-[0.8125rem] leading-none">
+      <div className="band text-[0.8125rem] leading-none">
         <div className="wrap flex h-9 items-center justify-between gap-6">
           <Link href="/livraison" className="truncate text-foreground/80 hover:text-foreground transition-colors">
             Port offert dès 60 €, expédition en 24/48 h

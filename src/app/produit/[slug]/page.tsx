@@ -120,7 +120,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       {/* La notice : description longue et tarifs, sur papier */}
       <section className="wrap">
-        <div className="paper sheet grid gap-12 lg:grid-cols-12 lg:gap-10">
+        <div className="panel sheet grid gap-12 lg:grid-cols-12 lg:gap-10">
           <div className="prose-cbd lg:col-span-7">
             <h2>{fr(`${p.name} : la fiche complète`)}</h2>
             {p.description.map((para) => (

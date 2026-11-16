@@ -3,16 +3,16 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import { site, locations, vendingSupervision } from "@/data/site";
-import { categories, categoryOrder, featuredProducts, getProductsByCategory, getProduct, forceLabels, startingPriceLabel, minPriceCents, formatPrice, type Category, type Force } from "@/data/products";
+import { categories, categoryOrder, featuredProducts, visibleProducts, getProductsByCategory, getProduct, forceLabels, startingPriceLabel, minPriceCents, formatPrice, type Category, type Force } from "@/data/products";
 import { homeFaq } from "@/data/faq";
-import { categoryVisual } from "@/data/category-visuals";
 import { guides } from "@/data/guides";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { AutoVideo } from "@/components/motion/AutoVideo";
 import { LiveTime } from "@/components/motion/ParisTime";
-import { HeroDial } from "@/components/home/HeroDial";
+import { WatchDial } from "@/components/home/WatchDial";
+import { GoldDust } from "@/components/motion/GoldDust";
 import { ForceGauge, type ForceOption } from "@/components/home/ForceGauge";
 import { Rosette } from "@/components/brand/Logo";
 import { itemListJsonLd, buildMetadata } from "@/lib/seo";
@@ -51,12 +51,16 @@ const forceLinks: Record<string, { href: string; cta: string }> = {
   maxi: { href: "/boutique?force=maxi", cta: "Voir la Force Maxi" },
 };
 
-const facts = [
-  { t: "THC inférieur à 0,3 %", d: "Conforme à la loi française, pour chaque lot." },
-  { t: "Analysé en laboratoire", d: "Les certificats sont publiés sur le site.", href: "/analyses-laboratoires" },
-  { t: "Colis neutre", d: "Aucune mention de CBD à l'extérieur." },
-  { t: "Port offert dès 60 €", d: "Expédié le jour même avant 13 h." },
+/** Chiffres clés : la partie numérique s'anime en comptant (attribut data-count), le texte reste lisible sans script. */
+const stats = [
+  { count: visibleProducts.length, before: "", after: "", label: "références analysées", note: "Les certificats sont publiés.", href: "/analyses-laboratoires" },
+  { count: null, before: "<\u00a00,3\u00a0%", after: "", label: "de THC, pour chaque lot", note: "Conforme à la loi française." },
+  { count: 60, before: "", after: "\u00a0€", label: "port offert dès 60\u00a0€", note: "Colis neutre, parti le jour même." },
+  { count: 24, before: "", after: "\u00a0h/24", label: "distributeurs ouverts", note: "À Charquemont et au Russey." },
 ];
+
+/** Disposition des quatre rayons : une grande carte, deux moyennes, une large. */
+const tileLayout = ["col-span-2 aspect-[5/4] lg:row-span-2 lg:aspect-auto lg:min-h-[38rem]", "aspect-[4/5] lg:aspect-auto lg:min-h-[18.25rem]", "aspect-[4/5] lg:aspect-auto lg:min-h-[18.25rem]", "col-span-2 aspect-[16/9] lg:aspect-auto lg:min-h-[18.25rem]"];
 
 const journey = [
   { when: "Avant 13 h", what: "Vous commandez" },
@@ -87,53 +91,62 @@ export default function HomePage() {
         )}
       />
 
-      {/* ───────────── Ouverture : le cadran ───────────── */}
+      {/* ───────────── Ouverture : la montre ───────────── */}
       <section className="relative overflow-hidden">
-        <div aria-hidden className="absolute inset-0 bg-[radial-gradient(70%_46%_at_50%_58%,#1d4d3b_0%,transparent_72%)] lg:bg-[radial-gradient(46%_64%_at_77%_48%,#1d4d3b_0%,transparent_72%)]" />
-        {/* la gravure du cadran s'arrête net au filet de la notice : elle ne passe pas sous les quatre faits */}
-        <div className="relative overflow-hidden">
-          <div className="relative wrap grid gap-y-9 pb-16 pt-9 sm:pt-12 lg:min-h-[min(53rem,calc(100svh-7.25rem))] lg:grid-cols-12 lg:grid-rows-[auto_auto] lg:content-center lg:gap-x-10 lg:gap-y-0 lg:pb-20 lg:pt-12">
-            <h1 className="t-hero seq-soften relative z-10 lg:col-span-7 lg:self-end">
-              {["Du bon CBD.", "À la bonne", "heure."].map((line, n) => (
-                <span key={line} className="seq-line">
-                  <span style={i(n)}>{line}</span>{" "}
+        <div aria-hidden className="glow" />
+        <GoldDust className="pointer-events-none absolute inset-0 h-full w-full" />
+        {/* Sur téléphone : le titre, les boutons, la montre, puis le texte ; sur ordinateur : le texte à gauche, la montre à droite. */}
+        <div className="relative wrap grid gap-y-7 pb-14 pt-8 sm:pt-12 lg:min-h-[min(52rem,calc(100svh-7.25rem))] lg:grid-cols-12 lg:content-center lg:gap-x-10 lg:gap-y-0 lg:pb-20 lg:pt-12">
+          <h1 className="t-hero relative z-10 lg:col-span-7 lg:row-start-1">
+            <span className="seq-line">
+              <span style={i(0)}>Du bon CBD.</span>
+            </span>{" "}
+            <em className="block">
+              <span className="seq-line">
+                <span style={i(1)}>
+                  <span className="gold-text">À la bonne</span>
                 </span>
-              ))}
-            </h1>
-
-            <div className="mx-auto w-[min(100%,21.5rem)] sm:w-[26rem] lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1 lg:w-full lg:self-center">
-              <HeroDial poster="/images/reels/small-buds.jpg" video="/videos/loops/small-buds.mp4" alt="Petites têtes de fleurs de CBD CBDoux, filmées de près" />
-            </div>
-
-            <div className="relative z-10 lg:col-span-7 lg:self-start lg:pt-9">
-              <p className="t-lead seq-in measure" style={i(4)}>
-                Fleurs, résines, huiles et vape analysés en laboratoire. Expédiés en 24/48&nbsp;h partout en France, ou servis jour et nuit par nos distributeurs du Haut-Doubs.
-              </p>
-              <div className="seq-in mt-8 flex flex-wrap items-center gap-x-7 gap-y-4" style={i(5)}>
-                <Link href="/boutique" className="btn btn-primary">
-                  Voir la boutique
-                </Link>
-                <Link href="/distributeurs" className="link">
-                  Trouver un distributeur
-                </Link>
-              </div>
-            </div>
+              </span>{" "}
+              <span className="seq-line">
+                <span style={i(2)}>
+                  <span className="gold-text">heure.</span>
+                </span>
+              </span>
+            </em>
+          </h1>
+          <p className="t-lead seq-in measure relative z-10 order-4 lg:order-none lg:col-span-7 lg:row-start-2 lg:mt-9" style={i(3)}>
+            Fleurs, résines, huiles et vape analysés en laboratoire. Expédiés en 24/48&nbsp;h partout en France, ou servis jour et nuit par nos distributeurs du Haut-Doubs.
+          </p>
+          <div className="seq-in relative z-10 order-2 flex gap-2.5 sm:gap-3 lg:order-none lg:col-span-7 lg:row-start-3 lg:mt-9" style={i(4)}>
+            <Link href="/boutique" className="btn btn-primary max-sm:flex-1 max-sm:px-3 max-sm:text-[0.9063rem]">
+              Voir la boutique
+            </Link>
+            <Link href="/distributeurs" className="btn btn-ghost max-sm:flex-[1.3] max-sm:whitespace-nowrap max-sm:px-3 max-sm:text-[0.9063rem]">
+              Distributeurs 24&nbsp;h/24
+            </Link>
           </div>
+
+          <WatchDial className="order-3 mx-auto mt-2 w-[min(100%,20.5rem)] sm:w-[25rem] lg:order-none lg:col-span-5 lg:col-start-8 lg:row-span-3 lg:row-start-1 lg:mt-0 lg:w-full lg:max-w-[30rem] lg:self-center" />
         </div>
 
-        {/* La notice : quatre faits, imprimés comme sur une étiquette */}
+        {/* Chiffres clés */}
         <div className="relative border-t border-foreground/15">
           <ul className="wrap grid grid-cols-2 lg:grid-cols-4">
-            {facts.map((fact, n) => (
-              <li key={fact.t} className={`py-6 sm:py-7 pr-4 ${n % 2 ? "pl-4 border-l border-foreground/15 sm:pl-7" : ""} ${n >= 2 ? "border-t border-foreground/15 lg:border-t-0" : ""} ${n === 2 ? "lg:border-l lg:pl-7" : ""}`}>
-                <p className="font-medium leading-snug">{fact.t}</p>
-                <p className="t-fine mt-1.5">
-                  {fact.href ? (
-                    <Link href={fact.href} className="link">
-                      {fact.d}
+            {stats.map((st, n) => (
+              <li key={st.label} className={`py-7 pr-4 sm:py-9 ${n % 2 ? "border-l border-foreground/15 pl-4 sm:pl-7" : ""} ${n >= 2 ? "border-t border-foreground/15 lg:border-t-0" : ""} ${n === 2 ? "lg:border-l lg:pl-7" : ""}`}>
+                <p className="stat-num">
+                  {st.before}
+                  {st.count !== null && <span data-count={st.count}>{st.count}</span>}
+                  {st.after}
+                </p>
+                <p className="mt-3 font-medium leading-snug">{st.label}</p>
+                <p className="t-fine mt-1">
+                  {st.href ? (
+                    <Link href={st.href} className="link">
+                      {st.note}
                     </Link>
                   ) : (
-                    fact.d
+                    st.note
                   )}
                 </p>
               </li>
@@ -142,35 +155,41 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ───────────── Bandeau défilant : le catalogue, aux couleurs de l'enseigne ───────────── */}
+      <div aria-hidden className="band band-rules marquee py-4 sm:py-5">
+        <ul className="marquee-track">
+          {[...visibleProducts, ...visibleProducts].map((p, n) => (
+            <li key={`${p.slug}-${n}`} className="flex items-center gap-11 whitespace-nowrap">
+              <span className="t-note text-[1.5rem] leading-none sm:text-[1.875rem]">{p.name.split(/\s+[—–]\s+/)[0]}</span>
+              <Rosette className="h-5 w-5 sm:h-6 sm:w-6" />
+            </li>
+          ))}
+        </ul>
+      </div>
+
       {/* ───────────── Les rayons ───────────── */}
       <section className="nuit section">
         <div className="wrap">
           <div className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-10">
-            <h2 className="t-h2 lg:col-span-7">Peu de références, toutes choisies.</h2>
+            <h2 className="t-h2 lg:col-span-7">
+              Peu de références, <em>toutes choisies.</em>
+            </h2>
             <p className="t-lead lg:col-span-5">Chaque variété est sélectionnée, vérifiée et analysée avant d'entrer au catalogue. Quatre rayons, une seule exigence.</p>
           </div>
 
-          <ul className="mt-12 sm:mt-16">
-            {categoryOrder.map((key) => {
+          <ul className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:gap-5 lg:grid-cols-4">
+            {categoryOrder.map((key, n) => {
               const c = categories[key];
               const count = getProductsByCategory(key).length;
-              const visual = categoryVisual[key];
               return (
-                <li key={key} className="border-t border-foreground/15 last:border-b">
-                  <Link href={`/${c.slug}`} className="group grid grid-cols-[4.25rem_1fr] items-center gap-x-4 py-5 sm:grid-cols-[7.5rem_1fr_auto] sm:gap-x-8 sm:py-7 lg:grid-cols-[9.5rem_1fr_auto]">
-                    <span className={`relative block aspect-square overflow-hidden rounded-full ${visual.blend ? "bg-[#e9dfc6]" : "bg-sapin"}`}>
-                      <Image src={visual.src} alt="" fill sizes="(max-width: 640px) 68px, 152px" className={`object-cover transition-transform duration-[1100ms] ease-out group-hover:scale-110 ${visual.blend ? "on-paper" : ""}`} />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="softens block font-serif font-light text-[clamp(1.9rem,7.6vw,5.25rem)] leading-[1] tracking-[-0.03em]">{c.name}</span>
-                      <span className="t-num mt-2 block text-[0.9375rem] text-foreground/70 sm:hidden">
+                <li key={key} data-reveal="scale" className={tileLayout[n]}>
+                  <Link href={`/${c.slug}`} className="tile group h-full w-full">
+                    <Image src={c.image} alt="" fill sizes={n === 0 || n === 3 ? "(max-width: 1024px) 100vw, 660px" : "(max-width: 1024px) 50vw, 330px"} />
+                    <span className="tile-body">
+                      <span className={`softens block font-serif font-light leading-[1] tracking-[-0.03em] ${n === 0 ? "text-[clamp(2.4rem,9vw,4.75rem)]" : "text-[clamp(1.5rem,5.4vw,2.6rem)]"}`}>{c.name}</span>
+                      <span className="t-num mt-2 block text-[0.8125rem] leading-snug text-foreground/80 sm:text-[0.9375rem]">
                         {count} référence{count > 1 ? "s" : ""}, {categoryFrom(key)}
                       </span>
-                    </span>
-                    <span className="t-num hidden text-right text-[0.9688rem] leading-relaxed text-foreground/75 sm:block">
-                      {count} référence{count > 1 ? "s" : ""}
-                      <br />
-                      {categoryFrom(key)}
                     </span>
                   </Link>
                 </li>
@@ -196,7 +215,9 @@ export default function HomePage() {
       <section className="section">
         <div className="wrap">
           <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
-            <h2 className="t-h2">La sélection du moment</h2>
+            <h2 className="t-h2">
+              La sélection <em>du moment</em>
+            </h2>
             <Link href="/boutique" className="link">
               Tout le catalogue
             </Link>
@@ -213,18 +234,23 @@ export default function HomePage() {
       <section className="section pt-0">
         <div className="wrap">
           <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
-            <h2 className="t-h2 lg:col-span-6">Regardez avant de choisir.</h2>
+            <h2 className="t-h2 lg:col-span-6">
+              Regardez <em>avant de choisir.</em>
+            </h2>
             <p className="t-lead lg:col-span-5 lg:col-start-8 lg:self-end">Texture, densité, couleur : nous filmons nos produits tels qu'ils sont, sans retouche. Ce que vous voyez est ce que vous recevez.</p>
           </div>
           <ul className="-mx-[var(--gutter)] mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[var(--gutter)] pb-2 [scrollbar-width:none] sm:mt-14 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden">
             {reels.map((r, n) => {
               const p = getProduct(r.slug);
               return (
-                <li key={r.slug} className={`w-[70vw] max-w-[20rem] shrink-0 snap-center lg:w-auto lg:max-w-none ${n === 1 ? "lg:mt-16" : n === 2 ? "lg:mt-32" : ""}`}>
+                <li key={r.slug} data-reveal="up" className={`w-[70vw] max-w-[20rem] shrink-0 snap-center lg:w-auto lg:max-w-none ${n === 1 ? "lg:mt-16" : n === 2 ? "lg:mt-32" : ""}`}>
                   <Link href={`/produit/${r.slug}`} className="group block">
-                    <div className="loop unveil aspect-[9/14] rounded-[3px]">
+                    <div className="loop aspect-[9/14] rounded-[4px] ring-1 ring-or/25">
                       <Image src={`/images/reels/${r.loop}.jpg`} alt={`${r.title}, filmé de près`} fill sizes="(max-width: 1024px) 70vw, 400px" />
                       <AutoVideo src={`/videos/loops/${r.loop}.mp4`} label={`${r.title} en vidéo`} />
+                      <span className="chip absolute left-3 top-3 z-10">
+                        <span aria-hidden className="live-dot" /> Filmé chez nous
+                      </span>
                     </div>
                     <div className="mt-4 flex items-baseline justify-between gap-4">
                       <h3 className="softens t-title">{r.title}</h3>
@@ -243,7 +269,9 @@ export default function HomePage() {
       <section className="section border-t border-foreground/15">
         <div className="wrap grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-10">
           <div className="lg:col-span-5">
-            <h2 className="t-h2">Quatre forces, de la plus douce à la plus intense.</h2>
+            <h2 className="t-h2">
+              Quatre forces, <em>de la plus douce à la plus intense.</em>
+            </h2>
             <p className="t-lead mt-6 measure">La force indique la concentration en CBD. Commencez toujours par la plus douce : la bonne quantité est la plus petite qui vous convient.</p>
             <p className="t-fine mt-6 measure">
               Produits réservés aux adultes. Ne conduisez pas après usage.{" "}
@@ -260,10 +288,12 @@ export default function HomePage() {
 
       {/* ───────────── Jour et nuit : les distributeurs ───────────── */}
       <section className="nuit section relative overflow-hidden">
-        <div aria-hidden className="guilloche guilloche-orge opacity-[0.14] w-[150vw] sm:w-[1100px] -left-[80vw] sm:-left-[620px] -bottom-[70vw] sm:-bottom-[560px]" />
+        <div aria-hidden className="guilloche guilloche-orge spin-slow opacity-[0.16] w-[150vw] sm:w-[1100px] -left-[80vw] sm:-left-[620px] -bottom-[70vw] sm:-bottom-[560px]" />
         <div className="relative wrap grid gap-14 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-6">
-            <h2 className="t-h2">Ouverts quand tout est fermé.</h2>
+            <h2 className="t-h2">
+              Ouverts quand <em>tout est fermé.</em>
+            </h2>
             <p className="t-lead mt-6 measure">Deux distributeurs CBDoux, à Charquemont et au Russey. {fr(vendingSupervision.short)}</p>
             <p className="mt-6 flex items-center gap-3 text-[0.9688rem]">
               <span aria-hidden className="live-dot" />
@@ -287,8 +317,8 @@ export default function HomePage() {
           </div>
 
           <div className="relative lg:col-span-5 lg:col-start-8 lg:pt-4">
-            <figure className="paper postcard relative z-[2] w-[47%] max-w-[15.5rem]" style={{ "--tilt": "-2.6deg" } as CSSProperties} data-parallax="-0.04">
-              <div className="unveil overflow-hidden">
+            <figure data-reveal="left" className="paper postcard relative z-[2] w-[47%] max-w-[15.5rem]" style={{ "--tilt": "-2.6deg" } as CSSProperties}>
+              <div className="overflow-hidden">
                 <Image src={charquemont.image} alt={charquemont.imageAlt} width={charquemont.imageSize[0]} height={charquemont.imageSize[1]} sizes="250px" className="block h-auto w-full" />
               </div>
               <figcaption>
@@ -296,8 +326,8 @@ export default function HomePage() {
                 <span className="text-[0.75rem] text-foreground/70">La cabine</span>
               </figcaption>
             </figure>
-            <figure className="paper postcard relative z-[1] -mt-[24%] ml-auto w-[80%] max-w-[27rem]" style={{ "--tilt": "1.5deg" } as CSSProperties} data-parallax="0.03">
-              <div className="unveil overflow-hidden">
+            <figure data-reveal="right" className="paper postcard relative z-[1] -mt-[24%] ml-auto w-[80%] max-w-[27rem]" style={{ "--tilt": "1.5deg" } as CSSProperties}>
+              <div className="overflow-hidden">
                 <Image src={russey.image} alt={russey.imageAlt} width={russey.imageSize[0]} height={russey.imageSize[1]} sizes="(max-width: 1024px) 80vw, 430px" className="block h-auto w-full" />
               </div>
               <figcaption>
@@ -313,7 +343,9 @@ export default function HomePage() {
       <section className="section">
         <div className="wrap">
           <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
-            <h2 className="t-h2 lg:col-span-7">Commandé avant 13&nbsp;h, parti le jour même.</h2>
+            <h2 className="t-h2 lg:col-span-7">
+              Commandé avant 13&nbsp;h, <em>parti le jour même.</em>
+            </h2>
             <div className="lg:col-span-4 lg:col-start-9 lg:self-end">
               <p className="t-lead">Sachets hermétiques inodores, colis neutre, numéro de suivi. Le port Colissimo est offert dès 60&nbsp;€ d'achat.</p>
               <Link href="/livraison" className="link mt-5 inline-block">
@@ -323,13 +355,13 @@ export default function HomePage() {
           </div>
 
           {/* Le trajet du colis, sur une règle de temps */}
-          <ol data-inview className="relative mt-14 grid gap-y-8 sm:mt-20 sm:grid-cols-4 sm:gap-x-6">
+          <ol data-reveal="up" className="relative mt-14 grid gap-y-8 sm:mt-20 sm:grid-cols-4 sm:gap-x-6">
             <svg aria-hidden className="pointer-events-none absolute left-[0.4rem] top-0 h-full w-px sm:left-0 sm:top-[0.4rem] sm:h-px sm:w-full" preserveAspectRatio="none">
               <line x1="0" y1="0" x2="100%" y2="100%" stroke="#d7b565" strokeWidth="2" className="draws" style={{ strokeDasharray: 2000, "--len": 2000 } as CSSProperties} />
             </svg>
             {journey.map((j) => (
               <li key={j.when} className="relative pl-8 sm:pl-0 sm:pt-9">
-                <span aria-hidden className="absolute left-0 top-[0.35rem] h-[0.85rem] w-[0.85rem] rounded-full border border-or bg-sapin sm:top-0" />
+                <span aria-hidden className="absolute left-0 top-[0.35rem] h-[0.85rem] w-[0.85rem] rounded-full border border-or bg-noir shadow-[0_0_0_4px_rgb(215_181_101/0.12)] sm:top-0" />
                 <p className="t-h3">{j.when}</p>
                 <p className="mt-1.5 text-foreground/75">{j.what}</p>
               </li>
@@ -342,7 +374,9 @@ export default function HomePage() {
       <section className="section border-t border-foreground/15">
         <div className="wrap grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-10">
           <div className="lg:col-span-6">
-            <h2 className="t-h2">Trois étapes, un seul interlocuteur.</h2>
+            <h2 className="t-h2">
+              Trois étapes, <em>un seul interlocuteur.</em>
+            </h2>
             <p className="t-lead mt-6 measure">Pas de formulaire de paiement à rallonge : vous validez votre panier, nous nous occupons du reste avec vous, sur WhatsApp.</p>
             <ol className="mt-10">
               {orderSteps.map((s, n) => (
@@ -357,7 +391,7 @@ export default function HomePage() {
             </ol>
           </div>
           <div className="flex justify-center lg:col-span-5 lg:col-start-8">
-            <div data-inview className="chat phone w-[19rem] max-w-full">
+            <div data-reveal="scale" className="chat phone w-[19rem] max-w-full">
               <div className="flex items-center gap-3 bg-sapin px-4 py-3.5 text-etiquette">
                 <span className="flex h-9 w-9 items-center justify-center rounded-full border border-or/60">
                   <Rosette className="h-5 w-5" />
@@ -389,7 +423,7 @@ export default function HomePage() {
       {/* ───────────── Le bon de bienvenue ───────────── */}
       <section className="section-tight pt-0">
         <div className="wrap">
-          <div className="paper ticket grid gap-8 px-8 py-10 sm:px-14 sm:py-12 lg:grid-cols-12 lg:items-center lg:gap-10">
+          <div data-reveal="scale" className="ticket grid gap-8 px-8 py-10 sm:px-14 sm:py-12 lg:grid-cols-12 lg:items-center lg:gap-10">
             <div className="lg:col-span-4">
               <p className="font-medium">Bon de bienvenue</p>
               <p className="t-num mt-2 font-serif text-[clamp(5rem,13vw,9rem)] font-light leading-[0.85] tracking-[-0.045em]" style={{ fontVariationSettings: '"SOFT" 100' }}>
@@ -411,18 +445,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ───────────── À lire : guides et questions, sur papier ───────────── */}
-      <section className="paper section">
+      {/* ───────────── À lire : guides et questions ───────────── */}
+      <section className="section border-t border-foreground/15">
         <div className="wrap grid gap-10 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-4">
-            <h2 className="t-h2">Comprendre avant de choisir.</h2>
+            <h2 className="t-h2">
+              Comprendre <em>avant de choisir.</em>
+            </h2>
             <Link href="/guides" className="link mt-6 inline-block">
               Tous les guides
             </Link>
           </div>
           <ul className="lg:col-span-7 lg:col-start-6">
             {latestGuides.map((g) => (
-              <li key={g.slug} className="border-t border-foreground/25 last:border-b">
+              <li key={g.slug} data-reveal="up" className="border-t border-foreground/15 last:border-b">
                 <Link href={`/guides/${g.slug}`} className="group block py-6">
                   <p className="t-fine">
                     {g.category}, {g.readingMinutes} min de lecture
@@ -437,7 +473,9 @@ export default function HomePage() {
 
         <div className="wrap mt-24 grid gap-10 sm:mt-32 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-4">
-            <h2 className="t-h2 lg:sticky lg:top-32">Questions fréquentes</h2>
+            <h2 className="t-h2 lg:sticky lg:top-32">
+              Questions <em>fréquentes</em>
+            </h2>
           </div>
           <div className="lg:col-span-7 lg:col-start-6">
             <Faq items={homeFaq} />
@@ -450,9 +488,12 @@ export default function HomePage() {
 
       {/* ───────────── Nous écrire ───────────── */}
       <section className="nuit section relative overflow-hidden">
-        <div aria-hidden className="guilloche guilloche-rosace opacity-[0.12] w-[140vw] sm:w-[980px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
+        <div aria-hidden className="glow glow-soft" />
+        <div aria-hidden className="guilloche guilloche-rosace opacity-[0.14] w-[140vw] sm:w-[980px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
         <div className="relative wrap text-center">
-          <h2 className="t-h1 mx-auto max-w-[14ch]">Une question&nbsp;? On vous répond.</h2>
+          <h2 className="t-h1 mx-auto max-w-[14ch]">
+            Une question&nbsp;? <em>On vous répond.</em>
+          </h2>
           <p className="t-lead mx-auto mt-6 max-w-xl">Conseil sur une force, suivi de colis, commande : une vraie personne vous répond sur WhatsApp, 7 jours sur 7.</p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">
             <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-primary">

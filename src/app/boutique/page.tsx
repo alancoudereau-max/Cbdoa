@@ -62,7 +62,7 @@ export default function BoutiquePage() {
 
       {/* Texte de présentation, sur papier */}
       <section className="wrap section-tight">
-        <div className="paper sheet grid gap-10 lg:grid-cols-2 lg:gap-16">
+        <div className="panel sheet grid gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
             <h2 className="t-h3">Acheter du CBD en ligne, en toute confiance</h2>
             <p className="mt-5 text-foreground/85">

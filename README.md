@@ -3,7 +3,7 @@
 Site e-commerce professionnel de **CBDoux** (SARL SMART VEND, Haut-Doubs) : fleurs, résines, huiles cutanées et vape CBD, expédition France entière, retrait local, distributeurs 24/7.
 
 - **Framework** : Next.js 15 (App Router, React 19, TypeScript) — rendu statique/ISR, ultra-rapide, SEO natif
-- **Style** : Tailwind CSS v4, direction « le cadran et l'étiquette » (vert sapin de l'enseigne, papier crème de l'étiquette, filets d'or, guilloché horloger), polices auto-hébergées (Fraunces pour les titres, Hanken Grotesk pour le texte)
+- **Style** : Tailwind CSS v4, direction « noir, or et cadran » (fond noir, or, touches de vert de l'enseigne, étiquettes produit en papier crème, montre CBDoux), polices auto-hébergées (Fraunces pour les titres, Hanken Grotesk pour le texte)
 - **Commande** : le client compose son panier puis envoie le récapitulatif complet sur le WhatsApp du marchand en un clic (fallback email / copie). Facturation, lien de paiement (Shine) et expédition gérés par le marchand — aucune base de données, aucun back-office à maintenir.
 - **Hébergement** : Netlify (configuration incluse : `netlify.toml`), déploiement automatique à chaque modification du dépôt GitHub — guide complet dans `DEPLOIEMENT.md`
 
@@ -26,7 +26,8 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 | `python3 -I scripts/build-conseils-pdf.py` | régénère `public/conseils-prudence.pdf` |
 | `python3 scripts/build-brand.py` | régénère le logo, les icônes, l'image de partage et le bandeau |
 | `python3 -I scripts/build-guilloche.py` | régénère les deux gravures de fond (`public/images/brand/guilloche-*.svg`) |
-| `python3 -I scripts/normalize-product-photos.py <photo.jpg>` | ramène au blanc le fond d'une photo produit, pour qu'elle se fonde dans le papier des fiches |
+| `python3 -I scripts/build-etiquettes.py` | prépare les photos produit sur fond blanc à la couleur du papier des étiquettes (`public/images/etiquettes/`) |
+| `python3 -I scripts/normalize-product-photos.py <photo.jpg>` | ramène au blanc le fond grisâtre d'une photo produit, avant de lancer la commande précédente |
 | `python3 -I scripts/patch-fonts.py` | à relancer si un fichier de police est remplacé : l'apostrophe du clavier s'affiche en apostrophe typographique |
 
 ## Où modifier quoi
@@ -45,17 +46,23 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 
 ## Direction artistique
 
-Un seul fond (le vert sapin de l'enseigne), un seul papier (le crème de l'étiquette des flacons : fiches produit, formulaires, tickets et notices sont « imprimés » dessus), un seul métal (l'or, en filets fins). Le motif de fond est un guilloché, la gravure des cadrans de montre : le Haut-Doubs est un pays horloger. L'accueil s'ouvre sur un cadran de 24 heures qui donne l'heure réelle : les distributeurs sont ouverts sur tout le tour.
+« Noir, or et cadran » (troisième version, 17 novembre 2026) : l'ambiance noir et or voulue par Alan, avec la finition de la refonte précédente.
+
+- **Fond noir, métal or.** Le vert de l'enseigne n'est qu'un accent : bandeau du haut, bandeau défilant, cadran de la montre, boutons posés sur papier.
+- **Le papier crème est réservé aux objets** : étiquettes produit, cartes postales des distributeurs, certificats d'analyse. Tout le reste (formulaires, textes longs, tableaux, récapitulatifs) vit sur des panneaux sombres liserés d'or (`.panel`).
+- **La montre** (`src/components/home/WatchDial.tsx`) : un cadran 12 heures original, signé CBDoux, qui donne l'heure exacte du Haut-Doubs (pays horloger, distributeurs ouverts jour et nuit). Elle n'imite aucune marque existante : rosace de la marque à midi, aiguilles « feuille », guichet de date.
+- **Le mouvement** : apparitions au défilement, chiffres qui comptent, bandeau défilant, reflets dorés, poussière d'or. Règle absolue : **aucune image n'attend un script pour s'afficher**, et aucun effet de fusion ou de découpe n'est demandé au navigateur (c'est ce qui faisait « buguer » les photos de la version précédente).
 
 | Besoin | Fichier |
 |---|---|
-| Couleurs, tailles de texte, boutons, papier, filets, animations | `src/app/globals.css` (jetons en tête de fichier ; `.paper` passe une zone sur papier crème, `.nuit` sur vert nuit) |
+| Couleurs, tailles de texte, boutons, panneaux, animations | `src/app/globals.css` (jetons en tête de fichier ; `.paper` = papier crème, `.panel` = panneau sombre, `.nuit` = noir profond, `.ticket` = bon doré) |
 | Polices | `src/fonts/` et `src/app/layout.tsx` |
-| Cadran de l'accueil, jauge des forces | `src/components/home/HeroDial.tsx`, `ForceGauge.tsx` |
+| Montre, jauge des forces | `src/components/home/WatchDial.tsx`, `ForceGauge.tsx` |
+| Animations (apparitions, compteurs, barre de lecture) | `src/components/motion/MotionRoot.tsx` : marquer un bloc `data-reveal`, un chiffre `data-count` |
 | Fiche produit en forme d'étiquette | `src/components/product/ProductCard.tsx` |
-| Photo de chaque rayon (médaillons) | `src/data/category-visuals.ts` |
+| Photos produit sur papier | `python3 -I scripts/build-etiquettes.py` (à relancer après tout ajout de photo) |
 
-Règles de typographie : phrases en minuscules (pas de titres en capitales), pas de flèche dans les boutons, numéros uniquement pour de vraies étapes. Les espaces insécables françaises (avant `? ! : ;`, entre un nombre et son unité) sont posées automatiquement sur les textes du catalogue par `fr()` (`src/lib/utils.ts`) et écrites telles quelles dans les pages. Les photos produit à fond blanc se fondent dans le papier ; une photo à fond gris se corrige avec `normalize-product-photos.py`, puis se renomme (le nom de fichier sert de clé de cache).
+Règles de typographie : titres en Fraunces, la seconde moitié de la phrase en italique doré (`<em>`) ; phrases en minuscules, pas de flèche dans les boutons, numéros uniquement pour de vraies étapes. Les espaces insécables françaises sont posées automatiquement sur les textes du catalogue par `fr()` (`src/lib/utils.ts`) et écrites telles quelles dans les pages.
 
 ## Structure
 

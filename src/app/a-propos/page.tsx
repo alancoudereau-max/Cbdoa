@@ -78,7 +78,7 @@ export default function AboutPage() {
       </section>
 
       {/* Engagements, sur papier */}
-      <section className="paper section">
+      <section className="nuit section">
         <div className="wrap grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-10">
           <blockquote className="t-h1 lg:col-span-6">« La petite douceur du Haut-Doubs. »</blockquote>
           <div className="lg:col-span-5 lg:col-start-8">

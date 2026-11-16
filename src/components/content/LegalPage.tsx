@@ -30,7 +30,7 @@ export function LegalPage({ slug }: { slug: string }) {
       </PageHero>
 
       <div className="wrap-narrow pb-24">
-        <div className="paper sheet prose-cbd">
+        <div className="panel sheet prose-cbd">
           {/* Le préambule ouvre le document, sur le papier : il se lit avant l'article 1. */}
           {d.intro && <p className="mb-10 border-b border-foreground/25 pb-8 font-serif text-[1.1875rem] font-light leading-[1.5] sm:text-[1.3125rem]">{fr(d.intro)}</p>}
           {d.sections.map((s) => (

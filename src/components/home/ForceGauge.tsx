@@ -27,18 +27,18 @@ export function ForceGauge({ options }: { options: ForceOption[] }) {
   const needle = -67.5 + active * 45;
 
   return (
-    <div className="paper sheet">
+    <div data-reveal="scale" className="panel sheet">
       <svg viewBox="0 0 400 226" className="mx-auto block w-full max-w-[26rem]" role="img" aria-label={`Jauge des forces : ${current.label}, niveau ${current.dots} sur 4`}>
         <g fill="none" strokeWidth="13" strokeLinecap="butt">
           {segments.map((d, i) => (
-            <path key={d} d={d} stroke="#12372a" opacity={i <= active ? 1 : 0.16} style={{ transition: "opacity 0.5s" }} />
+            <path key={d} d={d} stroke="#d7b565" opacity={i <= active ? 1 : 0.18} style={{ transition: "opacity 0.5s" }} />
           ))}
         </g>
-        <g fill="none" stroke="#7a5c1a" strokeWidth="1">
+        <g fill="none" stroke="#d7b565" strokeWidth="1">
           <path d={`M${point(180, R + 16)}A${R + 16} ${R + 16} 0 0 1 ${point(0, R + 16)}`} opacity="0.7" />
           <path d={`M${point(180, R - 16)}A${R - 16} ${R - 16} 0 0 1 ${point(0, R - 16)}`} opacity="0.45" />
         </g>
-        <g fill="#12372a" fontSize="13" style={{ fontFamily: "var(--font-sans)" }}>
+        <g fill="#f2ead6" opacity="0.8" fontSize="13" style={{ fontFamily: "var(--font-sans)" }}>
           <text x={CX - R - 16} y={CY + 22} textAnchor="start">
             Doux
           </text>
@@ -47,10 +47,10 @@ export function ForceGauge({ options }: { options: ForceOption[] }) {
           </text>
         </g>
         <g style={{ transform: `rotate(${needle}deg)`, transformOrigin: `${CX}px ${CY}px`, transition: "transform 0.95s cubic-bezier(0.3, 1.45, 0.45, 1)" }}>
-          <path d={`M${CX - 3.2} ${CY}L${CX} ${CY - R + 26}L${CX + 3.2} ${CY}Z`} fill="#12372a" />
+          <path d={`M${CX - 3.2} ${CY}L${CX} ${CY - R + 26}L${CX + 3.2} ${CY}Z`} fill="#f2ead6" />
         </g>
-        <circle cx={CX} cy={CY} r="9" fill="#12372a" />
-        <circle cx={CX} cy={CY} r="3" fill="#d7b565" />
+        <circle cx={CX} cy={CY} r="9" fill="#f2ead6" />
+        <circle cx={CX} cy={CY} r="3" fill="#8a6a1f" />
       </svg>
 
       <div role="radiogroup" aria-label="Choisir une force" className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4">

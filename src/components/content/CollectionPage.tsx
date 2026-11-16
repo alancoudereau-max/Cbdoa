@@ -47,7 +47,7 @@ export function CollectionPage({ slug }: { slug: CollectionSlug }) {
       </section>
 
       <section className="wrap section pb-0">
-        <div className="paper sheet grid gap-12 lg:grid-cols-12 lg:gap-10">
+        <div className="panel sheet grid gap-12 lg:grid-cols-12 lg:gap-10">
           <div className="prose-cbd min-w-0 lg:col-span-7">
             {c.sections.map((s) => (
               <div key={s.heading}>

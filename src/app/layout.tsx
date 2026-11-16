@@ -85,11 +85,11 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
   },
   manifest: "/manifest.webmanifest",
-  other: { "theme-color": "#12372a" },
+  other: { "theme-color": "#0c0b09" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#12372a",
+  themeColor: "#0c0b09",
   width: "device-width",
   initialScale: 1,
   colorScheme: "dark",
@@ -103,7 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MotionRoot />
         <a
           href="#contenu"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-etiquette focus:px-4 focus:py-2 focus:text-sapin"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-etiquette focus:px-4 focus:py-2 focus:text-noir"
         >
           Aller au contenu
         </a>

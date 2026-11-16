@@ -13,7 +13,7 @@ export function WhatsAppPlaque({ className }: { className?: string }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Écrire à CBDoux sur WhatsApp au ${site.phoneDisplay}`}
-      className={cn("nuit group relative block overflow-hidden rounded-[3px] px-7 py-12 text-center ring-1 ring-or/55 ring-offset-[5px] ring-offset-sapin", className)}
+      className={cn("nuit group relative block overflow-hidden rounded-[3px] px-7 py-12 text-center ring-1 ring-or/55 ring-offset-[5px] ring-offset-noir", className)}
     >
       <span aria-hidden className="guilloche guilloche-rosace opacity-[0.14] left-1/2 top-1/2 w-[34rem] -translate-x-1/2 -translate-y-1/2" />
       <span className="relative block">

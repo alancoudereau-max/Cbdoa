@@ -4,7 +4,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { locations, site, vendingSupervision } from "@/data/site";
 import { PageHero } from "@/components/ui/PageHero";
-import { HeroDial } from "@/components/home/HeroDial";
+import { WatchDial } from "@/components/home/WatchDial";
 import { LiveTime } from "@/components/motion/ParisTime";
 import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
@@ -53,7 +53,7 @@ export default function DistributeursPage() {
         guilloche={false}
         aside={
           <div className="mx-auto w-[min(78vw,20rem)] lg:ml-auto lg:mr-4 lg:w-[23rem]">
-            <HeroDial poster={russey.image} alt={russey.imageAlt} position="50% 40%" />
+            <WatchDial />
           </div>
         }
       >
@@ -72,7 +72,7 @@ export default function DistributeursPage() {
           <div className="wrap grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-10">
             <div className={`relative lg:col-span-6 ${i % 2 ? "lg:order-2 lg:col-start-7" : ""}`}>
               <figure className="paper postcard relative z-[1] mx-auto w-[88%] max-w-[30rem]" style={{ "--tilt": i % 2 ? "1.4deg" : "-1.4deg" } as CSSProperties}>
-                <div className="unveil overflow-hidden">
+                <div className="overflow-hidden">
                   <Image src={m.image} alt={m.imageAlt} width={m.imageSize[0]} height={m.imageSize[1]} sizes="(max-width: 1024px) 88vw, 480px" className="block h-auto w-full" priority={i === 0} />
                 </div>
                 <figcaption>
@@ -82,7 +82,7 @@ export default function DistributeursPage() {
               </figure>
               {m.secondImage && (
                 <figure className="paper postcard relative z-[2] -mt-[22%] ml-auto mr-0 w-[52%] max-w-[17rem] sm:mr-4" style={{ "--tilt": "-2.2deg" } as CSSProperties}>
-                  <div className="unveil overflow-hidden">
+                  <div className="overflow-hidden">
                     <Image src={m.secondImage.src} alt={m.secondImage.alt} width={m.secondImage.size[0]} height={m.secondImage.size[1]} sizes="(max-width: 1024px) 52vw, 270px" className="block h-auto w-full" />
                   </div>
                   <figcaption>
@@ -181,7 +181,7 @@ export default function DistributeursPage() {
         </div>
       </section>
 
-      <section className="paper section">
+      <section className="nuit section">
         <div className="wrap grid gap-10 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-4">
             <h2 className="t-h2">Distributeurs : vos questions</h2>

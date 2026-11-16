@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { type Product, startingPriceLabel, maxForce, categories } from "@/data/products";
 import { ForceBadge } from "@/components/ui/ForceBadge";
+import { labelImage } from "@/lib/etiquettes";
 import { cn, commas } from "@/lib/utils";
 
 /**
@@ -36,16 +37,16 @@ export function ProductCard({
 }) {
   const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
-    <article className={cn("paper etiquette group", className)}>
+    <article data-reveal="up" className={cn("paper etiquette group", className)}>
       <Link href={`/produit/${p.slug}`} className="absolute inset-0 z-10 rounded-[3px]" aria-label={`Voir ${p.name}`} />
       <div className="etiquette-photo">
         <Image
-          src={p.image}
+          src={labelImage(p.image)}
           alt={`${p.name} — ${categories[p.category].name} CBDoux`}
           fill
           priority={priority}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          className={cn("on-paper object-cover", !available && "opacity-60 grayscale")}
+          className={cn("object-cover", !available && "opacity-60 grayscale")}
         />
         <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2.5 sm:p-3">
           {!available ? <span className="pastille bg-sapin text-etiquette">Épuisé</span> : p.badge ? <span className="pastille">{p.badge}</span> : <span />}

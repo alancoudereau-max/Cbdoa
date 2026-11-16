@@ -42,7 +42,7 @@ export default function ConseilsPrudencePage() {
       </PageHero>
 
       <div className="wrap-narrow pb-24">
-        <div className="paper sheet">
+        <div className="panel sheet">
           <p className="rounded-[3px] bg-danger-soft px-5 py-4 text-[0.9688rem] leading-relaxed">
             <strong>Réservé aux adultes.</strong> Nos produits ne sont pas destinés aux mineurs, aux femmes enceintes ou allaitantes, ni aux personnes sous traitement médical sans avis d'un professionnel de santé. Ils ne sont pas des médicaments.
           </p>
