@@ -11,9 +11,9 @@ import { buildMetadata } from "@/lib/seo";
 import { formatEUR } from "@/lib/utils";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Livraison CBD France 24/48 h, colis discret — port offert dès 60 €",
+  title: "Livraison CBD 24/48 h en France, offerte dès 60 €",
   description:
-    "Expédition de votre CBD partout en France : Lettre suivie, Colissimo 48 h offert dès 60 €, Chronopost 24 h. Colis neutre, sachets hermétiques. Retrait gratuit à Damprichard & Le Russey.",
+    "Votre CBD expédié partout en France : Lettre suivie, Colissimo 48 h offert dès 60 €, Chronopost 24 h. Colis neutre. Retrait gratuit à Damprichard et au Russey.",
   path: "/livraison",
   keywords: ["livraison cbd", "cbd livraison 24h", "cbd colis discret", "frais de port cbd", "retrait cbd haut-doubs"],
 });

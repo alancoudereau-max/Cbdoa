@@ -62,9 +62,11 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", title: "CBDoux — CBD premium du Haut-Doubs", description: site.shortDescription, images: [site.ogImage] },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
-  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
-    : undefined,
+  // Codes de validation des outils pour webmasters (variables d'environnement Netlify, voir DEPLOIEMENT.md)
+  verification: {
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : {}),
+    ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ? { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } } : {}),
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "48x48" },

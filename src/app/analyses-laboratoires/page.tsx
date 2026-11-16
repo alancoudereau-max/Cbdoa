@@ -11,7 +11,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Analyses laboratoires CBD (COA) : taux CBD & THC vérifiés",
   description:
-    "Tous nos certificats d'analyse : taux de CBD et de THC par lot, méthodes HPLC et GC-MS, laboratoires indépendants. Conformité française THC < 0,3 %. Transparence totale.",
+    "Nos certificats d'analyse : taux de CBD et de THC par lot, méthodes HPLC et GC-MS, laboratoires indépendants. Conformité française : THC < 0,3 %.",
   path: "/analyses-laboratoires",
   keywords: ["analyse laboratoire cbd", "coa cbd", "certificat analyse cbd", "taux thc cbd", "cbd testé"],
 });

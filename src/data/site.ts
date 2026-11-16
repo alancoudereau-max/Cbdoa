@@ -99,7 +99,12 @@ export const locations = {
       hours: "24 h/24 — 7 j/7",
       payment: "Carte bancaire",
       image: "/images/brand/distributeur-charquemont.jpg",
-      mapsUrl: "https://share.google/beGYu4oykwVRiF67i",
+      /** Rue communiquée par l'exploitant (le numéro reste à préciser). */
+      street: "Rue de la Vierge" as string | undefined,
+      /** Recherche Google Maps sur le lieu (pas encore de fiche Google propre à ce distributeur). */
+      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Station+de+lavage+rue+de+la+Vierge+25140+Charquemont" as string | undefined,
+      /** Lien « laisser un avis Google » : à renseigner quand la fiche Google de ce distributeur existera. */
+      reviewUrl: undefined as string | undefined,
     },
     {
       id: "le-russey",
@@ -111,9 +116,31 @@ export const locations = {
       hours: "24 h/24 — 7 j/7",
       payment: "Carte bancaire",
       image: "/images/brand/distributeur-le-russey.jpg",
-      mapsUrl: undefined as string | undefined,
+      /** Adresse de la fiche Google « PREMIUM CBD DISTRIBUTEUR LE-RUSSEY CBDoux ». */
+      street: "15 place Dominique Parrenin" as string | undefined,
+      /** Fiche Google du distributeur (itinéraire, avis). */
+      mapsUrl: "https://www.google.com/maps?cid=4117224708896034599" as string | undefined,
+      /** Lien direct « laisser un avis » sur la fiche Google. */
+      reviewUrl: "https://search.google.com/local/writereview?placeid=ChIJV5x9unzxjUcRJ481Cg9SIzk" as string | undefined,
     },
   ],
+} as const;
+
+/**
+ * Fonctionnement des distributeurs (confirmé par l'exploitant le 16/11/2026) : chaque vente est déverrouillée
+ * à distance par un membre de l'équipe, qui voit le client par caméra, lui parle par l'interphone,
+ * vérifie sa majorité puis lui communique le code d'achat — de jour comme de nuit.
+ */
+export const vendingSupervision = {
+  title: "Chaque vente validée en direct",
+  short: "Caméra et interphone : un membre de l'équipe vérifie votre majorité et vous conseille avant de déverrouiller l'achat, de jour comme de nuit.",
+  steps: [
+    { title: "Présentez-vous devant la caméra", text: "Le distributeur nous prévient dès que vous êtes là, à toute heure." },
+    { title: "Nous vous répondons par l'interphone", text: "Un membre de l'équipe vérifie que vous êtes majeur et répond à vos questions sur les produits." },
+    { title: "Recevez votre code", text: "Nous vous communiquons le code qui déverrouille l'achat. Sans code, aucune vente n'est possible." },
+    { title: "Payez par carte et récupérez votre sachet", text: "Paiement sans contact ou avec code, produit conservé à 20 °C en sachet hermétique." },
+  ],
+  support: "Une question ou un souci devant la machine ? Appelez ou écrivez-nous sur WhatsApp : nous répondons 7 j/7.",
 } as const;
 
 /** Navigation principale */
@@ -135,6 +162,8 @@ export const footerNav = {
     { href: "/resines-cbd", label: "Résines CBD" },
     { href: "/huiles-cbd", label: "Huiles CBD cutanées" },
     { href: "/vape-cbd", label: "Vape & pods CBD" },
+    { href: "/cbd-puissant", label: "CBD puissant" },
+    { href: "/cbd-pas-cher", label: "CBD pas cher" },
     { href: "/nouveautes", label: "Nouveautés" },
   ],
   infos: [

@@ -7,9 +7,9 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Conseils d'utilisation & prudence CBD : dosage, forces, précautions",
+  title: "Conseils & prudence CBD : dosage et précautions",
   description:
-    "Comment utiliser nos produits CBD en toute sérénité : forces Classique à Maxi, dosage progressif, délais d'action, conduite, contre-indications, conservation. Guide téléchargeable en PDF.",
+    "Bien utiliser nos produits CBD : forces Classique à Maxi, dosage progressif, délais d'action, conduite, contre-indications, conservation. Guide PDF à télécharger.",
   path: "/conseils-prudence",
   keywords: ["conseils cbd", "dosage cbd", "précautions cbd", "cbd effets secondaires", "cbd contre-indications"],
 });
@@ -59,13 +59,12 @@ export default function ConseilsPrudencePage() {
         </Section>
 
         <Section icon={Droplet} title="Dosage : commencer doucement">
-          <p>La règle d'or : <span className="text-foreground font-medium">commencer bas, augmenter lentement</span>. Prenez une petite quantité, attendez 15 à 30 minutes en vaporisation (45 minutes à 1 h 30 en infusion) et évaluez le ressenti avant d'en reprendre.</p>
+          <p>La règle d'or : <span className="text-foreground font-medium">commencer bas, augmenter lentement</span>. Prenez une petite quantité, attendez 15 à 30 minutes et évaluez le ressenti avant d'en reprendre.</p>
           <p>Le ressenti varie selon la sensibilité, le poids, le métabolisme et le moment de la journée. Un même produit peut agir différemment d'une personne à l'autre.</p>
         </Section>
 
         <Section icon={Clock} title="Délai d'action et durée">
           <p><span className="font-medium text-foreground">Vaporisation :</span> ressenti en quelques minutes, durée 1 à 3 heures.</p>
-          <p><span className="font-medium text-foreground">Infusion :</span> ressenti plus lent (45 min à 1 h 30), durée plus longue. Attendez avant d'en reprendre.</p>
           <p><span className="font-medium text-foreground">Application cutanée (huiles) :</span> usage local, à renouveler selon besoin. Ne pas ingérer.</p>
         </Section>
 
@@ -88,7 +87,7 @@ export default function ConseilsPrudencePage() {
         </Section>
 
         <Section icon={Leaf} title="Qualité & traçabilité">
-          <p>Tous nos produits respectent la réglementation française (THC &lt; 0,3 %) et disposent d'analyses de laboratoire consultables. Fleurs et résines sont destinées à la vaporisation ou à l'infusion — non à la combustion. Les huiles sont à usage cutané exclusivement.</p>
+          <p>Tous nos produits respectent la réglementation française (THC &lt; 0,3 %) et disposent d'analyses de laboratoire consultables. Fleurs et résines sont destinées à la vaporisation — ni à la combustion, ni à un usage alimentaire. Les huiles sont à usage cutané exclusivement.</p>
           <p><Link href="/analyses-laboratoires" className="text-gold underline decoration-gold/40 hover:decoration-gold">Voir nos analyses laboratoires →</Link></p>
         </Section>
       </div>

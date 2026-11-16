@@ -13,7 +13,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { ForceBadge } from "@/components/ui/ForceBadge";
 import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
-import { buildMetadata, productJsonLd } from "@/lib/seo";
+import { buildMetadata, productJsonLd, productSeoTitle } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
 import { categoryFaq } from "@/data/category-faq";
 
@@ -27,12 +27,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const p = getProduct(slug);
   if (!p) return {};
-  const cat = categories[p.category];
-  const min = formatPrice(Math.min(...p.variants.map((v) => v.priceCents)));
-  const title = `${p.name} — ${cat.name} dès ${min}${p.variants.some((v) => v.format === "1 g") ? "/g" : ""}`;
   return buildMetadata({
-    title,
-    description: `${p.short} ${p.origin ? `${p.origin}. ` : ""}THC < 0,3 %, analyse labo. Livraison France 24/48 h, port offert dès 60 €.`.slice(0, 160),
+    title: productSeoTitle(p),
+    description: `${p.short} THC < 0,3 %, analyse labo. Livraison 24/48 h, port offert dès 60 €.`,
     path: `/produit/${p.slug}`,
     image: `/produit/${p.slug}/opengraph-image`,
     type: "product",

@@ -18,7 +18,7 @@ import { getAvailabilityMap } from "@/lib/stock";
 export const metadata: Metadata = buildMetadata({
   title: "CBDoux — CBD premium du Haut-Doubs, livraison France 24/48 h",
   description:
-    "Fleurs, résines, huiles et vape CBD premium testés en laboratoire (THC < 0,3 %). Expédition discrète partout en France, port offert dès 60 €. Retrait à Damprichard & Le Russey, distributeurs 24/7.",
+    "Fleurs, résines, huiles cutanées et vape CBD testés en laboratoire (THC < 0,3 %). Livraison France 24/48 h offerte dès 60 €, distributeurs 24 h/24 dans le Doubs.",
   path: "/",
   keywords: ["cbd", "boutique cbd en ligne", "fleur cbd", "résine cbd", "cbd haut-doubs", "cbd livraison france", "cbd doubs"],
 });

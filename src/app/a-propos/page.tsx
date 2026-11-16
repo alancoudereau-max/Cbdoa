@@ -10,7 +10,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "À propos de CBDoux — CBD premium né dans le Haut-Doubs",
   description:
-    "L'histoire de CBDoux : une marque de SMART VEND née dans le Haut-Doubs pour rendre le CBD premium accessible 24 h/24, en toute discrétion. Distributeurs, retrait, livraison France.",
+    "L'histoire de CBDoux, nom commercial de SMART VEND : un CBD premium né dans le Haut-Doubs, accessible 24 h/24. Distributeurs, retrait, livraison en France.",
   path: "/a-propos",
   keywords: ["cbdoux", "smart vend", "cbd haut-doubs", "boutique cbd française"],
 });

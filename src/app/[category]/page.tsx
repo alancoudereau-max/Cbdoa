@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { categories, categoryOrder, getCategoryBySlug, getProductsByCategory, forceLabels } from "@/data/products";
+import { categories, categoryOrder, getCategoryBySlug, getProductsByCategory, forceLabels, formatPrice } from "@/data/products";
 import { guides } from "@/data/guides";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -23,7 +23,10 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   const { category } = await params;
   const cat = getCategoryBySlug(category);
   if (!cat) return {};
-  return buildMetadata({ title: cat.title, description: cat.description, path: `/${cat.slug}`, image: cat.image, keywords: cat.keywords });
+  // Prix au gramme le plus bas de la catégorie, repris dans le titre (toujours à jour avec le catalogue).
+  const perGram = getProductsByCategory(cat.key).flatMap((p) => p.variants.filter((v) => v.format === "1 g").map((v) => v.priceCents));
+  const title = perGram.length ? `${cat.title} dès ${formatPrice(Math.min(...perGram))}/g` : cat.title;
+  return buildMetadata({ title, description: cat.description, path: `/${cat.slug}`, image: cat.image, keywords: cat.keywords });
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
@@ -56,7 +59,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
         {products.map((p, i) => (
-          <ProductCard key={p.slug} product={p} priority={i < 2} available={p.variants.some((v) => availability[v.sku] !== false)} />
+          <ProductCard key={p.slug} product={p} priority={i < 2} headingLevel={2} available={p.variants.some((v) => availability[v.sku] !== false)} />
         ))}
       </div>
 
@@ -87,7 +90,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             <p key={p}>{p}</p>
           ))}
           <p>
-            Tous nos produits sont réservés aux personnes majeures et ne sont pas des médicaments. Fleurs et résines sont destinées à la vaporisation ou à l'infusion ; nos huiles sont à usage cutané exclusivement. Consultez nos{" "}
+            Tous nos produits sont réservés aux personnes majeures et ne sont pas des médicaments. Fleurs et résines sont destinées à la vaporisation (ni combustion, ni usage alimentaire) ; nos huiles sont à usage cutané exclusivement. Consultez nos{" "}
             <Link href="/conseils-prudence">conseils de prudence</Link> et nos <Link href="/analyses-laboratoires">analyses de laboratoire</Link>.
           </p>
         </div>

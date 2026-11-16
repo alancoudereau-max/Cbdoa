@@ -70,8 +70,8 @@ export function SiteFooter() {
           <strong className="text-foreground/75">Avertissement.</strong> Produits réservés aux personnes majeures (18+). Nos produits
           contiennent moins de 0,3 % de THC conformément à la réglementation française. Ils ne sont pas des médicaments et ne sont
           destinés ni à diagnostiquer, ni à traiter, ni à prévenir une quelconque maladie. Déconseillés aux femmes enceintes ou
-          allaitantes. Ne pas conduire après consommation. Fleurs et résines destinées à la vaporisation ou à l'infusion — non
-          destinées à la combustion. Huiles à usage cutané exclusivement.
+          allaitantes. Ne pas conduire après consommation. Fleurs et résines destinées à la vaporisation — non
+          destinées à la combustion ni à un usage alimentaire. Huiles à usage cutané exclusivement.
         </div>
 
         <div className="mt-8 pt-6 border-t border-foreground/10 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between font-mono text-[10px] uppercase tracking-[0.15em] text-foreground/45">

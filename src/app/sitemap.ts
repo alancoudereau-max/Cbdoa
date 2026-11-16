@@ -4,6 +4,7 @@ import { visibleProducts, categories, categoryOrder } from "@/data/products";
 import { guides } from "@/data/guides";
 import { cities } from "@/data/cities";
 import { legalDocs } from "@/data/legal";
+import { collections } from "@/data/collections";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -30,5 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const cityList: MetadataRoute.Sitemap = cities.map((c) => ({ url: url(`/cbd/${c.slug}`), lastModified: now, changeFrequency: "monthly", priority: 0.6 }));
   const legal: MetadataRoute.Sitemap = legalDocs.map((d) => ({ url: url(`/${d.slug}`), lastModified: new Date(d.updatedAt), changeFrequency: "yearly", priority: 0.2 }));
 
-  return [...statics, ...cats, ...products, ...guidesList, ...cityList, ...legal];
+  const selections: MetadataRoute.Sitemap = collections.map((c) => ({ url: url(`/${c.slug}`), lastModified: now, changeFrequency: "weekly", priority: 0.8 }));
+
+  return [...statics, ...cats, ...selections, ...products, ...guidesList, ...cityList, ...legal];
 }

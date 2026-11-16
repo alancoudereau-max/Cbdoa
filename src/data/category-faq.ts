@@ -13,7 +13,7 @@ export const categoryFaq: Record<Category, FaqItem[]> = {
     },
     {
       q: "Comment utiliser une fleur de CBD ?",
-      a: "Nos fleurs sont destinées à la vaporisation (vaporisateur à herbe sèche, 160 à 220 °C selon le rendu recherché) ou à l'infusion (10 à 15 minutes dans une boisson chaude avec un corps gras : lait entier, huile de coco…). Elles ne sont pas destinées à la combustion.",
+      a: "Nos fleurs sont destinées à la vaporisation (vaporisateur à herbe sèche, 160 à 220 °C selon le rendu recherché). Elles ne sont destinées ni à la combustion ni à un usage alimentaire : depuis le 15 mai 2026, les denrées contenant du CBD (tisanes, préparations culinaires) ne peuvent plus être vendues en France.",
     },
     {
       q: "Combien de temps se conserve une fleur de CBD ?",
@@ -30,8 +30,8 @@ export const categoryFaq: Record<Category, FaqItem[]> = {
       a: "Le « pollen » désigne un tamisage à sec de trichomes, souvent plus friable et doré (comme notre Olivette Gold). Le hash ou résine pressée est plus compact et foncé. Les deux sont issus du même principe ; seules la finesse de filtration, la pression et la génétique changent la texture et les arômes.",
     },
     {
-      q: "Comment consommer une résine de CBD ?",
-      a: "En vaporisation (vaporisateur compatible concentrés ou chambre dédiée, souvent avec un tampon de dégommage) ou en infusion après l'avoir émiettée dans une boisson chaude contenant un corps gras. La résine n'est pas destinée à la combustion.",
+      q: "Comment utiliser une résine de CBD ?",
+      a: "En vaporisation, avec un vaporisateur compatible concentrés ou une chambre dédiée (souvent avec un tampon de dégommage). La résine n'est destinée ni à la combustion ni à un usage alimentaire.",
     },
     {
       q: "Que sont les résines « Force Maxi » (Beldia, Piatella) ?",

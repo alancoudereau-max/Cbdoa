@@ -10,8 +10,8 @@ import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, faqJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "FAQ CBD : légalité, livraison, paiement, forces, utilisation",
-  description: "Toutes les réponses à vos questions sur le CBD et CBDoux : légalité en France, livraison discrète, commande et paiement, forces Classique à Maxi, fleurs, résines, huiles, vape.",
+  title: "FAQ CBD : légalité, livraison, paiement, forces",
+  description: "Vos questions sur le CBD et CBDoux : légalité en France, livraison discrète, commande et paiement, forces Classique à Maxi, fleurs, résines, huiles, vape.",
   path: "/faq",
   keywords: ["faq cbd", "questions cbd", "cbd légal", "livraison cbd", "paiement cbd"],
 });

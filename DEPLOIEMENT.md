@@ -54,11 +54,18 @@ Dans Claude : **Paramètres → Connecteurs → GitHub → Connecter**, avec le 
 ## 5. Le jour de la mise en ligne — référencement (20 min)
 
 1. **Google Search Console** (search.google.com/search-console) : *Ajouter une propriété* → votre domaine → méthode « Balise HTML » : copiez le code `content="…"`, ajoutez-le dans Netlify (*Project configuration → Environment variables*) sous le nom `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`, relancez un déploiement, puis cliquez « Vérifier ». Ensuite *Sitemaps* → `sitemap.xml` → Envoyer.
-2. **Bing Webmaster Tools** (bing.com/webmasters) : « Importer depuis Google Search Console ».
+2. **Bing Webmaster Tools** (bing.com/webmasters) : « Importer depuis Google Search Console ». Si Bing demande une balise, son code va dans la variable `NEXT_PUBLIC_BING_SITE_VERIFICATION`. Les pages nouvelles ou modifiées sont en plus signalées à Bing par IndexNow : le fichier `public/8d1fb510c1ad4b498696d65f9eed1a4d.txt` sert de clé, ne le supprimez pas.
 3. **Ancien site** `cbdoux.lovable.app` : demandez à Claude d'y activer la redirection (301) vers le nouveau domaine pour transférer le référencement acquis. Gardez l'ancien projet publié au moins 3 mois.
 4. **Fiche Google Business Profile** : mettez la nouvelle adresse du site, ajoutez les photos des deux distributeurs, les horaires 24/7, et demandez des avis clients. C'est le levier n° 1 du référencement local.
 5. **Facebook** : remplacez l'adresse du site et annoncez le nouveau site.
 6. Dans 7 à 10 jours : dans la Search Console, vérifiez *Pages → indexées* (≈ 85 pages attendues).
+
+### Règles de rédaction à garder (référencement et conformité)
+
+- **Titres Google** : 60 caractères maximum, « | CBDoux » compris (ajouté automatiquement quand la place le permet). **Descriptions** : 160 caractères maximum. Le contrôle se fait avec `python3 qa/seo_extract.py` après un build.
+- **Aucune présentation alimentaire** des fleurs, du trim et des résines (infusion, tisane, cuisine) : depuis le 15 mai 2026, les denrées contenant du CBD ne peuvent plus être vendues en France. Les produits sont présentés pour la vaporisation ; les huiles pour un usage cutané.
+- **Distributeurs** : adresses, liens Google et texte « vente validée en direct » se règlent dans `src/data/site.ts` (`locations`, `vendingSupervision`). La page `/distributeurs` sert de localisateur pour les fiches Google.
+- **Pages de sélection** `/cbd-puissant` et `/cbd-pas-cher` : produits, prix et tableaux sont calculés depuis le catalogue (`src/data/collections.ts`), rien à mettre à jour à la main.
 
 ## 6. Au quotidien
 

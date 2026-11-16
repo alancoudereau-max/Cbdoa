@@ -18,6 +18,10 @@ export const homeFaq: FaqItem[] = [
     a: "C'est simple : vous composez votre panier, vous indiquez vos coordonnées et votre mode de livraison, puis votre récapitulatif nous est envoyé sur WhatsApp en un clic. Nous confirmons la disponibilité et vous adressons votre facture avec un lien de paiement sécurisé par carte bancaire (ou un RIB pour un virement). Pour un retrait, vous pouvez aussi régler sur place en espèces ou par carte. Aucune donnée bancaire n'est saisie sur le site. Nos distributeurs automatiques acceptent la carte 24 h/24.",
   },
   {
+    q: "Comment fonctionnent vos distributeurs automatiques ?",
+    a: "Nos deux distributeurs, à Charquemont et au Russey, sont ouverts 24 h/24. Chaque vente est validée en direct : vous vous présentez devant la caméra, un membre de l'équipe vérifie votre majorité par l'interphone, vous conseille si besoin, puis vous communique le code qui déverrouille l'achat. Paiement par carte bancaire.",
+  },
+  {
     q: "Que signifient les forces Classique, 2, 3 et Maxi ?",
     a: "La force indique la concentration en CBD du produit. Classique : CBD naturel, non renforcé. Force 2 et Force 3 : fleur ou résine renforcée en CBD (ressenti plus présent). Force Maxi : la concentration la plus élevée de la gamme, réservée aux adultes habitués et déconseillée aux débutants. Dans tous les cas, commencez par une petite quantité, attendez les effets et ne conduisez pas après usage.",
   },

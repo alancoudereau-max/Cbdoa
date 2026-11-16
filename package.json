@@ -2,14 +2,13 @@
   "name": "cbdoux-site",
   "version": "1.0.0",
   "private": true,
-  "description": "CBDoux — boutique en ligne CBD premium (Haut-Doubs) : Next.js 15, Mollie, Supabase, Resend.",
+  "description": "CBDoux — boutique en ligne CBD premium (Haut-Doubs) : Next.js 15, commande par WhatsApp, sans base de données.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit",
-    "db:print": "cat supabase/schema.sql"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "lucide-react": "^1.70.0",

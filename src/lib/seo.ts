@@ -1,7 +1,40 @@
 import type { Metadata } from "next";
-import { site, company, locations, SITE_URL } from "@/data/site";
-import { categories, type Product, minPriceCents, maxPriceCents } from "@/data/products";
+import { site, company, locations, vendingSupervision, SITE_URL } from "@/data/site";
+import { categories, type Product, minPriceCents, maxPriceCents, startingPriceLabel } from "@/data/products";
 import { absoluteUrl } from "@/lib/utils";
+
+const BRAND_SUFFIX = ` | ${site.name}`;
+/** Longueurs au-delà desquelles Google tronque le plus souvent l'affichage. */
+export const TITLE_MAX = 60;
+export const DESCRIPTION_MAX = 160;
+
+/** Coupe proprement un texte à la longueur voulue (fin de mot, puis « … »). */
+export function clip(text: string, max: number): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max - 1);
+  const lastSpace = cut.lastIndexOf(" ");
+  const base = lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut;
+  return `${base.replace(/[\s,;:·—–-]+$/, "")}…`;
+}
+
+/**
+ * Titre affiché dans les résultats de recherche : « | CBDoux » n'est ajouté que si la marque
+ * n'y figure pas déjà et si l'ensemble tient en 60 caractères (sinon Google le tronque).
+ */
+export function seoTitle(title: string): string {
+  const t = title.replace(/\s+/g, " ").trim();
+  if (t.toLowerCase().includes(site.name.toLowerCase())) return t;
+  return t.length + BRAND_SUFFIX.length <= TITLE_MAX ? `${t}${BRAND_SUFFIX}` : t;
+}
+
+/** Titre d'une fiche produit : nom optimisé pour la recherche + prix d'appel (toujours à jour avec le catalogue). */
+export function productSeoTitle(p: Product): string {
+  const cleanName = p.name.replace(/\s+[—–-]\s+/g, " ");
+  const base = p.seoName ?? (p.category === "fleurs" ? `${cleanName} : fleur CBD` : cleanName);
+  const price = startingPriceLabel(p);
+  return price.startsWith("dès") ? `${base} ${price}` : `${base} : ${price}`;
+}
 
 /** Construit un objet Metadata complet (title, description, canonical, OpenGraph, Twitter). */
 export function buildMetadata(opts: {
@@ -18,8 +51,9 @@ export function buildMetadata(opts: {
   const url = absoluteUrl(opts.path);
   const image = absoluteUrl(opts.image ?? site.ogImage);
   return {
-    title: opts.title,
-    description: opts.description,
+    // « absolute » : le gabarit « %s | CBDoux » du layout n'est pas réappliqué (seoTitle s'en charge).
+    title: { absolute: seoTitle(opts.title) },
+    description: clip(opts.description, DESCRIPTION_MAX),
     keywords: opts.keywords,
     alternates: { canonical: url, languages: { "fr-FR": url } },
     robots: opts.noIndex ? { index: false, follow: false } : { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
@@ -137,7 +171,7 @@ export function vendingMachineJsonLd(m: (typeof locations.vendingMachines)[numbe
     "@type": "Store",
     "@id": `${SITE_URL}/distributeurs#${m.id}`,
     name: `Distributeur CBDoux 24/7 — ${m.city}`,
-    description: `${m.place}. ${m.details}`,
+    description: `${m.place}${m.street ? `, ${m.street}` : ""}. ${m.details} ${vendingSupervision.short}`,
     image: absoluteUrl(m.image),
     url: absoluteUrl("/distributeurs"),
     telephone: site.phoneE164,
@@ -145,7 +179,7 @@ export function vendingMachineJsonLd(m: (typeof locations.vendingMachines)[numbe
     paymentAccepted: m.payment,
     address: {
       "@type": "PostalAddress",
-      streetAddress: m.place,
+      streetAddress: m.street ?? m.place,
       postalCode: m.postalCode,
       addressLocality: m.city,
       addressRegion: "Doubs",
@@ -175,6 +209,21 @@ export function breadcrumbJsonLd(items: Array<{ name: string; path: string }>) {
   };
 }
 
+/** Date de mise en ligne des vidéos produit (ouverture du site). */
+const VIDEO_UPLOAD_DATE = "2026-11-16T03:00:00+01:00";
+
+/** Droit de rétractation de 14 jours, retour par envoi postal aux frais du client (voir /retours). */
+const RETURN_POLICY = {
+  "@type": "MerchantReturnPolicy",
+  applicableCountry: "FR",
+  returnPolicyCountry: "FR",
+  returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+  merchantReturnDays: 14,
+  returnMethod: "https://schema.org/ReturnByMail",
+  returnFees: "https://schema.org/ReturnFeesCustomerResponsibility",
+  merchantReturnLink: absoluteUrl("/retours"),
+} as const;
+
 export function productJsonLd(p: Product, opts: { available: boolean }) {
   const cat = categories[p.category];
   const low = minPriceCents(p) / 100;
@@ -197,6 +246,18 @@ export function productJsonLd(p: Product, opts: { available: boolean }) {
       { "@type": "PropertyValue", name: "Arômes", value: p.aromas },
     ],
     audience: { "@type": "PeopleAudience", suggestedMinAge: 18 },
+    ...(p.video
+      ? {
+          subjectOf: {
+            "@type": "VideoObject",
+            name: `${p.name} en vidéo`,
+            description: `Présentation en vidéo : ${p.short}`,
+            thumbnailUrl: [absoluteUrl(p.image)],
+            contentUrl: absoluteUrl(p.video),
+            uploadDate: VIDEO_UPLOAD_DATE,
+          },
+        }
+      : {}),
     offers: {
       "@type": "AggregateOffer",
       url,
@@ -216,6 +277,7 @@ export function productJsonLd(p: Product, opts: { available: boolean }) {
         priceCurrency: "EUR",
         availability: opts.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
         url,
+        hasMerchantReturnPolicy: RETURN_POLICY,
         shippingDetails: {
           "@type": "OfferShippingDetails",
           shippingDestination: { "@type": "DefinedRegion", addressCountry: "FR" },

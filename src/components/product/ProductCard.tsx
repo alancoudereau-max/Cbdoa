@@ -5,7 +5,21 @@ import { type Product, startingPriceLabel, maxForce, categories } from "@/data/p
 import { ForceBadge } from "@/components/ui/ForceBadge";
 import { cn } from "@/lib/utils";
 
-export function ProductCard({ product: p, priority = false, className, available = true }: { product: Product; priority?: boolean; className?: string; available?: boolean }) {
+export function ProductCard({
+  product: p,
+  priority = false,
+  className,
+  available = true,
+  headingLevel = 3,
+}: {
+  product: Product;
+  priority?: boolean;
+  className?: string;
+  available?: boolean;
+  /** Niveau du titre : 2 quand la grille suit directement le H1 de la page (hiérarchie des titres). */
+  headingLevel?: 2 | 3;
+}) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
     <article className={cn("lift group relative flex flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-card/60 hover:border-gold/50 transition-colors", className)}>
       <Link href={`/produit/${p.slug}`} className="absolute inset-0 z-10" aria-label={`Voir ${p.name}`} />
@@ -36,7 +50,7 @@ export function ProductCard({ product: p, priority = false, className, available
       </div>
       <div className="flex flex-1 flex-col p-4 sm:p-5">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-gold mb-1.5">{p.origin ?? categories[p.category].name}</p>
-        <h3 className="font-serif text-xl sm:text-2xl leading-tight">{p.name}</h3>
+        <Heading className="font-serif text-xl sm:text-2xl leading-tight">{p.name}</Heading>
         <div className="mt-2">
           <ForceBadge force={maxForce(p)} size="xs" />
         </div>

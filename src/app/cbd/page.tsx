@@ -7,8 +7,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "CBD près de chez vous : Haut-Doubs, Doubs et toute la France",
-  description: "Où acheter du CBD CBDoux : distributeurs 24h/24 à Charquemont et au Russey, retrait à Damprichard, livraison locale (Maîche, Morteau…) et expédition 24/48 h à Pontarlier, Besançon, Montbéliard, Belfort et partout en France.",
+  title: "CBD près de chez vous : Haut-Doubs, Doubs, France",
+  description: "Où trouver CBDoux : distributeurs 24 h/24 à Charquemont et au Russey, retrait à Damprichard, livraison locale et expédition 24/48 h partout en France.",
   path: "/cbd",
   keywords: ["cbd doubs", "cbd haut-doubs", "cbd près de chez moi", "acheter cbd franche-comté"],
 });

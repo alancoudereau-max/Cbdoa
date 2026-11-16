@@ -38,7 +38,7 @@ export const guides: Guide[] = [
     slug: "cbd-legal-france-2026",
     title: "CBD légal en France en 2026 : ce que dit vraiment la loi",
     description:
-      "Fleurs, résines, huiles, vape : quels produits CBD sont autorisés en France en 2026 ? Seuil de THC, interdiction alimentaire, mineurs, allégations. Le point complet.",
+      "Fleurs, résines, huiles, vape : quels produits CBD sont autorisés en France en 2026 ? Seuil de THC, interdiction alimentaire, mineurs, allégations.",
     category: "Réglementation",
     publishedAt: "2026-11-08",
     readingMinutes: 7,
@@ -63,7 +63,7 @@ export const guides: Guide[] = [
         heading: "Ce qui a changé en mai 2026 : fin des aliments au CBD",
         blocks: [
           p("Depuis le 15 mai 2026, la France applique strictement la réglementation européenne sur les nouveaux aliments (« novel food ») : les denrées alimentaires contenant du CBD — huiles à avaler, gummies, tisanes à base de fleurs, chocolats — ne peuvent plus être commercialisées tant qu'aucune autorisation européenne n'a été délivrée."),
-          p("Les fleurs et résines destinées à la vaporisation ou à l'infusion, les e-liquides et pods, ainsi que les cosmétiques (huiles et baumes à usage cutané) restent autorisés. C'est pourquoi nos huiles Full Spectrum sont exclusivement proposées pour un usage cutané."),
+          p("Les fleurs et résines destinées à la vaporisation, les e-liquides et pods, ainsi que les cosmétiques (huiles et baumes à usage cutané) restent autorisés. C'est pourquoi nos huiles Full Spectrum sont exclusivement proposées pour un usage cutané, et nos fleurs et résines pour la vaporisation : nous ne les présentons ni pour l'infusion, ni pour la cuisine."),
         ],
       },
       {
@@ -104,7 +104,7 @@ export const guides: Guide[] = [
     slug: "comment-choisir-fleur-cbd",
     title: "Comment choisir sa fleur de CBD : indoor, hydro, greenhouse",
     description:
-      "Indoor, hydroponie ou greenhouse ? Taux de CBD, trichomes, arômes, small buds et trim : le guide pour choisir une fleur de CBD de qualité et adaptée à vos goûts.",
+      "Indoor, hydroponie ou greenhouse ? Taux de CBD, trichomes, arômes, small buds et trim : le guide pour choisir une fleur de CBD de qualité, adaptée à vos goûts.",
     category: "Bien choisir",
     publishedAt: "2026-11-08",
     readingMinutes: 8,
@@ -159,7 +159,7 @@ export const guides: Guide[] = [
       {
         heading: "Small buds et trim : les bons plans",
         blocks: [
-          p("Les small buds sont les petites têtes récoltées sur les mêmes plants que les grosses : même génétique, même culture, prix plus doux. Le trim rassemble les petites feuilles résineuses et mini-buds issus de la manucure : idéal pour les infusions et les préparations maison, à prix très accessible."),
+          p("Les small buds sont les petites têtes récoltées sur les mêmes plants que les grosses : même génétique, même culture, prix plus doux. Le trim rassemble les petites feuilles résineuses et mini-buds issus de la manucure : il se vaporise comme une fleur, avec un rendu plus léger, à prix très accessible."),
           p("Notre Californienne Indoor Small Buds est proposée en force Maxi, réservée aux adultes habitués. Le Trim Premium Indoor est vendu par lots de 10, 50 et 100 g."),
         ],
       },
@@ -176,12 +176,12 @@ export const guides: Guide[] = [
       { q: "Une fleur à 24 % de CBD est-elle plus « forte » qu'une 18 % ?", a: "Plus concentrée en CBD, oui. Mais le ressenti dépend aussi des terpènes, de la quantité utilisée et de votre sensibilité. Les forces 2, 3 et Maxi vont plus loin que le taux naturel." },
     ],
     relatedProducts: ["super-lemon-haze-hydro-usa", "cali-fruit-indoor", "fruit-haze", "trim-premium-indoor"],
-    relatedGuides: ["comprendre-les-forces-cbd", "fleur-ou-resine-cbd", "vaporiser-ou-infuser-cbd"],
+    relatedGuides: ["comprendre-les-forces-cbd", "fleur-ou-resine-cbd", "vaporiser-cbd-guide-pratique"],
     keywords: ["choisir fleur cbd", "fleur cbd indoor", "fleur cbd hydroponie", "meilleure fleur cbd", "fleur cbd débutant", "small buds cbd"],
   },
   {
     slug: "fleur-ou-resine-cbd",
-    title: "Fleur ou résine de CBD : quelles différences, lequel choisir ?",
+    title: "Fleur ou résine de CBD : différences et conseils",
     description:
       "Fleur, résine, hash, pollen : comprenez les différences de fabrication, de texture, d'arômes et d'usage pour choisir le produit CBD qui vous correspond.",
     category: "Bien choisir",
@@ -193,7 +193,7 @@ export const guides: Guide[] = [
       {
         heading: "La fleur : la plante telle quelle",
         blocks: [
-          p("La fleur de CBD est la tête séchée du chanvre, manucurée et conservée. Elle offre le profil aromatique le plus fidèle à la variété et se prête à la vaporisation comme à l'infusion. Son taux de CBD naturel se situe généralement entre 10 et 25 % selon les génétiques."),
+          p("La fleur de CBD est la tête séchée du chanvre, manucurée et conservée. Elle offre le profil aromatique le plus fidèle à la variété et se vaporise facilement, à basse température. Son taux de CBD naturel se situe généralement entre 10 et 25 % selon les génétiques."),
         ],
       },
       {
@@ -223,7 +223,7 @@ export const guides: Guide[] = [
               ["Concentration CBD", "10 – 25 % (naturel)", "35 – 45 % et plus"],
               ["Arômes", "Fidèles à la variété, très lisibles", "Plus profonds, terreux, épicés"],
               ["Texture", "Têtes à effriter", "Bloc à chauffer légèrement et émietter"],
-              ["Usage", "Vaporisation, infusion", "Vaporisation (chambre concentrés), infusion"],
+              ["Usage", "Vaporisation", "Vaporisation (chambre pour concentrés)"],
               ["Prix au gramme", "5 à 10 €", "5 à 10 €"],
               ["Conservation", "Plusieurs mois en sachet hermétique", "Très bonne, peu sensible au séchage"],
             ],
@@ -240,18 +240,91 @@ export const guides: Guide[] = [
     ],
     faq: [
       { q: "La résine est-elle plus « forte » que la fleur ?", a: "Elle est plus concentrée en CBD, donc une plus petite quantité suffit. Le ressenti dépend de la force choisie et de votre sensibilité." },
-      { q: "Comment utiliser une résine de CBD ?", a: "Chauffez-la quelques secondes entre les doigts pour l'assouplir, émiettez-la, puis vaporisez-la (chambre pour concentrés ou tampon de dégommage) ou infusez-la avec un corps gras. Elle n'est pas destinée à la combustion." },
+      { q: "Comment utiliser une résine de CBD ?", a: "Chauffez-la quelques secondes entre les doigts pour l'assouplir, émiettez-la, puis vaporisez-la (chambre pour concentrés ou tampon de dégommage). Elle n'est destinée ni à la combustion ni à un usage alimentaire." },
       { q: "Qu'est-ce qu'une résine triple filtrée ?", a: "Une résine passée au tamis trois fois (190, 120, 73 µ) pour ne garder que les trichomes : pureté proche de 99 %, aucun déchet végétal." },
     ],
     relatedProducts: ["3x-filtre", "olivette-gold", "beldia", "super-lemon-haze-hydro-usa"],
-    relatedGuides: ["comment-choisir-fleur-cbd", "vaporiser-ou-infuser-cbd", "comprendre-les-forces-cbd"],
+    relatedGuides: ["piatella-cbd-c-est-quoi", "comment-choisir-fleur-cbd", "vaporiser-cbd-guide-pratique", "comprendre-les-forces-cbd"],
     keywords: ["fleur ou résine cbd", "différence hash fleur cbd", "pollen cbd", "résine cbd filtrée", "hash cbd"],
+  },
+  {
+    slug: "piatella-cbd-c-est-quoi",
+    title: "Piatella CBD : c'est quoi, comment l'utiliser ?",
+    description:
+      "D'où vient la Piatella, comment reconnaître cette résine à la texture fondante, comment l'utiliser et la conserver : le guide CBDoux, sans jargon.",
+    category: "Bien choisir",
+    publishedAt: "2026-11-16",
+    readingMinutes: 5,
+    intro:
+      "Piatella : le mot revient partout dans l'univers de la résine. Derrière ce nom venu de la scène barcelonaise du hash, une texture souple, presque fondante, et une aromatique généreuse. Voici ce qu'il faut savoir avant d'en commander.",
+    sections: [
+      {
+        heading: "D'où vient le nom « Piatella » ?",
+        blocks: [
+          p("La Piatella (on écrit aussi « piattella ») est née à Barcelone. Des artisans y ont popularisé un affinage à froid : une résine extraite à l'eau glacée, sans solvant, est séchée puis conservée plusieurs semaines au frais, entre 4 et 10 °C environ, à l'abri de l'air. Sans jamais être chauffée, elle passe d'une texture sableuse à une pâte souple, presque crémeuse."),
+          p("Le terme a ensuite voyagé. Dans l'univers du CBD, il désigne aujourd'hui des résines travaillées dans cet esprit — texture malléable, aromatique marquée — sans qu'il existe de définition officielle. Les procédés varient d'un fabricant à l'autre : c'est l'analyse de laboratoire, et non le nom, qui renseigne sur ce que contient réellement une résine."),
+        ],
+      },
+      {
+        heading: "Comment reconnaître une Piatella",
+        blocks: [
+          ul([
+            "Une robe claire à brun doré, souvent plus pâle qu'une résine pressée classique.",
+            "Une texture souple, qui se travaille entre les doigts sans partir en poudre.",
+            "Une coupe nette, au cœur finement granuleux ou crémeux.",
+            "Un parfum présent dès l'ouverture du sachet.",
+          ]),
+          p("Notre Piatella présente une robe brun doré et un cœur finement granuleux, à la texture généreuse, presque fondante : nous la montrons en vidéo sur sa fiche produit."),
+        ],
+      },
+      {
+        heading: "Piatella, 3X Filtré, Olivette, Beldia : quelles différences ?",
+        blocks: [
+          table(
+            ["Résine", "Ce qui la caractérise", "Texture"],
+            [
+              ["Piatella", "Résine à la texture travaillée, dans l'esprit des affinages à froid", "Souple, fondante"],
+              ["3X Filtré", "Tamisage à sec en trois passes : 190, 120 puis 73 microns", "Fine, homogène"],
+              ["Olivette Gold", "Pollen tamisé puis pressé en boules", "Friable et grasse"],
+              ["Beldia", "Résine pressée à l'ancienne, de caractère", "Compacte"],
+            ],
+          ),
+          p("Le mot « beldia » vient de l'arabe marocain, où il désigne ce qui est « du pays », traditionnel : on l'emploie pour les résines travaillées à l'ancienne."),
+        ],
+      },
+      {
+        heading: "Comment l'utiliser",
+        blocks: [
+          p("Comme toutes nos résines, la Piatella est destinée à la vaporisation, dans une chambre pour concentrés ou avec un tampon de dégommage. Elle n'est destinée ni à la combustion ni à un usage alimentaire."),
+          ul([
+            "Prélevez une très petite quantité : notre Piatella est proposée en Force Maxi, la concentration la plus élevée de la gamme.",
+            "Montez progressivement en température.",
+            "Attendez 15 à 30 minutes avant toute nouvelle prise.",
+            "Ne conduisez pas après usage.",
+          ]),
+        ],
+      },
+      {
+        heading: "Comment la conserver",
+        blocks: [
+          p("Une résine souple craint la chaleur et l'air. Gardez-la dans son sachet hermétique, à l'abri de la lumière, autour de 20 °C, et refermez bien après chaque utilisation : elle conserve ainsi sa texture et ses arômes plusieurs mois."),
+        ],
+      },
+    ],
+    faq: [
+      { q: "La Piatella est-elle plus forte qu'une autre résine ?", a: "Le nom ne dit rien de la concentration : ce sont la force et l'analyse qui comptent. Chez CBDoux, la Piatella est proposée en Force Maxi, réservée aux adultes habitués." },
+      { q: "La Piatella CBD est-elle légale ?", a: "Oui, comme toute résine de CBD dont le THC reste inférieur à 0,3 %. Nos lots sont analysés." },
+      { q: "Piatella ou 3X Filtré : que choisir ?", a: "Le 3X Filtré existe en force Classique, 2 et 3 : c'est le bon choix pour découvrir la résine. La Piatella, en Force Maxi, s'adresse aux adultes habitués qui recherchent une texture souple et une résine très concentrée." },
+    ],
+    relatedProducts: ["piatella", "beldia", "3x-filtre", "olivette-gold"],
+    relatedGuides: ["fleur-ou-resine-cbd", "comprendre-les-forces-cbd", "vaporiser-cbd-guide-pratique"],
+    keywords: ["piatella cbd", "piatella c'est quoi", "résine piatella", "piattella", "beldia cbd", "résine cbd premium"],
   },
   {
     slug: "comprendre-les-forces-cbd",
     title: "Forces Classique, 2, 3 et Maxi : comprendre la gamme CBDoux",
     description:
-      "Que signifient les forces Classique, Force 2, Force 3 et Maxi chez CBDoux ? Fleurs renforcées en CBD, dosage progressif, précautions : le guide pour choisir la bonne force.",
+      "Que signifient les forces Classique, 2, 3 et Maxi chez CBDoux ? Fleurs renforcées en CBD, dosage progressif, précautions : choisir la bonne force.",
     category: "Utilisation",
     publishedAt: "2026-11-08",
     readingMinutes: 6,
@@ -277,7 +350,7 @@ export const guides: Guide[] = [
           p("La force Maxi est réservée à quelques références (Californienne Small Buds, Beldia, Piatella). C'est la concentration la plus élevée de notre gamme. Elle est réservée aux adultes habitués et déconseillée aux débutants."),
           ul([
             "Commencez par une très petite quantité.",
-            "Attendez de ressentir les effets avant toute nouvelle prise (15 à 30 minutes en vaporisation, davantage en infusion).",
+            "Attendez de ressentir les effets avant toute nouvelle prise (15 à 30 minutes en vaporisation).",
             "Ne conduisez pas et n'utilisez pas de machines après usage.",
             "En cas de doute, demandez-nous conseil avant l'achat.",
           ]),
@@ -311,14 +384,14 @@ export const guides: Guide[] = [
       { q: "Peut-on mélanger les forces ?", a: "Rien ne l'interdit, mais commencez toujours par la force la plus douce et attendez les effets avant d'aller plus loin." },
     ],
     relatedProducts: ["super-lemon-haze-hydro-usa", "snow-white", "californienne-indoor-small-buds", "beldia"],
-    relatedGuides: ["cbd-et-conduite", "comment-choisir-fleur-cbd", "vaporiser-ou-infuser-cbd"],
+    relatedGuides: ["cbd-et-conduite", "comment-choisir-fleur-cbd", "vaporiser-cbd-guide-pratique"],
     keywords: ["fleur cbd renforcée", "fleur cbd boostée", "force cbd", "cbd puissant", "dosage cbd fleur", "cbd débutant"],
   },
   {
     slug: "cbd-et-conduite",
-    title: "CBD et conduite : pourquoi il ne faut pas prendre le volant",
+    title: "CBD et test salivaire : faut-il éviter de conduire ?",
     description:
-      "Peut-on conduire après avoir consommé du CBD ? Dépistage salivaire, somnolence, délais : ce que dit la réglementation et nos recommandations.",
+      "Peut-on conduire après avoir consommé du CBD ? Test salivaire, somnolence, délais : ce que dit la réglementation et nos recommandations.",
     category: "Réglementation",
     publishedAt: "2026-11-08",
     readingMinutes: 5,
@@ -419,19 +492,19 @@ export const guides: Guide[] = [
       { q: "Pourquoi vos distributeurs sont-ils régulés à 20 °C ?", a: "Parce qu'une température stable autour de 20 °C préserve les terpènes et évite la condensation, même en plein hiver dans le Haut-Doubs." },
     ],
     relatedProducts: ["amnesia-haze-hydro", "olivette-gold"],
-    relatedGuides: ["vaporiser-ou-infuser-cbd", "cbd-haut-doubs-distributeurs-24h"],
+    relatedGuides: ["vaporiser-cbd-guide-pratique", "cbd-haut-doubs-distributeurs-24h"],
     keywords: ["conserver fleur cbd", "conservation cbd", "sachet cbd", "durée conservation cbd", "humidité fleur cbd"],
   },
   {
-    slug: "vaporiser-ou-infuser-cbd",
-    title: "Vaporiser ou infuser son CBD : le guide pratique",
+    slug: "vaporiser-cbd-guide-pratique",
+    title: "Vaporiser son CBD : températures et bons gestes",
     description:
-      "Vaporisation à basse température, infusion avec un corps gras, pourquoi éviter la combustion : comment profiter des arômes de vos fleurs et résines de CBD.",
+      "Vaporisation à basse température, réglages, matériel, pourquoi éviter la combustion : le guide pratique pour vos fleurs et résines de CBD.",
     category: "Utilisation",
     publishedAt: "2026-11-08",
-    readingMinutes: 6,
+    readingMinutes: 5,
     intro:
-      "Nos fleurs et résines sont destinées à la vaporisation ou à l'infusion — pas à la combustion. Les deux méthodes préservent les arômes et se maîtrisent facilement. Mode d'emploi.",
+      "Nos fleurs et résines sont destinées à la vaporisation — pas à la combustion, ni à un usage alimentaire. La méthode préserve les arômes et se maîtrise facilement. Mode d'emploi.",
     sections: [
       {
         heading: "Pourquoi éviter la combustion",
@@ -459,16 +532,21 @@ export const guides: Guide[] = [
         ],
       },
       {
-        heading: "L'infusion : la méthode douce",
+        heading: "Bien choisir son matériel",
         blocks: [
-          p("Le CBD est liposoluble : il ne se dissout pas dans l'eau seule. Pour une infusion, ajoutez toujours un corps gras : lait entier, lait végétal gras, une noisette de beurre ou d'huile de coco."),
-          ol([
-            "Émiettez 0,5 à 1 g de fleur ou de trim (ou une petite quantité de résine).",
-            "Portez l'eau à frémissement avec le corps gras.",
-            "Laissez infuser 10 à 15 minutes à feu très doux, filtrez.",
-            "Dégustez ; les effets d'une infusion arrivent plus lentement (45 minutes à 1 h 30) et durent plus longtemps : attendez avant d'en reprendre.",
+          ul([
+            "Un vaporisateur portable à herbes sèches avec réglage de température : le plus simple pour débuter.",
+            "Une chambre ou une capsule pour concentrés si vous vaporisez de la résine.",
+            "Un grinder pour un effritage régulier, une petite brosse pour vider la chambre après chaque session.",
+            "Un nettoyage régulier : une chambre propre restitue mieux les arômes.",
           ]),
-          p("Notre Trim Premium Indoor est pensé pour cet usage : profil terpénique préservé, prix très accessible."),
+        ],
+      },
+      {
+        heading: "Et l'infusion, la cuisine ?",
+        blocks: [
+          p("Depuis le 15 mai 2026, la France applique la réglementation européenne sur les nouveaux aliments : les denrées contenant du CBD — tisanes de fleurs, huiles à avaler, préparations culinaires — ne peuvent plus être vendues. Nous ne proposons donc pas nos fleurs, notre trim ni nos résines pour l'infusion ou la cuisine : ils sont destinés à la vaporisation."),
+          p("Notre guide sur la réglementation du CBD en France fait le point complet sur ce changement."),
         ],
       },
       {
@@ -485,12 +563,12 @@ export const guides: Guide[] = [
     ],
     faq: [
       { q: "Quel vaporisateur choisir pour débuter ?", a: "Un vaporisateur portable à herbes sèches avec réglage de température par paliers suffit largement. Vérifiez qu'il accepte aussi les concentrés si vous souhaitez vaporiser de la résine." },
-      { q: "Peut-on infuser une résine de CBD ?", a: "Oui : émiettez une petite quantité dans une boisson chaude contenant un corps gras et laissez infuser 10 à 15 minutes." },
+      { q: "Peut-on infuser ou cuisiner vos fleurs et résines ?", a: "Nous ne les proposons pas pour cet usage. Depuis le 15 mai 2026, les denrées alimentaires contenant du CBD ne peuvent plus être vendues en France : nos fleurs et résines sont destinées à la vaporisation." },
       { q: "Combien de temps dure une session de vaporisation ?", a: "Quelques minutes suffisent. Les effets apparaissent rapidement et durent généralement 1 à 3 heures." },
     ],
-    relatedProducts: ["trim-premium-indoor", "amnesia-haze-hydro", "3x-filtre"],
-    relatedGuides: ["comprendre-les-forces-cbd", "conserver-fleurs-resines-cbd", "fleur-ou-resine-cbd"],
-    keywords: ["vaporiser cbd", "température vaporisation cbd", "infusion cbd", "infuser fleur cbd", "cbd sans combustion"],
+    relatedProducts: ["amnesia-haze-hydro", "trim-premium-indoor", "3x-filtre"],
+    relatedGuides: ["comprendre-les-forces-cbd", "conserver-fleurs-resines-cbd", "cbd-legal-france-2026"],
+    keywords: ["vaporiser cbd", "température vaporisation cbd", "vaporisateur cbd", "vaporiser résine cbd", "cbd sans combustion"],
   },
   {
     slug: "lire-analyse-laboratoire-coa",
@@ -559,7 +637,7 @@ export const guides: Guide[] = [
     slug: "livraison-cbd-discrete-france",
     title: "Livraison de CBD en France : discrète, rapide, suivie",
     description:
-      "Comment se passe une commande CBDoux : colis neutre, sachets hermétiques, Lettre suivie, Colissimo 48 h ou Chronopost 24 h, suivi en temps réel, retrait gratuit dans le Haut-Doubs.",
+      "Comment se passe une commande CBDoux : colis neutre, sachets hermétiques, Lettre suivie, Colissimo 48 h ou Chronopost 24 h, suivi en temps réel.",
     category: "Livraison",
     publishedAt: "2026-11-08",
     readingMinutes: 5,
@@ -618,7 +696,7 @@ export const guides: Guide[] = [
     slug: "cbd-haut-doubs-distributeurs-24h",
     title: "CBD dans le Haut-Doubs : distributeurs 24h/24 et retrait",
     description:
-      "Charquemont, Le Russey, Damprichard, Maîche, Morteau : où trouver du CBD de qualité dans le Haut-Doubs ? Distributeurs automatiques 24/7, retrait gratuit et livraison locale CBDoux.",
+      "Charquemont, Le Russey, Damprichard, Maîche, Morteau : où trouver du CBD dans le Haut-Doubs ? Distributeurs 24 h/24, retrait gratuit et livraison locale CBDoux.",
     category: "Haut-Doubs",
     publishedAt: "2026-11-08",
     readingMinutes: 5,
@@ -628,8 +706,9 @@ export const guides: Guide[] = [
       {
         heading: "Une cabine téléphonique devenue distributeur",
         blocks: [
-          p("Notre premier distributeur automatique est installé à Charquemont, à la Station Lavage Central, dans une ancienne cabine téléphonique entièrement rénovée. Un objet du quotidien transformé en point d'accès discret, ouvert 24 h/24 et 7 j/7, avec paiement par carte bancaire."),
-          p("Un second distributeur est installé au Russey, à l'Hôtel du Commerce, en face de la mairie. Même principe : accès simple, discret, à toute heure."),
+          p("Notre premier distributeur automatique est installé à Charquemont, à la Station Lavage Central (rue de la Vierge), dans une ancienne cabine téléphonique entièrement rénovée. Un objet du quotidien transformé en point d'accès discret, ouvert 24 h/24 et 7 j/7, avec paiement par carte bancaire."),
+          p("Un second distributeur est installé au Russey, à l'Hôtel du Commerce (15 place Dominique Parrenin), en face de la mairie. Même principe : accès simple, discret, à toute heure."),
+          p("Sur les deux machines, chaque vente est validée en direct : vous vous présentez devant la caméra, un membre de l'équipe vous répond par l'interphone, vérifie votre majorité et vous communique le code d'achat. De jour comme de nuit."),
         ],
       },
       {

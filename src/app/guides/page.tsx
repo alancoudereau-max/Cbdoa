@@ -8,9 +8,9 @@ import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, itemListJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Guides CBD : légalité, choix, utilisation, conservation",
+  title: "Guides CBD : légalité, choix, utilisation",
   description:
-    "Tout comprendre sur le CBD : réglementation française 2026, choisir sa fleur ou sa résine, forces, vaporisation, conservation, analyses labo, livraison discrète. Les guides CBDoux.",
+    "Tout comprendre sur le CBD : réglementation 2026, choisir sa fleur ou sa résine, forces, vaporisation, conservation, analyses labo. Les guides CBDoux.",
   path: "/guides",
   keywords: ["guide cbd", "cbd conseils", "cbd légal", "choisir cbd", "blog cbd"],
 });

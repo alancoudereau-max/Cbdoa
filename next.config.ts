@@ -51,6 +51,8 @@ const nextConfig: NextConfig = {
       { source: "/livraison-retrait", destination: "/livraison", permanent: true },
       { source: "/produit/recharge", destination: "/produit/recharge-pods", permanent: true },
       { source: "/produit/pods-delta-9-rechargeable", destination: "/produit/pods-cbd-rechargeables", permanent: true },
+      // Guide renommé le 16/11/2026 (plus de présentation « infusion »)
+      { source: "/guides/vaporiser-ou-infuser-cbd", destination: "/guides/vaporiser-cbd-guide-pratique", permanent: true },
     ];
   },
 };

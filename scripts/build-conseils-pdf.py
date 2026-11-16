@@ -44,12 +44,11 @@ sections = [
         "<b>Force Maxi</b> — concentration la plus élevée de la gamme (Californienne Small Buds, Beldia, Piatella). Réservée aux adultes habitués, déconseillée aux débutants : très petite quantité, attendez les effets avant toute nouvelle prise, ni conduite ni machines après usage.",
     ]),
     ("Dosage : commencer bas, augmenter lentement", [
-        "Prenez une petite quantité, attendez 15 à 30 minutes en vaporisation (45 minutes à 1 h 30 en infusion) et évaluez le ressenti avant d'en reprendre.",
+        "Prenez une petite quantité, attendez 15 à 30 minutes et évaluez le ressenti avant d'en reprendre.",
         "Le ressenti varie selon la sensibilité, le poids, le métabolisme et le moment de la journée. Un même produit peut agir différemment d'une personne à l'autre.",
     ]),
     ("Délai et durée", [
         "<b>Vaporisation :</b> ressenti en quelques minutes, durée 1 à 3 heures.",
-        "<b>Infusion</b> (avec un corps gras) : ressenti plus lent (45 min à 1 h 30), durée plus longue. Attendez avant d'en reprendre.",
         "<b>Application cutanée (huiles) :</b> usage local, à renouveler selon besoin. Ne pas ingérer.",
     ]),
     ("Conduite et activités à risque", [
@@ -66,7 +65,7 @@ sections = [
     ]),
     ("Qualité, conformité et usage prévu", [
         "Tous nos produits respectent la réglementation française (THC &lt; 0,3 %) et disposent d'analyses de laboratoire consultables sur notre site, page « Analyses laboratoires ».",
-        "Fleurs et résines sont destinées à la vaporisation ou à l'infusion — non à la combustion. Les huiles sont à usage cutané exclusivement. Nos produits ne sont pas des médicaments.",
+        "Fleurs et résines sont destinées à la vaporisation — ni à la combustion, ni à un usage alimentaire. Les huiles sont à usage cutané exclusivement. Nos produits ne sont pas des médicaments.",
     ]),
 ]
 

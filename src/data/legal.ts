@@ -47,7 +47,7 @@ export const legalDocs: LegalDoc[] = [
   {
     slug: "mentions-legales",
     title: "Mentions légales",
-    description: `Mentions légales du site ${site.url} édité par ${company.legalName} : éditeur, hébergeur, propriété intellectuelle, informations réglementaires sur les produits CBD.`,
+    description: `Mentions légales du site ${site.url} édité par ${company.legalName} : éditeur, hébergeur, propriété intellectuelle, produits CBD.`,
     updatedAt: "2026-11-16",
     intro: "Conformément à l'article 6-III de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN), vous trouverez ci-dessous les informations relatives à l'éditeur et à l'hébergeur du site.",
     sections: [
@@ -72,7 +72,7 @@ export const legalDocs: LegalDoc[] = [
       {
         heading: "Information sur les produits CBD",
         blocks: [
-          p("Les produits proposés sur le Site sont issus de variétés de chanvre (Cannabis sativa L.) autorisées et présentent une teneur en THC inférieure à 0,3 %, conformément à l'arrêté du 30 décembre 2021. Ils ne sont pas des médicaments et ne font l'objet d'aucune allégation thérapeutique. Les fleurs et résines sont destinées à la vaporisation ou à l'infusion et ne sont pas destinées à la combustion ; les huiles sont des produits à usage cutané exclusivement."),
+          p("Les produits proposés sur le Site sont issus de variétés de chanvre (Cannabis sativa L.) autorisées et présentent une teneur en THC inférieure à 0,3 %, conformément à l'arrêté du 30 décembre 2021. Ils ne sont pas des médicaments et ne font l'objet d'aucune allégation thérapeutique. Les fleurs et résines sont destinées à la vaporisation ; elles ne sont destinées ni à la combustion ni à un usage alimentaire. Les huiles sont des produits à usage cutané exclusivement."),
           p("La vente est strictement réservée aux personnes majeures. Les produits sont déconseillés aux femmes enceintes ou allaitantes et aux personnes suivant un traitement médical sans avis d'un professionnel de santé. Il est recommandé de ne pas conduire ni d'utiliser de machines après consommation."),
         ],
       },
@@ -112,7 +112,7 @@ export const legalDocs: LegalDoc[] = [
   {
     slug: "cgv",
     title: "Conditions générales de vente",
-    description: `Conditions générales de vente de la boutique en ligne ${site.name} : commande par WhatsApp, prix, paiement par lien sécurisé, livraison en France, rétractation, garanties légales, médiation.`,
+    description: `Conditions générales de vente ${site.name} : commande par WhatsApp, prix, paiement par lien sécurisé, livraison en France, rétractation, garanties, médiation.`,
     updatedAt: "2026-11-16",
     intro: `Les présentes conditions générales de vente (ci-après « CGV ») régissent les ventes de produits conclues à distance entre ${vendeur} (ci-après « le Vendeur » ou « ${site.name} ») et toute personne physique majeure agissant à des fins non professionnelles (ci-après « le Client ») sur le site ${site.url}.`,
     sections: [
@@ -127,7 +127,7 @@ export const legalDocs: LegalDoc[] = [
         blocks: [
           p("Les produits proposés sont des fleurs, résines (« trim » inclus) et extraits de chanvre à teneur en THC inférieure à 0,3 %, des huiles à usage cutané et des produits de vapotage contenant du CBD. Ils sont décrits avec la plus grande exactitude possible ; les photographies et vidéos n'ont pas de valeur contractuelle (variations naturelles d'aspect selon les lots)."),
           ul([
-            "Les fleurs et résines sont destinées à la vaporisation ou à l'infusion. Elles ne sont pas destinées à la combustion.",
+            "Les fleurs et résines sont destinées à la vaporisation. Elles ne sont destinées ni à la combustion ni à un usage alimentaire.",
             "Les huiles sont des produits à usage cutané exclusivement. Elles ne doivent pas être ingérées.",
             "Les produits ne sont pas des médicaments ; aucune allégation thérapeutique n'est formulée.",
             "Les produits sont destinés à un usage personnel. Toute revente est interdite.",
@@ -324,7 +324,7 @@ export const legalDocs: LegalDoc[] = [
   {
     slug: "cookies",
     title: "Politique cookies",
-    description: `${site.name} n'utilise aucun cookie publicitaire : seulement des stockages techniques indispensables (panier, vérification d'âge), sans outil de mesure d'audience. Détails.`,
+    description: `${site.name} n'utilise aucun cookie publicitaire : seulement des stockages techniques indispensables (panier, vérification d'âge), sans mesure d'audience.`,
     updatedAt: "2026-11-16",
     intro: "Nous avons fait le choix d'un site sobre : pas de cookies publicitaires, pas de suivi par des tiers. Voici précisément ce qui est stocké sur votre appareil et pourquoi.",
     sections: [
@@ -361,7 +361,7 @@ export const legalDocs: LegalDoc[] = [
   {
     slug: "retours",
     title: "Retours, rétractation et remboursements",
-    description: `Vos droits en clair : délai de rétractation de 14 jours, exceptions pour les produits descellés, procédure de retour, remboursement, colis perdu ou abîmé. Service client ${site.name}.`,
+    description: `Vos droits en clair : rétractation sous 14 jours, exceptions pour les produits descellés, procédure de retour, remboursement, colis perdu ou abîmé.`,
     updatedAt: "2026-11-08",
     intro: "Nous voulons que chaque commande se passe bien. Si ce n'est pas le cas, voici vos droits et la marche à suivre, en langage clair. Les règles complètes figurent dans nos Conditions générales de vente.",
     sections: [

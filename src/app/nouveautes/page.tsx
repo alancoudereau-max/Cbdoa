@@ -23,7 +23,7 @@ export default async function NouveautesPage() {
       </SectionHeading>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
         {newProducts.map((p, i) => (
-          <ProductCard key={p.slug} product={p} priority={i < 2} available={p.variants.some((v) => availability[v.sku] !== false)} />
+          <ProductCard key={p.slug} product={p} priority={i < 2} headingLevel={2} available={p.variants.some((v) => availability[v.sku] !== false)} />
         ))}
       </div>
     </div>

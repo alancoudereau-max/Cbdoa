@@ -5,6 +5,8 @@
  *  - aucune allégation thérapeutique (pas de « soigne », « anti-douleur », « sommeil »…)
  *  - descriptions sensorielles (arômes, texture, culture) et « ressenti » formulé en bien-être
  *  - THC < 0,3 %, réservé aux adultes, non destiné à un usage médical
+ *  - aucune présentation alimentaire (infusion, tisane, cuisine, ingestion) : depuis le 15 mai 2026, les denrées
+ *    contenant du CBD ne peuvent plus être vendues en France ; fleurs et résines sont présentées pour la vaporisation
  *
  * Les prix sont en centimes d'euro (prix payé par le client). Pour changer un prix, modifiez `priceCents`.
  * Rupture de stock : `soldOut: true` sur un produit ou une variante. Retirer un produit : `hidden: true`.
@@ -55,6 +57,8 @@ export type Product = {
   video?: string;
   variants: Variant[];
   keywords: string[];
+  /** Nom optimisé pour le titre Google de la fiche (le prix d'appel est ajouté automatiquement). Facultatif. */
+  seoName?: string;
 };
 
 export const categories: Record<
@@ -73,10 +77,10 @@ export const categories: Record<
   fleurs: {
     slug: "fleurs-cbd",
     name: "Fleurs CBD",
-    title: "Fleurs CBD premium indoor & hydroponie — livraison France 24/48 h",
+    title: "Fleurs CBD indoor & hydroponie",
     h1: "Fleurs CBD premium",
     description:
-      "Fleurs de CBD indoor, hydroponie et greenhouse sélectionnées dans le Haut-Doubs : Super Lemon Haze, Amnesia, Orangello, Snow White… THC < 0,3 %, analyses labo, expédition discrète partout en France.",
+      "Fleurs de CBD indoor, hydroponie et greenhouse : Super Lemon Haze, Amnesia, Orangello, Snow White… THC < 0,3 %, analyses labo, livraison France 24/48 h.",
     intro: [
       "Nos fleurs de chanvre CBD sont choisies pour la densité de leurs têtes, leur taux de trichomes et la netteté de leurs arômes. Culture indoor, hydroponie ou greenhouse : chaque variété est goûtée et validée avant d'être proposée, et chaque lot est accompagné d'une analyse de laboratoire (THC < 0,3 %).",
       "Choisissez votre force : Classique (CBD naturel), Force 2 et Force 3 (CBD renforcé) ou Maxi (concentration la plus élevée de la gamme, réservée aux adultes habitués). Vendues au gramme et par 10 g, nos fleurs sont expédiées sous 24 h ouvrées en emballage neutre et hermétique.",
@@ -87,10 +91,10 @@ export const categories: Record<
   resines: {
     slug: "resines-cbd",
     name: "Résines CBD",
-    title: "Résines & hash CBD — 3X Filtré, Olivette Gold, Beldia, Piatella",
+    title: "Résine CBD : hash, Piatella, Beldia",
     h1: "Résines CBD",
     description:
-      "Résines de CBD premium : hash triple filtré, pollen pressé Olivette Gold, Beldia et Piatella en force Maxi. THC < 0,3 %, analyses disponibles, livraison discrète en France.",
+      "Résines de CBD : hash triple filtré, pollen pressé Olivette Gold, Beldia et Piatella en force Maxi. THC < 0,3 %, analyses labo, livraison discrète 24/48 h.",
     intro: [
       "Une résine de CBD, c'est la concentration des trichomes de la plante. Notre sélection va du hash triple filtré (99 % de trichomes, sans déchet végétal) aux résines traditionnelles pressées, en passant par des textures plus grasses et friables comme l'Olivette Gold.",
       "Toutes nos résines affichent un THC inférieur à 0,3 % et sont proposées en plusieurs forces. Les références Beldia et Piatella sont exclusivement en force Maxi et réservées aux adultes habitués : commencez toujours par une très petite quantité.",
@@ -101,7 +105,7 @@ export const categories: Record<
   huiles: {
     slug: "huiles-cbd",
     name: "Huiles CBD",
-    title: "Huiles CBD cutanées Full Spectrum 10 % & 20 % — fabriquées en France",
+    title: "Huile CBD cutanée Full Spectrum 10 % et 20 %",
     h1: "Huiles CBD cutanées",
     description:
       "Huiles CBD Full Spectrum 10 % et 20 % à usage cutané (massage, peau), fabriquées en France. Flacon 30 ml. Livraison partout en France.",
@@ -232,7 +236,7 @@ export const products: Product[] = [
     ],
     aromas: "Citron vert acidulé, bonbon citron, Haze épicée, pointe diesel citronnée.",
     profile: "Profil vif et tonique, apprécié en journée pour un moment de détente lucide.",
-    usage: "Vaporisation ou infusion (avec un corps gras). Non destinée à la combustion.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/super-lemon-haze-hydro-usa.jpg",
     variants: tiers("SLH", [
       { force: 1, cbdInfo: "Indoor 24 % CBD", perGram: 600, per10g: 5500 },
@@ -256,7 +260,7 @@ export const products: Product[] = [
     ],
     aromas: "Citron zesté, agrumes vifs, floral Haze, fond légèrement terreux.",
     profile: "Profil clair et tonique, idéal pour une journée active.",
-    usage: "Vaporisation ou infusion. Non destinée à la combustion.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/amnesia-haze-hydro.jpg",
     variants: tiers("AMN", [
       { force: 1, cbdInfo: "Hydro 20 % CBD", perGram: 600, per10g: 5500 },
@@ -279,7 +283,7 @@ export const products: Product[] = [
     ],
     aromas: "Orange sanguine, zestes d'agrumes, touches florales, fond sucré miellé.",
     profile: "Profil ensoleillé et léger, apprécié en journée et dans les moments créatifs.",
-    usage: "Vaporisation ou infusion. Non destinée à la combustion.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/orangello-hydroponie.jpg",
     variants: tiers("ORA", [
       { force: 1, cbdInfo: "Hydro 22 % CBD", perGram: 600, per10g: 5500 },
@@ -301,7 +305,7 @@ export const products: Product[] = [
     ],
     aromas: "Orange clémentine, fruits sucrés, crème dessert, floral Haze.",
     profile: "Profil gourmand et équilibré, pour un moment de détente positive.",
-    usage: "Vaporisation ou infusion. Non destinée à la combustion.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/cali-fruit-indoor.jpg",
     variants: tiers("CALI", [
       { force: 1, cbdInfo: "Indoor 18 % CBD", perGram: 500, per10g: 4500 },
@@ -324,7 +328,7 @@ export const products: Product[] = [
     ],
     aromas: "Fruits rouges mûrs, baies sucrées, citron acidulé, fond terreux boisé.",
     profile: "Profil doux et enveloppant, apprécié en fin de journée.",
-    usage: "Vaporisation ou infusion. Non destinée à la combustion.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/critical-berry-indoor-usa.jpg",
     variants: tiers("CRB", [
       { force: 1, cbdInfo: "Indoor 21 % CBD", perGram: 500, per10g: 4500 },
@@ -346,7 +350,7 @@ export const products: Product[] = [
     ],
     aromas: "Baies rouges, mangue tropicale, citron pétillant, floral doux.",
     profile: "Profil léger et fruité, pour une pause détente à toute heure.",
-    usage: "Vaporisation ou infusion. Non destinée à la combustion.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/fruit-haze.jpg",
     variants: tiers("FRH", [{ force: 1, cbdInfo: "Indoor 18 % CBD", perGram: 500, per10g: 4500 }]),
     keywords: ["fruit haze cbd", "fleur cbd mangue", "fleur cbd fruitée"],
@@ -364,7 +368,7 @@ export const products: Product[] = [
     ],
     aromas: "Citron et mangue en attaque, floral poudré, finale de pin boisé.",
     profile: "Profil enveloppant et apaisant, à réserver au soir.",
-    usage: "Vaporisation ou infusion. Non destinée à la combustion.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/snow-white.jpg",
     variants: tiers("SNW", [
       { force: 2, cbdInfo: "20 % + ~10 % CBD renforcé", perGram: 800, per10g: 7500 },
@@ -385,13 +389,14 @@ export const products: Product[] = [
     ],
     aromas: "Chewing-gum sucré, fraise tagada, fruits ronds, fond floral doux.",
     profile: "Profil gourmand et enveloppant, idéal en fin de journée.",
-    usage: "Vaporisation ou infusion. Non destinée à la combustion.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/bubble-gum-greenhouse.jpg",
     variants: tiers("BBG", [{ force: 3, cbdInfo: "Greenhouse + ~25 % CBD renforcé", perGram: 800, per10g: 7500 }]),
     keywords: ["bubble gum cbd", "fleur cbd sucrée", "fleur cbd indica"],
   },
   {
     slug: "californienne-indoor-small-buds",
+    seoName: "Small Buds CBD Californienne Indoor",
     name: "Californienne Indoor — Small Buds",
     category: "fleurs",
     origin: "Indoor",
@@ -405,7 +410,7 @@ export const products: Product[] = [
     ],
     aromas: "Fruité et sucré, typique des génétiques californiennes (variable selon le lot).",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
-    usage: "Vaporisation ou infusion. Non destinée à la combustion.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/californienne-indoor-small-buds.jpg",
     video: "/videos/californienne-indoor-small-buds.mp4",
     variants: maxiTiers("CALSB", "Force Maxi — concentration maximale"),
@@ -413,6 +418,7 @@ export const products: Product[] = [
   },
   {
     slug: "trim-premium-indoor",
+    seoName: "Trim CBD Premium Indoor",
     name: "Trim Premium Indoor",
     category: "fleurs",
     origin: "Indoor · manucure premium",
@@ -420,24 +426,25 @@ export const products: Product[] = [
     short: "Petites feuilles, pistils et mini-buds gorgés de trichomes, issus de la manucure de nos fleurs indoor.",
     description: [
       "Le trim, c'est tout ce qui entoure la fleur au moment de la manucure : petites feuilles résineuses, pistils et mini-buds. Issu de nos fleurs indoor, il conserve un profil terpénique fidèle à un prix imbattable.",
-      "Idéal pour les infusions, les tisanes, la cuisine ou les préparations maison (huiles, beurres). Herbacé frais, notes boisées et pointe fruitée douce.",
+      "Il se vaporise comme une fleur, pour un rendu plus léger : herbacé frais, notes boisées et pointe fruitée douce. Il n'est pas destiné à un usage alimentaire.",
       "Vendu par lots de 10 g, 50 g et 100 g.",
     ],
     aromas: "Herbacé frais, notes boisées, pointe fruitée douce.",
-    profile: "CBD classique, pour un usage polyvalent au quotidien.",
-    usage: "Infusion, cuisine, préparations maison.",
+    profile: "CBD classique, léger, pour le quotidien.",
+    usage: "Vaporisation. Non destiné à la combustion ni à un usage alimentaire.",
     image: "/images/products/trim-premium-indoor.jpg",
     variants: [
       { sku: "TRIM-10G", tier: "unique", tierLabel: "CBD classique", force: 1, format: "Lot 10 g", grams: 10, priceCents: 700, cbdInfo: "CBD classique" },
       { sku: "TRIM-50G", tier: "unique", tierLabel: "CBD classique", force: 1, format: "Lot 50 g", grams: 50, priceCents: 3500, cbdInfo: "CBD classique" },
       { sku: "TRIM-100G", tier: "unique", tierLabel: "CBD classique", force: 1, format: "Lot 100 g", grams: 100, priceCents: 7000, cbdInfo: "CBD classique" },
     ],
-    keywords: ["trim cbd", "trim cbd pas cher", "cbd infusion", "feuilles cbd"],
+    keywords: ["trim cbd", "trim cbd pas cher", "trim cbd vaporisation", "feuilles cbd"],
   },
 
   // ───────────────────────────── RÉSINES ─────────────────────────────
   {
     slug: "3x-filtre",
+    seoName: "3X Filtré : hash CBD triple filtré",
     name: "3X Filtré — Résine",
     category: "resines",
     origin: "Triple filtration · 190, 120 et 73 microns",
@@ -450,7 +457,7 @@ export const products: Product[] = [
     ],
     aromas: "Terre boisée, cèdre épicé, pin poivré, pointe de citron fruité.",
     profile: "Profil profond et enveloppant, idéal en soirée.",
-    usage: "Vaporisation (chambre dédiée) ou infusion avec un corps gras. Non destinée à la combustion.",
+    usage: "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/3x-filtre.jpg",
     variants: tiers("3XF", [
       { force: 1, cbdInfo: "40 % CBD", perGram: 500, per10g: 4500 },
@@ -461,6 +468,7 @@ export const products: Product[] = [
   },
   {
     slug: "olivette-gold",
+    seoName: "Olivette Gold : résine CBD pressée",
     name: "Olivette Gold — Résine",
     category: "resines",
     origin: "Résine pressée · pollen tamisé premium",
@@ -474,7 +482,7 @@ export const products: Product[] = [
     ],
     aromas: "Épices douces, cuir, bois de santal, fond floral et sucré.",
     profile: "Profil enveloppant et apaisant, pour une soirée calme.",
-    usage: "Vaporisation ou infusion avec un corps gras. Non destinée à la combustion.",
+    usage: "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/olivette-gold.jpg",
     variants: tiers("OLV", [
       { force: 1, cbdInfo: "35 % CBD", perGram: 500, per10g: 4500 },
@@ -485,6 +493,7 @@ export const products: Product[] = [
   },
   {
     slug: "beldia",
+    seoName: "Beldia CBD : résine traditionnelle",
     name: "Beldia — Résine",
     category: "resines",
     origin: "Résine traditionnelle",
@@ -498,7 +507,7 @@ export const products: Product[] = [
     ],
     aromas: "Résineux, notes terreuses et épicées, dans l'esprit des résines traditionnelles.",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
-    usage: "Vaporisation ou infusion avec un corps gras. Non destinée à la combustion.",
+    usage: "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/beldia.jpg",
     video: "/videos/beldia.mp4",
     variants: maxiTiers("BELD", "Force Maxi — concentration maximale"),
@@ -506,6 +515,7 @@ export const products: Product[] = [
   },
   {
     slug: "piatella",
+    seoName: "Piatella CBD : résine premium Force Maxi",
     name: "Piatella — Résine",
     category: "resines",
     origin: "Résine Piatella",
@@ -519,7 +529,7 @@ export const products: Product[] = [
     ],
     aromas: "Résineux et rond ; profil précis variable selon le lot.",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
-    usage: "Vaporisation ou infusion avec un corps gras. Non destinée à la combustion.",
+    usage: "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/piatella.jpg",
     video: "/videos/piatella.mp4",
     variants: maxiTiers("PIAT", "Force Maxi — concentration maximale"),
