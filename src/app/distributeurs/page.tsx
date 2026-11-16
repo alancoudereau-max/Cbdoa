@@ -14,7 +14,7 @@ export const metadata: Metadata = buildMetadata({
   description:
     "Deux distributeurs automatiques de CBD ouverts 24 h/24 dans le Doubs, à Charquemont et au Russey. Chaque vente est validée en direct par caméra et interphone.",
   path: "/distributeurs",
-  image: "/images/brand/distributeur-charquemont.jpg",
+  image: "/images/distributeurs/le-russey-chalet.jpg",
   keywords: ["distributeur cbd", "distributeur automatique cbd", "distributeur cbd 24h", "distributeur cbd doubs", "cbd charquemont", "cbd le russey"],
 });
 
@@ -29,7 +29,7 @@ const faq = [
   },
   {
     q: "Un mineur peut-il acheter au distributeur ?",
-    a: "Non. La vente de CBD est interdite aux mineurs et la machine reste verrouillée tant qu'un membre de l'équipe n'a pas vérifié, par caméra, que le client est majeur. Sans le code communiqué par l'interphone, aucune vente n'est possible.",
+    a: "Non. La vente de CBD est interdite aux mineurs et la machine reste verrouillée tant qu'un membre de l'équipe n'a pas vérifié, par caméra, que le client est majeur : une pièce d'identité peut vous être demandée. Sans le code communiqué par l'interphone, aucune vente n'est possible.",
   },
   { q: "Quels moyens de paiement sont acceptés ?", a: "La carte bancaire, sans contact ou avec code." },
   { q: "Les produits sont-ils les mêmes qu'en ligne ?", a: "Oui : mêmes lots, mêmes analyses de laboratoire. La sélection du distributeur est plus restreinte (références phares) et réassortie régulièrement." },
@@ -102,7 +102,17 @@ export default function DistributeursPage() {
               </div>
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-br from-gold/30 via-transparent to-gold/10 blur-2xl" />
-                <Image src={m.image} alt={`Distributeur automatique de CBD CBDoux à ${m.city}, ouvert 24 h/24`} width={989} height={1400} sizes="(max-width: 1024px) 100vw, 480px" className="relative w-full max-w-sm mx-auto rounded-2xl border border-gold/30" priority={i === 0} />
+                <Image src={m.image} alt={m.imageAlt} width={m.imageSize[0]} height={m.imageSize[1]} sizes="(max-width: 1024px) 100vw, 520px" className="relative w-full max-w-md mx-auto rounded-2xl border border-gold/30" priority={i === 0} />
+                {m.secondImage && (
+                  <Image
+                    src={m.secondImage.src}
+                    alt={m.secondImage.alt}
+                    width={m.secondImage.size[0]}
+                    height={m.secondImage.size[1]}
+                    sizes="(max-width: 1024px) 60vw, 260px"
+                    className="relative -mt-16 ml-auto mr-2 w-3/5 max-w-[260px] rounded-2xl border border-gold/30 shadow-deep"
+                  />
+                )}
               </div>
             </div>
           </section>

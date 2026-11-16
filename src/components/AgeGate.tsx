@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import { Logo, Ornament } from "@/components/brand/Logo";
 
 const KEY = "cbdoux-age-ok";
 const TTL_DAYS = 30;
@@ -52,7 +52,8 @@ export function AgeGate() {
       className="fixed inset-0 z-[100] flex items-center justify-center bg-background/90 backdrop-blur-xl px-4"
     >
       <div className="luxe-panel relative w-full max-w-md rounded-3xl p-7 sm:p-9 text-center animate-fade-up">
-        <Image src="/images/brand/logo.png" alt="CBDoux" width={220} height={64} className="mx-auto h-12 w-auto mb-5" priority />
+        <Logo weight="fine" className="mx-auto h-16 sm:h-[4.5rem]" />
+        <Ornament className="mt-4 mb-5" />
         <p className="kicker mb-4">Accès réservé · 18 +</p>
         {!refused ? (
           <>
@@ -60,7 +61,7 @@ export function AgeGate() {
               Avez-vous 18 ans ou plus ?
             </h2>
             <p className="text-sm text-foreground/70 leading-relaxed mb-7">
-              Ce site est réservé aux personnes majeures. Nos produits contiennent moins de 0,3 % de THC, conformément à la
+              Ce site est réservé aux personnes majeures. Nos produits contiennent moins de 0,3&nbsp;% de THC, conformément à la
               législation française, et ne sont pas destinés à un usage médical.
             </p>
             <div className="grid grid-cols-2 gap-3">

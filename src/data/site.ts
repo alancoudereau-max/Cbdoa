@@ -24,7 +24,7 @@ export const site = {
   whatsapp: "https://wa.me/33767982563",
   facebook: "https://www.facebook.com/profile.php?id=61576530651113",
   googleMaps: "https://share.google/beGYu4oykwVRiF67i",
-  logo: "/images/brand/logo.png",
+  logo: "/images/brand/cbdoux-bandeau.png",
   ogImage: "/images/og/og-default.jpg",
   foundingYear: 2026,
   /** Zone principale (SEO local) */
@@ -95,10 +95,14 @@ export const locations = {
       postalCode: "25140",
       place: "Station Lavage Central",
       details:
-        "Ancienne cabine téléphonique entièrement rénovée et transformée en distributeur. Produits conservés à 20 °C en sachets de conservation biphase.",
+        "Ancienne cabine téléphonique entièrement rénovée et transformée en distributeur, à la station de lavage. Produits conservés à 20 °C en sachets de conservation biphase.",
       hours: "24 h/24 — 7 j/7",
       payment: "Carte bancaire",
-      image: "/images/brand/distributeur-charquemont.jpg",
+      /** Photo réelle de la machine (fournie par l'exploitant le 16/11/2026) */
+      image: "/images/distributeurs/charquemont-cabine.jpg",
+      imageSize: [1100, 1499] as [number, number],
+      imageAlt: "Distributeur automatique de CBD CBDoux à Charquemont : cabine vitrée, caméra et affichage « vente interdite aux mineurs »",
+      secondImage: undefined as { src: string; size: [number, number]; alt: string } | undefined,
       /** Rue communiquée par l'exploitant (le numéro reste à préciser). */
       street: "Rue de la Vierge" as string | undefined,
       /** Recherche Google Maps sur le lieu (pas encore de fiche Google propre à ce distributeur). */
@@ -112,10 +116,18 @@ export const locations = {
       postalCode: "25210",
       place: "Hôtel du Commerce — en face de la mairie",
       details:
-        "Distributeur installé au cœur du village. Accès simple et discret à toute heure. Produits conservés à 20 °C en sachets de conservation biphase.",
+        "Distributeur installé au cœur du village, à l'abri dans son chalet en bois. Accès simple et discret à toute heure. Produits conservés à 20 °C en sachets de conservation biphase.",
       hours: "24 h/24 — 7 j/7",
       payment: "Carte bancaire",
-      image: "/images/brand/distributeur-le-russey.jpg",
+      /** Photos réelles du chalet (fournies par l'exploitant le 16/11/2026) */
+      image: "/images/distributeurs/le-russey-chalet.jpg",
+      imageSize: [1100, 1178] as [number, number],
+      imageAlt: "Distributeur automatique de CBD CBDoux au Russey : chalet en bois devant l'Hôtel du Commerce",
+      secondImage: {
+        src: "/images/distributeurs/le-russey-rue.jpg",
+        size: [1100, 1221] as [number, number],
+        alt: "Le chalet du distributeur CBDoux du Russey, sous l'enseigne de l'Hôtel du Commerce, face à la mairie",
+      } as { src: string; size: [number, number]; alt: string } | undefined,
       /** Adresse de la fiche Google « PREMIUM CBD DISTRIBUTEUR LE-RUSSEY CBDoux ». */
       street: "15 place Dominique Parrenin" as string | undefined,
       /** Fiche Google du distributeur (itinéraire, avis). */
@@ -136,7 +148,7 @@ export const vendingSupervision = {
   short: "Caméra et interphone : un membre de l'équipe vérifie votre majorité et vous conseille avant de déverrouiller l'achat, de jour comme de nuit.",
   steps: [
     { title: "Présentez-vous devant la caméra", text: "Le distributeur nous prévient dès que vous êtes là, à toute heure." },
-    { title: "Nous vous répondons par l'interphone", text: "Un membre de l'équipe vérifie que vous êtes majeur et répond à vos questions sur les produits." },
+    { title: "Nous vous répondons par l'interphone", text: "Un membre de l'équipe vérifie que vous êtes majeur (une pièce d'identité peut vous être demandée) et répond à vos questions." },
     { title: "Recevez votre code", text: "Nous vous communiquons le code qui déverrouille l'achat. Sans code, aucune vente n'est possible." },
     { title: "Payez par carte et récupérez votre sachet", text: "Paiement sans contact ou avec code, produit conservé à 20 °C en sachet hermétique." },
   ],

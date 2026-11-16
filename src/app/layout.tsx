@@ -8,6 +8,7 @@ import { AgeGate } from "@/components/AgeGate";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { JsonLd } from "@/components/JsonLd";
+import { MotionRoot } from "@/components/motion/MotionRoot";
 import { organizationJsonLd, websiteJsonLd, storeJsonLd } from "@/lib/seo";
 
 const inter = localFont({
@@ -91,6 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" className={`${inter.variable} ${instrument.variable} ${jetbrains.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
         <JsonLd data={[organizationJsonLd(), websiteJsonLd(), storeJsonLd()]} />
+        <MotionRoot />
         <a
           href="#contenu"
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-gold focus:px-4 focus:py-2 focus:text-background"

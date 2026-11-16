@@ -19,7 +19,7 @@ export function SectionHeading({
   className?: string;
 }) {
   return (
-    <div className={cn(align === "center" && "text-center mx-auto", className)}>
+    <div data-reveal="up" className={cn(align === "center" && "text-center mx-auto", className)}>
       {kicker && <p className="kicker mb-3">— {kicker}</p>}
       <Tag className={cn("font-serif leading-[0.95]", Tag === "h1" ? "text-4xl sm:text-6xl lg:text-7xl" : "text-3xl sm:text-5xl lg:text-6xl")}>
         {title}

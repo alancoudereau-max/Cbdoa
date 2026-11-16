@@ -67,12 +67,20 @@ Dans Claude : **Paramètres → Connecteurs → GitHub → Connecter**, avec le 
 - **Distributeurs** : adresses, liens Google et texte « vente validée en direct » se règlent dans `src/data/site.ts` (`locations`, `vendingSupervision`). La page `/distributeurs` sert de localisateur pour les fiches Google.
 - **Pages de sélection** `/cbd-puissant` et `/cbd-pas-cher` : produits, prix et tableaux sont calculés depuis le catalogue (`src/data/collections.ts`), rien à mettre à jour à la main.
 
+### Identité visuelle (logo, couleurs, animations)
+
+- **Logo** : redessiné en tracés vectoriels en novembre 2026 (« CBD », la rosace à huit pétales à la place du « o », « ux » en italique), sans fond : il se pose sur toutes les pages. Composants `Logo`, `Rosette`, `Ornament` et `HexOrnament` dans `src/components/brand/Logo.tsx`.
+- **Tout régénérer** (logo, icônes d'onglet et d'application, image de partage, bandeau) : `python3 scripts/build-brand.py` (les réglages sont en tête du script). Ne pas modifier `src/components/brand/logo-data.ts` à la main.
+- **Codes repris de l'enseigne** : bandeau vert liseré d'or (`.band-green`, `.band-rules`), carte « écrin » verte (`.card-emerald`), alvéoles dorées (`.hex-lines`), bon de bienvenue (`.coupon`) ; le tout dans `src/app/globals.css`.
+- **Animations** : pilotées par `src/components/motion/MotionRoot.tsx`. Rien n'est masqué sans JavaScript, et le réglage « réduire les animations » du téléphone les coupe toutes.
+- **Photos des distributeurs** : `public/images/distributeurs/` (photos réelles, sans personne reconnaissable ni plaque d'immatriculation). **Vidéos en boucle** : `public/videos/loops/` (moins de 600 Ko chacune, sans son).
+
 ## 6. Au quotidien
 
 - **Commandes** : elles arrivent sur WhatsApp avec une référence `CBD-AAMMJJ-XXXX`.
 - **Rupture de stock, prix, texte, photo, nouveau produit** : demandez à Claude (« mets la Snow White en rupture »), ou modifiez `src/data/products.ts` (`soldOut: true` pour une rupture) directement sur GitHub. Netlify remet le site en ligne tout seul en 2 à 3 minutes.
 - **Tarifs de livraison** : `src/lib/shipping.ts`. **Codes promo** : `src/data/promos.ts`. **Coordonnées et société** : `src/data/site.ts`.
-- **Budget Netlify** : l'offre gratuite fonctionne avec des crédits mensuels (300 par mois en novembre 2026 ; une mise en ligne en consomme 15, le trafic un peu). Regroupez donc vos modifications plutôt que de les envoyer une par une ; si les crédits sont épuisés, le site est mis en pause jusqu'au mois suivant. L'offre « Personal » (9 $/mois) donne plus de marge quand le trafic grandit.
+- **Budget Netlify** : le site est sur l'offre « Personal » depuis le 16/11/2026, qui fonctionne avec des crédits mensuels (1 000 par mois selon la grille publique ; une mise en ligne en consomme 15, le trafic environ 20 par Go). Regroupez donc vos modifications plutôt que de les envoyer une par une ; si les crédits sont épuisés, le site est mis en pause jusqu'au mois suivant.
 - **TVA** : la société est en franchise en base (confirmé le 16/11/2026). Les CGV et les mentions légales portent « TVA non applicable, article 293 B du CGI », et vos factures doivent porter la même mention, sans TVA. Cette référence légale change au 1er janvier 2027 (l'ancienne reste admise pendant une période transitoire) : Claude mettra le site à jour. Si la société devient redevable de la TVA, prévenez Claude : le réglage est dans `src/data/site.ts` (`vatExempt`).
 - **Statistiques de visite** : le site n'embarque aucun outil de mesure d'audience ; la Google Search Console (étape 5) suffit pour suivre le référencement.
 - **Médiateur de la consommation** (obligatoire) : dès votre adhésion (CNPM, Medicys, CM2C…), transmettez son nom : il est repris automatiquement dans les CGV et les mentions légales.

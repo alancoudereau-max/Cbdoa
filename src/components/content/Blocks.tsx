@@ -31,7 +31,7 @@ export function Blocks({ blocks }: { blocks: AnyBlock[] }) {
             return <blockquote key={i}>{b.text}</blockquote>;
           case "table":
             return (
-              <div key={i} className="overflow-x-auto -mx-1 px-1">
+              <div key={i} className="overflow-x-auto max-w-full">
                 <table>
                   <thead>
                     <tr>

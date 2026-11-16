@@ -51,7 +51,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
       </header>
 
       <div className="grid lg:grid-cols-12 gap-12">
-        <div className="lg:col-span-8">
+        <div className="min-w-0 lg:col-span-8">
           <nav aria-label="Sommaire" className="mb-10 rounded-2xl border border-foreground/10 bg-card/40 p-5">
             <p className="kicker mb-3">Sommaire</p>
             <ol className="space-y-1.5 text-sm">

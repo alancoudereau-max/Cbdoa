@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
 import { site, company } from "@/data/site";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Reveal } from "@/components/ui/Reveal";
+import { Rosette } from "@/components/brand/Logo";
+import { WhatsAppPlaque } from "@/components/brand/WhatsAppPlaque";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -60,11 +61,11 @@ export default function AboutPage() {
           <div>
             <p className="kicker mb-4">Nos engagements</p>
             <ul className="space-y-4 text-foreground/80">
-              <li className="flex gap-3"><span className="text-gold">✺</span> Produits conformes (THC &lt; 0,3 %), analyses de laboratoire publiées.</li>
-              <li className="flex gap-3"><span className="text-gold">✺</span> Sélection goûtée et validée, conservation à 20 °C en sachets biphase.</li>
-              <li className="flex gap-3"><span className="text-gold">✺</span> Aucune promesse miracle : des descriptions honnêtes et des conseils de prudence clairs.</li>
-              <li className="flex gap-3"><span className="text-gold">✺</span> Vente réservée aux adultes, discrétion totale en ligne comme sur place.</li>
-              <li className="flex gap-3"><span className="text-gold">✺</span> Un interlocuteur humain sur WhatsApp, 7 j/7.</li>
+              <li className="flex gap-3"><Rosette className="h-4 w-4 shrink-0 mt-1" /> Produits conformes (THC &lt; 0,3 %), analyses de laboratoire publiées.</li>
+              <li className="flex gap-3"><Rosette className="h-4 w-4 shrink-0 mt-1" /> Sélection goûtée et validée, conservation à 20 °C en sachets biphase.</li>
+              <li className="flex gap-3"><Rosette className="h-4 w-4 shrink-0 mt-1" /> Aucune promesse miracle : des descriptions honnêtes et des conseils de prudence clairs.</li>
+              <li className="flex gap-3"><Rosette className="h-4 w-4 shrink-0 mt-1" /> Vente réservée aux adultes, discrétion totale en ligne comme sur place.</li>
+              <li className="flex gap-3"><Rosette className="h-4 w-4 shrink-0 mt-1" /> Un interlocuteur humain sur WhatsApp, 7 j/7.</li>
             </ul>
             <p className="mt-8 text-xs text-foreground/50">
               {site.name} est le nom commercial de {company.legalName} ({company.legalForm}), SIREN {company.siren}.
@@ -87,8 +88,8 @@ export default function AboutPage() {
           <p className="text-foreground/70 mb-6 text-sm">Fleurs, résines, huiles cutanées et vape : la sélection CBDoux, livrée partout en France.</p>
           <Link href="/boutique" className="btn-outline inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm">Voir la boutique <ArrowUpRight size={14} /></Link>
         </Reveal>
-        <Reveal delay={160} className="relative overflow-hidden rounded-2xl border border-gold/30">
-          <Image src="/images/brand/whatsapp-poster.jpg" alt="Rejoignez CBDoux sur WhatsApp" width={805} height={1200} sizes="(max-width: 1024px) 100vw, 400px" className="w-full h-full object-cover" />
+        <Reveal delay={160}>
+          <WhatsAppPlaque className="h-full" />
         </Reveal>
       </section>
     </div>

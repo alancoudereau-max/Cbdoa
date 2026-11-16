@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Mail, MapPin, MessageCircle, Clock, ThumbsUp } from "lucide-react";
 import { site } from "@/data/site";
 import { ContactForm } from "@/components/contact/ContactForm";
@@ -25,7 +24,7 @@ export default function ContactPage() {
         <ContactForm />
         <div className="space-y-4">
           <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="flex gap-4 rounded-2xl border border-gold/30 bg-gold/10 p-5 hover:border-gold transition-colors">
-            <Image src="/images/social/whatsapp.png" alt="" width={48} height={48} className="h-12 w-12 rounded-xl" />
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-gold text-background"><MessageCircle aria-hidden size={24} /></span>
             <div>
               <p className="kicker mb-0.5">WhatsApp — réponse rapide</p>
               <p className="font-serif text-2xl">{site.phoneDisplay}</p>

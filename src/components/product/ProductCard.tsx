@@ -21,7 +21,7 @@ export function ProductCard({
 }) {
   const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
-    <article className={cn("lift group relative flex flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-card/60 hover:border-gold/50 transition-colors", className)}>
+    <article data-reveal="up" className={cn("lift spotlight group relative flex flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-card/60 hover:border-gold/50 transition-colors", className)}>
       <Link href={`/produit/${p.slug}`} className="absolute inset-0 z-10" aria-label={`Voir ${p.name}`} />
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-black via-card-2 to-black">
         <Image
@@ -54,13 +54,13 @@ export function ProductCard({
         <div className="mt-2">
           <ForceBadge force={maxForce(p)} size="xs" />
         </div>
-        <p className="mt-2.5 text-sm text-foreground/65 line-clamp-2 flex-1">{p.short}</p>
-        <div className="mt-4 flex items-center justify-between border-t border-foreground/10 pt-3.5">
+        <p className="mt-2.5 text-sm text-foreground/65 line-clamp-2">{p.short}</p>
+        <div className="mt-auto pt-4"><div className="flex items-center justify-between border-t border-foreground/10 pt-3.5">
           <span className="font-serif text-lg text-gold">{startingPriceLabel(p)}</span>
           <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.15em] text-foreground/50 group-hover:text-gold transition-colors">
             Voir <ArrowUpRight size={12} className="group-hover:rotate-45 transition-transform" />
           </span>
-        </div>
+        </div></div>
       </div>
     </article>
   );

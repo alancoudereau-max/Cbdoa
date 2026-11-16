@@ -16,6 +16,9 @@ export function generateStaticParams() {
 function ogSafe(text: string): string {
   return text
     .replace(/→/g, "-")
+    .replace(/œ/g, "oe")
+    .replace(/Œ/g, "Oe")
+    .replace(/\s[—–]\s/g, " · ")
     .replace(/µ|μ/g, "u")
     .replace(/[^\u0000-\u00FF€’‘“”…]/g, "");
 }
@@ -37,7 +40,7 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
   const p = getProduct(slug);
   if (!p) return new ImageResponse(<div style={{ width: "100%", height: "100%", background: "#0d0c0a" }} />, size);
   const img = await readPublicImage(p.image);
-  const logo = await readPublicImage("/images/brand/logo.png");
+  const logo = await readPublicImage("/images/brand/cbdoux-logo.png");
   const min = formatPrice(Math.min(...p.variants.map((v) => v.priceCents)));
   const perGram = p.variants.some((v) => v.format === "1 g");
 
@@ -59,7 +62,7 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             {logo ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={logo} alt="" width={200} height={58} style={{ objectFit: "contain" }} />
+              <img src={logo} alt="" width={244} height={51} style={{ objectFit: "contain" }} />
             ) : (
               <div style={{ fontSize: 40, color: "#d9b85c", display: "flex" }}>CBDoux</div>
             )}

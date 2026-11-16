@@ -21,3 +21,8 @@ next-env.d.ts
 .vercel
 # netlify
 .netlify
+
+# Python
+__pycache__/
+*.pyc
+.brand-tmp/

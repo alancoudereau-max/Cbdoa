@@ -228,3 +228,213 @@ details[open] > div { animation: fadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
   .print-area * { color: #111 !important; background: transparent !important; box-shadow: none !important; }
   .print-area h1, .print-area h2, .print-area h3 { color: #8a6a16 !important; -webkit-text-fill-color: #8a6a16 !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Mouvement & habillage (refonte de novembre 2026)
+   Principe : tout est lisible sans JavaScript et sans animation ; le script
+   <MotionRoot /> ne masque que les blocs situés sous la ligne de flottaison,
+   puis les fait apparaître au défilement. « prefers-reduced-motion » coupe tout.
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --emerald: oklch(0.36 0.07 165);
+  --emerald-light: oklch(0.66 0.12 165);
+}
+
+@keyframes rise { from { opacity: 0; transform: translate3d(0, 105%, 0) rotate(1.5deg); } to { opacity: 1; transform: none; } }
+@keyframes soft-in { from { opacity: 0; transform: translate3d(0, 18px, 0); } to { opacity: 1; transform: none; } }
+@keyframes aurora-drift {
+  0% { transform: translate3d(-5%, -3%, 0) rotate(0deg) scale(1); }
+  50% { transform: translate3d(4%, 4%, 0) rotate(7deg) scale(1.12); }
+  100% { transform: translate3d(-2%, 6%, 0) rotate(-5deg) scale(1.05); }
+}
+@keyframes marquee-back { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.85; } 100% { transform: scale(2.6); opacity: 0; } }
+@keyframes bob { 0%, 100% { transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg)); } 50% { transform: translate3d(0, -12px, 0) rotate(var(--tilt, 0deg)); } }
+@keyframes sheen { from { transform: translateX(-130%) skewX(-18deg); } to { transform: translateX(230%) skewX(-18deg); } }
+@keyframes page-in { from { opacity: 0; transform: translate3d(0, 12px, 0); } to { opacity: 1; transform: none; } }
+@keyframes bubble-in { from { opacity: 0; transform: translate3d(0, 14px, 0) scale(0.95); } to { opacity: 1; transform: none; } }
+@keyframes ticker { 0%, 28% { transform: translateY(0); } 33%, 61% { transform: translateY(-25%); } 66%, 94% { transform: translateY(-50%); } 100% { transform: translateY(-75%); } }
+@keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(400%); } }
+@keyframes menu-in { from { opacity: 0; transform: translate3d(0, 16px, 0); } to { opacity: 1; transform: none; } }
+
+/* Transition d'entrée de page (src/app/template.tsx) */
+.page-enter { position: relative; isolation: isolate; animation: page-in 0.55s var(--ease-expo) both; }
+
+/* Barre de progression de lecture */
+.scroll-progress {
+  position: fixed; inset: 0 0 auto 0; height: 2px; z-index: 70; pointer-events: none;
+  transform-origin: 0 50%; transform: scaleX(var(--progress, 0));
+  background: linear-gradient(90deg, var(--color-gold-dark), var(--color-gold-light), var(--color-gold));
+}
+
+/* Apparitions au défilement (classes posées par MotionRoot) */
+.rv-wait { opacity: 0; transform: translate3d(0, 30px, 0); }
+.rv-wait[data-reveal="left"] { transform: translate3d(-40px, 0, 0); }
+.rv-wait[data-reveal="right"] { transform: translate3d(40px, 0, 0); }
+.rv-wait[data-reveal="scale"] { transform: scale(0.93); }
+.rv-wait[data-reveal="blur"] { filter: blur(14px); transform: translate3d(0, 14px, 0); }
+.rv-in {
+  transition: opacity 0.95s var(--ease-expo), transform 0.95s var(--ease-expo), filter 0.95s var(--ease-expo) !important;
+  transition-delay: calc(var(--rv-delay, 0ms) + var(--rv-extra, 0ms)) !important;
+}
+
+/* Fond « aurore » : halos or et émeraude en mouvement lent */
+.aurora {
+  position: absolute; inset: -25%; pointer-events: none; opacity: 0.6; filter: blur(80px) saturate(1.25);
+  background:
+    radial-gradient(38% 34% at 18% 28%, oklch(0.82 0.14 80 / 0.5), transparent 70%),
+    radial-gradient(34% 40% at 82% 18%, oklch(0.42 0.1 165 / 0.6), transparent 70%),
+    radial-gradient(44% 40% at 62% 88%, oklch(0.6 0.13 70 / 0.4), transparent 70%);
+  animation: aurora-drift 20s ease-in-out infinite alternate; will-change: transform;
+}
+
+/* Titre cinétique : chaque ligne monte depuis un masque */
+.kinetic .line { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+.kinetic .line > span { display: block; animation: rise 1s var(--ease-expo) both; animation-delay: calc(var(--i, 0) * 120ms + 60ms); }
+.hero-in { animation: soft-in 0.9s var(--ease-expo) both; animation-delay: calc(var(--i, 0) * 90ms + 320ms); }
+
+/* Verre dépoli */
+.glass {
+  background: oklch(0.16 0.01 80 / 0.58);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3); backdrop-filter: blur(18px) saturate(1.3);
+  border: 1px solid oklch(0.96 0.012 85 / 0.12);
+}
+
+/* Reflet qui traverse les boutons dorés au survol */
+.btn-gold { position: relative; overflow: hidden; isolation: isolate; }
+.btn-gold::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, oklch(1 0 0 / 0.5) 50%, transparent 70%);
+  transform: translateX(-130%) skewX(-18deg);
+}
+.btn-gold:hover::after { animation: sheen 0.9s ease; }
+
+/* Halo qui suit le curseur sur les cartes (variables --mx / --my posées par MotionRoot) */
+.spotlight { position: relative; }
+.spotlight::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 2;
+  opacity: 0; transition: opacity 0.45s;
+  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), oklch(0.82 0.14 80 / 0.2), transparent 46%);
+}
+@media (hover: hover) { .spotlight:hover::before { opacity: 1; } }
+
+/* Pastille « en direct » */
+.live-dot { position: relative; display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: var(--color-success); }
+.live-dot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: inherit; animation: pulse-ring 2.2s var(--ease-expo) infinite; }
+.live-dot.gold { background: var(--color-gold); }
+
+/* Éléments flottants du visuel d'accueil */
+.bob { animation: bob 7s ease-in-out infinite; }
+.bob-slow { animation: bob 10s ease-in-out infinite; animation-delay: -3s; }
+
+/* Défilement de texte en sens inverse */
+.marquee-track.reverse { animation: marquee-back 52s linear infinite; }
+
+/* Bandeau d'annonces tournant (3 messages) */
+.ticker { height: 1.1rem; overflow: hidden; }
+.ticker > ul { animation: ticker 12s var(--ease-expo) infinite; }
+.ticker li { height: 1.1rem; line-height: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Carrousel horizontal sans barre de défilement */
+@media (max-width: 1023.98px) {
+  .snap-row { display: flex; gap: 0.9rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 0.25rem; }
+  .snap-row::-webkit-scrollbar { display: none; }
+  .snap-row > * { scroll-snap-align: center; flex: 0 0 auto; }
+}
+
+/* Cartes vidéo verticales */
+.reel { position: relative; overflow: hidden; border-radius: 1.75rem; border: 1px solid oklch(0.82 0.14 80 / 0.28); background: #000; aspect-ratio: 9 / 16; box-shadow: 0 40px 90px -40px oklch(0 0 0 / 0.9), 0 0 0 1px oklch(0 0 0 / 0.4); }
+.reel video, .reel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.reel video { opacity: 0; transition: opacity 0.6s; }
+.reel video[data-ready="1"] { opacity: 1; }
+.reel::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, oklch(0 0 0 / 0.28) 0%, transparent 28%, transparent 52%, oklch(0 0 0 / 0.82) 100%); }
+
+/* Téléphone illustrant la commande par WhatsApp */
+.phone { position: relative; border-radius: 2.6rem; border: 9px solid oklch(0.2 0.008 80); background: oklch(0.13 0.012 160); box-shadow: 0 50px 110px -40px oklch(0 0 0 / 0.9), inset 0 0 0 1px oklch(0.96 0.012 85 / 0.08); overflow: hidden; }
+.bubble { border-radius: 1.1rem; padding: 0.7rem 0.9rem; font-size: 0.8rem; line-height: 1.45; max-width: 86%; }
+.bubble.me { margin-left: auto; background: oklch(0.42 0.09 160); border-bottom-right-radius: 0.3rem; }
+.bubble.them { background: oklch(0.23 0.01 80); border-bottom-left-radius: 0.3rem; }
+html.js .chat .bubble { opacity: 0; }
+html.js .chat.is-in .bubble { animation: bubble-in 0.6s var(--ease-expo) both; animation-delay: calc(var(--i, 0) * 650ms + 250ms); }
+
+/* Ligne de balayage de la caméra (bloc distributeurs) */
+.scanline { position: absolute; inset: 0 0 auto 0; height: 22%; pointer-events: none; background: linear-gradient(180deg, transparent, oklch(0.82 0.14 80 / 0.16), transparent); animation: scan 4.5s linear infinite; }
+
+/* Texte géant en contour (pied de page) */
+.text-outline { color: transparent; -webkit-text-stroke: 1px oklch(0.82 0.14 80 / 0.4); }
+
+/* Menu mobile : entrée échelonnée des liens */
+.menu-open .menu-item { animation: menu-in 0.5s var(--ease-expo) both; animation-delay: calc(var(--i, 0) * 45ms + 60ms); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rv-wait { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .aurora, .bob, .bob-slow, .scanline, .ticker > ul, .marquee-track, .marquee-track.reverse { animation: none !important; }
+  html.js .chat .bubble { opacity: 1; }
+}
+
+/* ── Identité CBDoux : rosace, alvéoles dorées, bandeau vert (reprise des visuels de la marque) ── */
+/* Taille par défaut du logo, dans la couche « components » pour que les utilitaires (h-8, w-full…) gardent la main */
+@layer components {
+  .logo { display: block; height: 2.25rem; width: auto; }
+  .rosette, .hex-ornament { display: block; }
+}
+@keyframes rosette-in { from { opacity: 0; transform: rotate(-140deg) scale(0.6); } to { opacity: 1; transform: none; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+/* La rosace du logo tourne sur elle-même : à l'arrivée, puis d'un quart de tour au survol */
+.logo-rosette { transform-box: fill-box; transform-origin: center; transition: transform 1.4s var(--ease-expo); animation: rosette-in 1.3s var(--ease-expo) both; }
+a:hover .logo .logo-rosette, .logo:hover .logo-rosette { transform: rotate(90deg); }
+/* Version filaire : tous les traits à un pixel, quelle que soit la taille */
+.logo-outline .logo-letters, .logo-outline .logo-rosette > * { stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.logo-outline .logo-rosette { animation: none; }
+.rosette-spin { animation: spin 80s linear infinite; }
+.rosette-spin.fast { animation-duration: 28s; }
+
+/* Alvéoles dorées (nid d'abeille), à poser en calque absolu ; le masque les fait disparaître en fondu */
+.hex-lines {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.16;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48.5' height='84' viewBox='0 0 48.5 84'><path d='M24.25 0L48.5 14V42L24.25 56L0 42V14Z M24.25 56V84' fill='none' stroke='%23d9b85c' stroke-width='1'/></svg>");
+  background-size: 48.5px 84px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 80% at var(--hex-x, 100%) var(--hex-y, 0%), #000 0%, transparent 70%);
+  mask-image: radial-gradient(ellipse 70% 80% at var(--hex-x, 100%) var(--hex-y, 0%), #000 0%, transparent 70%);
+}
+
+/* Rosace en image de fond : pour les répétitions (bandeau défilant), sans alourdir la page */
+.rosette-mark { display: inline-block; background: url("/images/brand/cbdoux-rosace.svg") center / contain no-repeat; }
+
+/* Filigrane de haut de page (posé par app/template.tsx, sous le contenu) */
+.hex-lines.page-hex { inset: 0 0 auto 0; height: 640px; z-index: -1; opacity: 0.14; }
+
+/* Bandeau vert profond liseré d'or (rappel du bandeau de l'enseigne) */
+.band-green {
+  background: linear-gradient(90deg, oklch(0.23 0.045 162), oklch(0.31 0.065 162) 50%, oklch(0.23 0.045 162));
+  color: var(--color-gold-light);
+  border-bottom: 1px solid oklch(0.82 0.14 80 / 0.35);
+}
+/* Variante haute : double filet doré en haut et en bas, comme sur l'enseigne */
+.band-rules { position: relative; border-top: 1px solid oklch(0.82 0.14 80 / 0.55); border-bottom: 1px solid oklch(0.82 0.14 80 / 0.55); }
+.band-rules::before, .band-rules::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: oklch(0.82 0.14 80 / 0.28); pointer-events: none; }
+.band-rules::before { top: 4px; }
+.band-rules::after { bottom: 4px; }
+/* Carte « écrin » : vert profond, liseré or, alvéoles en filigrane */
+.card-emerald {
+  background:
+    radial-gradient(120% 90% at 0% 0%, oklch(0.33 0.07 162 / 0.9), transparent 60%),
+    linear-gradient(160deg, oklch(0.22 0.04 162), oklch(0.15 0.02 150));
+  border: 1px solid oklch(0.82 0.14 80 / 0.35);
+}
+html[data-menu-open] .wa-fab { opacity: 0; pointer-events: none; }
+
+/* Bon de bienvenue : billet doré légèrement incliné */
+.coupon {
+  position: relative; overflow: hidden; text-align: center;
+  padding: 1.5rem 2.25rem 1.25rem; border-radius: 1.25rem;
+  color: oklch(0.2 0.03 80);
+  background: linear-gradient(135deg, #b98a2e 0%, #f3dfa0 42%, #e3c275 60%, #c59a3d 100%);
+  box-shadow: 0 30px 60px -25px oklch(0 0 0 / 0.7), inset 0 0 0 1px oklch(1 0 0 / 0.35), inset 0 0 0 6px oklch(0.2 0.03 80 / 0.06);
+  transform: rotate(var(--tilt, 0deg));
+}
+.coupon::before, .coupon::after { content: ""; position: absolute; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 9999px; background: oklch(0.2 0.04 162); }
+.coupon::before { left: -11px; }
+.coupon::after { right: -11px; }
+@media (prefers-reduced-motion: reduce) { .logo-rosette, .rosette-spin { animation: none !important; transition: none !important; } }

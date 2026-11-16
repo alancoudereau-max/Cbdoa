@@ -5,7 +5,7 @@ Importe et optimise les images exportées depuis l'ancien projet Lovable vers /p
 Usage : python3 -I scripts/import-lovable-assets.py <dossier-export-lovable> <racine-du-site>
 """
 import sys, os, shutil
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps  # noqa: F401
 
 SRC = sys.argv[1]
 DST = sys.argv[2]
@@ -82,39 +82,12 @@ categories = {
 for slug, rel in categories.items():
     save_image(os.path.join(A, rel), os.path.join(P, "images", "products", f"{slug}.jpg"), max_side=1200, square=True, force_jpg=True)
 
-# ───── Marque
-save_image(os.path.join(A, "brand/logo.png"), os.path.join(P, "images", "brand", "logo.png"), max_side=826)
-save_image(os.path.join(A, "brand/banner-wide.png"), os.path.join(P, "images", "brand", "banner-wide.png"), max_side=1200)
-save_image(os.path.join(A, "brand/banner-wide-v2.png"), os.path.join(P, "images", "brand", "banner-hero.jpg"), max_side=1600, force_jpg=True)
-save_image(os.path.join(A, "brand/distributeur-poster.png"), os.path.join(P, "images", "brand", "distributeur-charquemont.jpg"), max_side=1400, force_jpg=True)
-# Provisoire : affiche du Russey non présente dans l'export
-save_image(os.path.join(A, "brand/distributeur-poster.png"), os.path.join(P, "images", "brand", "distributeur-le-russey.jpg"), max_side=1400, force_jpg=True)
-save_image(os.path.join(A, "brand/promo-bienvenue.png"), os.path.join(P, "images", "brand", "promo-bienvenue.jpg"), max_side=1200, force_jpg=True)
-save_image(os.path.join(A, "brand/whatsapp-poster.png"), os.path.join(P, "images", "brand", "whatsapp-poster.jpg"), max_side=1200, force_jpg=True)
-save_image(os.path.join(A, "brand/services-affiche.jpg"), os.path.join(P, "images", "brand", "services-affiche.jpg"), max_side=1232)
-
-# ───── Réseaux sociaux
-for n in ("facebook", "whatsapp", "google-maps"):
-    ext = ".png" if n != "google-maps" else ".jpg"
-    save_image(os.path.join(A, f"social/{n}.png"), os.path.join(P, "images", "social", f"{n}{ext}"), max_side=400, force_jpg=(n == "google-maps"), square=True)
+# Le logo, les icônes et l'image de partage ne viennent plus de l'export Lovable :
+# ils sont redessinés et générés par scripts/build-brand.py (identité de novembre 2026).
 
 # ───── Analyses laboratoire (COA) — garder lisibles
 for f in os.listdir(os.path.join(A, "coa")):
     save_image(os.path.join(A, "coa", f), os.path.join(P, "images", "coa", os.path.splitext(f)[0] + ".jpg"), max_side=1600, quality=85, force_jpg=True)
-
-# ───── Icônes
-fav = Image.open(os.path.join(SRC, "public", "favicon.ico")).convert("RGBA")
-fav.save(out(os.path.join(P, "favicon.ico")), format="ICO", sizes=[(16, 16), (32, 32), (48, 48)])
-fav.resize((180, 180), Image.LANCZOS).save(out(os.path.join(P, "apple-icon.png")), "PNG")
-fav.resize((512, 512), Image.LANCZOS).save(out(os.path.join(P, "icon-512.png")), "PNG")
-fav.resize((192, 192), Image.LANCZOS).save(out(os.path.join(P, "icon-192.png")), "PNG")
-fav.resize((32, 32), Image.LANCZOS).save(out(os.path.join(P, "icon.png")), "PNG")
-
-# ───── Image Open Graph par défaut (1200×630) à partir de la bannière
-hero = Image.open(os.path.join(A, "brand/banner-wide-v2.png")).convert("RGB")
-og = ImageOps.fit(hero, (1200, 630), Image.LANCZOS, centering=(0.5, 0.5))
-og.save(out(os.path.join(P, "images", "og", "og-default.jpg")), "JPEG", quality=85, optimize=True)
-print("OG par défaut OK")
 
 # PDF conseils (sera régénéré, on garde l'original en secours)
 shutil.copy(os.path.join(SRC, "public", "conseils-prudence.pdf"), out(os.path.join(P, "conseils-prudence-original.pdf")))

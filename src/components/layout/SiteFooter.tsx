@@ -1,5 +1,6 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { Logo } from "@/components/brand/Logo";
 import { MapPin, Clock, Mail, MessageCircle, ShieldCheck, Truck, Lock, FlaskConical } from "lucide-react";
 import { site, footerNav, company } from "@/data/site";
 
@@ -15,6 +16,7 @@ export function SiteFooter() {
     <footer className="relative grain border-t border-foreground/10 bg-card/40 mt-24">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="orb orb-gold w-[400px] h-[400px] -bottom-32 -right-20 opacity-20" />
+        <div className="hex-lines" style={{ "--hex-x": "0%", "--hex-y": "100%" } as CSSProperties} />
       </div>
 
       {/* Réassurance */}
@@ -35,7 +37,7 @@ export function SiteFooter() {
       <div className="relative mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 py-16">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <Image src="/images/brand/logo.png" alt="CBDoux" width={200} height={58} className="h-10 w-auto mb-6 opacity-90" />
+            <Logo weight="fine" className="h-14 mb-6" />
             <p className="font-serif text-3xl leading-[1] mb-4">
               La douceur<br />
               <span className="font-serif-italic text-foreground/55">du Haut-Doubs.</span>
@@ -80,6 +82,10 @@ export function SiteFooter() {
           </p>
           <p>Commande par WhatsApp · Paiement par lien sécurisé CB ou virement</p>
         </div>
+      </div>
+      {/* Grand filigrane : le logo en version filaire */}
+      <div aria-hidden data-reveal="up" className="relative px-3 pb-20 sm:px-8 sm:pb-6 opacity-45">
+        <Logo outline weight="fine" className="mx-auto h-auto w-full max-w-[1300px]" />
       </div>
     </footer>
   );
