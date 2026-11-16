@@ -26,3 +26,5 @@ next-env.d.ts
 __pycache__/
 *.pyc
 .brand-tmp/
+kit-cbdoux/
+kit-cbdoux.zip
