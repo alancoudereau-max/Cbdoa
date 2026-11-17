@@ -211,15 +211,15 @@ export function AddToCart({ product, availability }: { product: Product; availab
       {mounted &&
         createPortal(
           <div className="buybar lg:hidden" data-show={bar !== "off"} aria-hidden={bar === "off"}>
-            <div className="flex items-center gap-3">
-              <div className="min-w-0 flex-1">
+            <div className="buybar-row">
+              <div className="buybar-text">
                 <p className="truncate text-[0.9375rem] font-medium leading-tight">{product.name}</p>
-                <p className="t-num mt-1 truncate text-[0.8125rem] leading-tight text-foreground/75">
+                <p className="buybar-price t-num truncate text-[0.8125rem] leading-tight text-foreground/75">
                   {bar === "before" && several ? `Dès ${formatEUR(fromCents)}` : `${variant.tierLabel}, ${variant.format} · ${formatEUR(variant.priceCents * qty)}`}
                 </p>
               </div>
               <button type="button" tabIndex={bar === "off" ? -1 : 0} onClick={onBar} disabled={!available && bar === "after"} className="btn btn-primary btn-sm shrink-0">
-                {barLabel}
+                <span className="min-w-0 truncate">{barLabel}</span>
               </button>
             </div>
           </div>,

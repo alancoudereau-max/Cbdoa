@@ -451,7 +451,25 @@
   @media (max-width: 1023px) { html[data-buybar] .wa-fab { translate: 0 -4.75rem; } html[data-buybar] footer { padding-bottom: 4.5rem; } }
   .buybar { position: fixed; inset: auto 0 0 0; z-index: 39; transform: translateY(110%); transition: transform 0.45s var(--ease-out); border-top: 1px solid rgb(215 181 101 / 0.45); background: rgb(6 6 5 / 0.94); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); padding: 0.7rem var(--gutter) max(0.7rem, env(safe-area-inset-bottom)); }
   .buybar[data-show="true"] { transform: none; }
+  .buybar-row { display: flex; align-items: center; gap: 0.75rem; }
+  .buybar-text { min-width: 0; flex: 1 1 0%; }
+  .buybar-price { margin-top: 0.25rem; }
   html[data-menu-open] .buybar, html[data-gate] .buybar { transform: translateY(110%); }
+
+  /* Badge « Powered by Netlify » : tant que l'hébergeur l'affiche (cadre #nl-badge-frame, en bas à droite,
+     64 px de haut), nos éléments se rangent autour de lui au lieu de passer dessous. Sans badge, rien ne change. */
+  html:has(#nl-badge-frame) .wa-fab { translate: 0 -4.5rem; }
+  @media (max-width: 1023px) {
+    /* barre d'achat : le nom et le prix sur une ligne au-dessus du badge, le bouton à sa gauche */
+    html:has(#nl-badge-frame) .buybar-row { flex-direction: column; align-items: flex-start; gap: 0.55rem; }
+    html:has(#nl-badge-frame) .buybar-text { display: flex; width: 100%; flex: none; align-items: baseline; gap: 0.6rem; }
+    html:has(#nl-badge-frame) .buybar-text > p:first-child { flex: 0 1 auto; min-width: 0; }
+    html:has(#nl-badge-frame) .buybar-price { flex: none; margin-top: 0; }
+    /* le bouton ne dépasse jamais sous le badge (201 px de large) */
+    html:has(#nl-badge-frame) .buybar .btn { max-width: calc(100vw - 201px - var(--gutter) - 0.5rem); padding-inline: 0.7rem; font-size: 0.84rem; white-space: nowrap; }
+    html:has(#nl-badge-frame)[data-buybar] .wa-fab { translate: 0 -6.6rem; }
+    html:has(#nl-badge-frame)[data-buybar] footer { padding-bottom: 6.6rem; }
+  }
 
   /* ── Noir et or ── */
   /* Bandeau vert de l'enseigne, liseré d'or (bandeau du haut, bandeau défilant) */
