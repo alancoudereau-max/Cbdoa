@@ -50,8 +50,11 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 
 - **Fond noir, métal or.** Le vert de l'enseigne n'est qu'un accent : bandeau du haut, bandeau défilant, cadran de la montre, boutons posés sur papier.
 - **Le papier crème est réservé aux objets** : étiquettes produit, cartes postales des distributeurs, certificats d'analyse. Tout le reste (formulaires, textes longs, tableaux, récapitulatifs) vit sur des panneaux sombres liserés d'or (`.panel`).
-- **La montre** (`src/components/home/WatchDial.tsx`) : un cadran 12 heures original, signé CBDoux, qui donne l'heure exacte du Haut-Doubs (pays horloger, distributeurs ouverts jour et nuit). Elle n'imite aucune marque existante : rosace de la marque à midi, aiguilles « feuille », guichet de date.
+- **La montre** (`src/components/home/WatchDial.tsx`) : un cadran 12 heures original, signé CBDoux, qui donne l'heure exacte du Haut-Doubs (pays horloger, distributeurs ouverts jour et nuit). Elle n'imite aucune marque existante : rosace de la marque à midi, aiguilles « feuille », guichet de date. Depuis le 17 novembre : un guichet « jour et nuit » (soleil le jour, lune la nuit), la lumière du cadran qui tourne quand la page défile, une légère inclinaison vers le pointeur sur ordinateur, et les aiguilles qui font un tour quand on touche la montre ou qu'on entre sur le site.
 - **Le mouvement** : apparitions au défilement, chiffres qui comptent, bandeau défilant, reflets dorés, poussière d'or. Règle absolue : **aucune image n'attend un script pour s'afficher**, et aucun effet de fusion ou de découpe n'est demandé au navigateur (c'est ce qui faisait « buguer » les photos de la version précédente).
+- **La vitesse fait partie du dessin.** Les animations permanentes ne font que déplacer ou fondre des éléments (poussière d'or en CSS, reflet du titre, bandeau défilant) : le navigateur n'a rien à recalculer au repos. Le reflet doré des titres de section ne passe qu'une fois, à leur arrivée à l'écran.
+- **Vérification d'âge** (`src/components/AgeGate.tsx`) : écrite dans le HTML de chaque page et pilotée par deux petits scripts, elle s'affiche dès la première image, sans attendre le reste du JavaScript. L'ouverture de la page se joue au moment où l'on entre.
+- **Fiche produit sur téléphone** : une barre d'achat reste en bas de l'écran (`AddToCart.tsx`). Avant le bloc d'achat, elle donne le prix et y conduit ; après, elle ajoute au panier le choix en cours.
 
 | Besoin | Fichier |
 |---|---|

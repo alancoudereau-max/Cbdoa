@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { cities, getCity } from "@/data/cities";
+import { cities, getCity, inCity } from "@/data/cities";
 import { featuredProducts } from "@/data/products";
 import { locations, site } from "@/data/site";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -48,7 +48,7 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
           { name: "CBD près de chez vous", path: "/cbd" },
           { name: c.name, path: `/cbd/${c.slug}` },
         ]}
-        title={`CBD à ${c.name}`}
+        title={`CBD ${inCity(c.name)}`}
         lead={fr(c.intro)}
       >
         <p className="t-num text-[0.9688rem] text-foreground/75">
@@ -100,7 +100,7 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
 
       <section className="wrap section grid gap-10 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-4">
-          <h2 className="t-h2">Questions fréquentes à {c.name}</h2>
+          <h2 className="t-h2">Questions fréquentes {inCity(c.name)}</h2>
         </div>
         <div className="lg:col-span-7 lg:col-start-6">
           <Faq items={c.faq} />
@@ -118,7 +118,7 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
           <span className="mr-2 text-foreground/70">À proximité</span>
           {nearby.map((n) => (
             <Link key={n.slug} href={`/cbd/${n.slug}`} className="btn btn-ghost btn-sm">
-              CBD à {n.name}
+              CBD {inCity(n.name)}
             </Link>
           ))}
         </nav>

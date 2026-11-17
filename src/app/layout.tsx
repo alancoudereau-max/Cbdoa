@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { preload } from "react-dom";
 import localFont from "next/font/local";
 import "./globals.css";
 import { site, SITE_URL } from "@/data/site";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
-import { AgeGate } from "@/components/AgeGate";
+import { AgeGate, AgeGateFlag } from "@/components/AgeGate";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { JsonLd } from "@/components/JsonLd";
@@ -96,9 +97,12 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // La gravure de la vérification d'âge est le plus grand élément du premier écran d'un nouveau visiteur : on la charge tôt.
+  preload("/images/brand/guilloche-rosace.svg", { as: "image" });
   return (
-    <html lang="fr" className={`${fraunces.variable} ${frauncesItalic.variable} ${hanken.variable} ${hankenItalic.variable}`}>
+    <html lang="fr" suppressHydrationWarning className={`${fraunces.variable} ${frauncesItalic.variable} ${hanken.variable} ${hankenItalic.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
+        <AgeGateFlag />
         <JsonLd data={[organizationJsonLd(), websiteJsonLd(), storeJsonLd()]} />
         <MotionRoot />
         <a

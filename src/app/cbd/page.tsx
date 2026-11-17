@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { cities } from "@/data/cities";
+import { cities, inCity } from "@/data/cities";
 import { PageHero } from "@/components/ui/PageHero";
 import { buildMetadata } from "@/lib/seo";
 
@@ -31,7 +31,7 @@ export default function CbdIndexPage() {
           {cities.map((c) => (
             <li key={c.slug} className="border-t border-foreground/15 last:border-b">
               <Link href={`/cbd/${c.slug}`} className="group grid gap-x-10 gap-y-1.5 py-5 sm:grid-cols-[1fr_auto] sm:items-baseline sm:py-6">
-                <h2 className="softens t-h3">CBD à {c.name}</h2>
+                <h2 className="softens t-h3">CBD {inCity(c.name)}</h2>
                 <p className="t-num text-[0.9375rem] text-foreground/70 sm:text-right">
                   {c.postalCode}, {c.department}
                 </p>

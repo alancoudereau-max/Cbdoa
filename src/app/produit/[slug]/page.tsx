@@ -128,7 +128,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             ))}
             <p className="mt-7 flex items-start gap-3 rounded-[3px] bg-danger-soft px-4 py-3.5 text-[0.875rem] leading-relaxed text-foreground">
               <span>
-                Produit réservé aux adultes. Ne pas conduire ni utiliser de machines après usage. Déconseillé aux femmes enceintes ou allaitantes et aux personnes sous traitement sans avis médical. {forceLabels[strongest].label} : {fr(forceLabels[strongest].description)} Ce produit n'est pas un médicament. <Link href="/conseils-prudence">Conseils et prudence</Link>.
+                Produit réservé aux adultes. Ne pas conduire ni utiliser de machines après usage. Déconseillé aux femmes enceintes ou allaitantes et aux personnes sous traitement sans avis médical. {forceLabels[strongest].label} : {fr(forceLabels[strongest].description.replace(/^./, (c) => c.toLowerCase()))} Ce produit n'est pas un médicament. <Link href="/conseils-prudence">Conseils et prudence</Link>.
               </span>
             </p>
           </div>

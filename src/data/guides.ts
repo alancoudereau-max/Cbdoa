@@ -130,7 +130,7 @@ export const guides: Guide[] = [
         heading: "Le taux de CBD : utile, mais pas suffisant",
         blocks: [
           p("Le pourcentage de CBD indiqué (18 %, 22 %, 24 %…) donne une idée de la concentration en cannabidiol du lot. Il se vérifie sur l'analyse de laboratoire (COA). Mais deux fleurs à 20 % peuvent offrir des expériences très différentes selon leurs terpènes, leur fraîcheur et leur conservation."),
-          p("Nos forces Classique, 2 et 3 permettent d'ajuster la concentration : la Force 2 et la Force 3 sont des fleurs renforcées en CBD après récolte. Pour une première commande, la force Classique est le choix le plus sûr."),
+          p("Nos forces Classique, 2 et 3 permettent d'ajuster le ressenti : la Force 2 et la Force 3 sont des fleurs enrichies en cannabinoïdes après récolte. Pour une première commande, la force Classique est le choix le plus sûr."),
         ],
       },
       {
@@ -173,7 +173,7 @@ export const guides: Guide[] = [
     faq: [
       { q: "Quelle fleur CBD pour débuter ?", a: "Une fleur en force Classique au profil doux et fruité : Fruit Haze ou Cali Fruit Indoor. Commencez par 1 g pour tester les arômes et votre sensibilité." },
       { q: "Pourquoi certaines fleurs sont-elles plus chères ?", a: "Le mode de culture (indoor et hydroponie coûtent plus cher que la serre), la génétique, le travail de manucure et le taux de CBD expliquent les écarts. Le prix au gramme baisse sur les formats 10 g." },
-      { q: "Une fleur à 24 % de CBD est-elle plus « forte » qu'une 18 % ?", a: "Plus concentrée en CBD, oui. Mais le ressenti dépend aussi des terpènes, de la quantité utilisée et de votre sensibilité. Les forces 2, 3 et Maxi vont plus loin que le taux naturel." },
+      { q: "Une fleur à 24 % de CBD est-elle plus « forte » qu'une 18 % ?", a: "Plus concentrée en CBD, oui. Mais le ressenti dépend aussi des terpènes, de la quantité utilisée et de votre sensibilité. Les forces 2, 3 et Maxi, enrichies en cannabinoïdes, vont plus loin que la fleur au naturel." },
     ],
     relatedProducts: ["super-lemon-haze-hydro-usa", "cali-fruit-indoor", "fruit-haze", "trim-premium-indoor"],
     relatedGuides: ["comprendre-les-forces-cbd", "fleur-ou-resine-cbd", "vaporiser-cbd-guide-pratique"],
@@ -297,7 +297,7 @@ export const guides: Guide[] = [
         blocks: [
           p("Comme toutes nos résines, la Piatella est destinée à la vaporisation, dans une chambre pour concentrés ou avec un tampon de dégommage. Elle n'est destinée ni à la combustion ni à un usage alimentaire."),
           ul([
-            "Prélevez une très petite quantité : notre Piatella est proposée en Force Maxi, la concentration la plus élevée de la gamme.",
+            "Prélevez une très petite quantité : notre Piatella est proposée en Force Maxi, l'enrichissement le plus élevé de la gamme.",
             "Montez progressivement en température.",
             "Attendez 15 à 30 minutes avant toute nouvelle prise.",
             "Ne conduisez pas après usage.",
@@ -324,30 +324,30 @@ export const guides: Guide[] = [
     slug: "comprendre-les-forces-cbd",
     title: "Forces Classique, 2, 3 et Maxi : comprendre la gamme CBDoux",
     description:
-      "Que signifient les forces Classique, 2, 3 et Maxi chez CBDoux ? Fleurs renforcées en CBD, dosage progressif, précautions : choisir la bonne force.",
+      "Que signifient les forces Classique, 2, 3 et Maxi chez CBDoux ? Fleurs enrichies en cannabinoïdes, dosage progressif, précautions : choisir la bonne force.",
     category: "Utilisation",
     publishedAt: "2026-11-08",
     readingMinutes: 6,
     intro:
-      "Nos fleurs et résines existent en plusieurs forces. Ce n'est pas un gadget marketing : c'est une échelle de concentration en CBD qui vous permet de choisir un ressenti adapté à votre expérience. Explications.",
+      "Nos fleurs et résines existent en plusieurs forces. Ce n'est pas un gadget marketing : c'est une échelle d'enrichissement en cannabinoïdes qui vous permet de choisir un ressenti adapté à votre expérience. Explications.",
     sections: [
       {
-        heading: "Classique : le CBD naturel",
+        heading: "Classique : la fleur au naturel",
         blocks: [
-          p("La force Classique correspond à la fleur ou à la résine telle qu'elle sort de la culture et de la transformation, sans renforcement. Taux de CBD naturel (18 à 24 % pour nos fleurs, 35 à 40 % pour nos résines). C'est la force que nous recommandons pour découvrir une variété ou pour un usage en journée."),
+          p("La force Classique correspond à la fleur ou à la résine telle qu'elle sort de la culture et de la transformation, sans enrichissement. Taux de CBD naturel (18 à 24 % pour nos fleurs, 35 à 40 % pour nos résines). C'est la force que nous recommandons pour découvrir une variété ou pour un usage en journée."),
         ],
       },
       {
-        heading: "Force 2 et Force 3 : renforcées en CBD",
+        heading: "Force 2 et Force 3 : enrichies en cannabinoïdes",
         blocks: [
-          p("Une fleur « renforcée » (ou « boostée ») est enrichie en CBD après la récolte, à l'aide d'un extrait de chanvre riche en cannabidiol. La Force 2 ajoute environ 10 à 15 % de CBD, la Force 3 environ 25 %. Le taux de THC reste inférieur à 0,3 %."),
+          p("Une fleur « enrichie » (ou « boostée ») reçoit, après la récolte, un extrait de chanvre concentré en cannabinoïdes. La Force 2 est enrichie modérément, la Force 3 plus fortement. Le taux de THC reste inférieur à 0,3 %."),
           p("Le ressenti est plus présent et plus enveloppant. La Force 3 s'adresse aux consommateurs habitués ; nous déconseillons de conduire après usage, quelle que soit la force."),
         ],
       },
       {
-        heading: "Force Maxi : la concentration maximale",
+        heading: "Force Maxi : l'enrichissement maximal",
         blocks: [
-          p("La force Maxi est réservée à quelques références (Californienne Small Buds, Beldia, Piatella). C'est la concentration la plus élevée de notre gamme. Elle est réservée aux adultes habitués et déconseillée aux débutants."),
+          p("La force Maxi est réservée à quelques références (Californienne Small Buds, Beldia, Piatella). C'est l'enrichissement en cannabinoïdes le plus élevé de notre gamme. Elle est réservée aux adultes habitués et déconseillée aux débutants."),
           ul([
             "Commencez par une très petite quantité.",
             "Attendez de ressentir les effets avant toute nouvelle prise (15 à 30 minutes en vaporisation).",
@@ -379,7 +379,7 @@ export const guides: Guide[] = [
       },
     ],
     faq: [
-      { q: "Une fleur renforcée en CBD est-elle légale ?", a: "Oui, dès lors que le THC reste inférieur à 0,3 % et que le renforcement est réalisé avec du CBD (et non avec un cannabinoïde interdit). Nos lots sont analysés." },
+      { q: "Une fleur enrichie en cannabinoïdes est-elle légale ?", a: "Oui, dès lors que le THC reste inférieur à 0,3 % et que les cannabinoïdes utilisés sont autorisés en France (certains, comme le HHC, y sont interdits). Nos lots sont analysés." },
       { q: "La force Maxi est-elle adaptée à une première commande ?", a: "Non. Pour découvrir, choisissez la force Classique. La force Maxi est réservée aux adultes habitués." },
       { q: "Peut-on mélanger les forces ?", a: "Rien ne l'interdit, mais commencez toujours par la force la plus douce et attendez les effets avant d'aller plus loin." },
     ],
@@ -401,8 +401,15 @@ export const guides: Guide[] = [
       {
         heading: "Le test salivaire ne fait pas la différence",
         blocks: [
-          p("Les tests salivaires routiers recherchent le THC. Un produit CBD légal contient jusqu'à 0,3 % de THC : des traces suffisantes, selon la quantité consommée et la sensibilité du test, pour provoquer un résultat positif. En France, la conduite après usage de stupéfiants est sanctionnée dès lors que du THC est détecté, sans seuil minimal."),
+          p("Les tests salivaires routiers recherchent le THC. Un produit CBD légal contient jusqu'à 0,3 % de THC : des traces suffisantes, selon la quantité consommée et la sensibilité du test, pour provoquer un résultat positif. En France, la conduite après usage de stupéfiants est sanctionnée dès lors que du THC est détecté, sans seuil minimal : la Cour de cassation l'a confirmé en juin 2023 pour les produits au CBD."),
           p("Même si vous êtes certain de n'avoir consommé que du CBD légal, la procédure (immobilisation, prise de sang de confirmation, éventuelles poursuites) est longue et incertaine. Le plus simple est de ne pas conduire."),
+        ],
+      },
+      {
+        heading: "Le taux de THC change le risque, sans l'annuler",
+        blocks: [
+          p("Le dépistage ne réagit pas au CBD lui-même : ce sont les traces de THC qui comptent. Une fleur proche du plafond légal de 0,3 % en apporte bien davantage qu'une variété à très faible teneur (moins de 0,01 % de THC). Avec cette dernière, le risque de dépistage positif est plus faible."),
+          p("Plus faible ne veut pas dire nul. La quantité consommée, la régularité de l'usage et la sensibilité du test jouent aussi, et aucun produit ne permet de garantir un résultat négatif. Le taux de THC de chaque lot figure sur son certificat d'analyse : consultez-le avant de choisir, et ne prenez pas le volant après usage, quelle que soit la variété."),
         ],
       },
       {
@@ -431,6 +438,7 @@ export const guides: Guide[] = [
     ],
     faq: [
       { q: "Le CBD est-il considéré comme un stupéfiant au volant ?", a: "Le CBD non, mais le THC qu'il peut contenir à l'état de traces oui. Un test salivaire positif au THC entraîne les mêmes conséquences qu'une consommation de cannabis." },
+      { q: "Une fleur à très faible taux de THC évite-t-elle un test positif ?", a: "Elle réduit le risque, sans l'éliminer. Le dépistage recherche le THC : moins une variété en contient (moins de 0,01 % pour les plus basses), moins il y a de chances qu'il soit détecté. Aucun produit ne garantit un test négatif, et nous déconseillons toujours de conduire après usage." },
       { q: "Puis-je conduire après une huile CBD cutanée ?", a: "Nos huiles sont à usage cutané ; elles ne sont pas conçues pour être absorbées comme un produit inhalé. Par principe de prudence, restez attentif à votre état avant toute conduite." },
       { q: "Que faire en cas de contrôle positif ?", a: "Restez calme, présentez votre facture et l'emballage du produit, et demandez la prise de sang de confirmation. Un avocat pourra vous accompagner si des poursuites sont engagées." },
     ],
@@ -608,8 +616,8 @@ export const guides: Guide[] = [
       {
         heading: "Exemple : nos analyses",
         blocks: [
-          p("Notre Critical Berry (analyse du 9 février 2026, laboratoire CBD-THC Lab, méthode HPLC) affiche 12,43 % de CBD total pour 0,22 % de THC total. Notre résine 3X Filtré : 9,56 % de CBD pour 0,24 % de THC. L'extrait utilisé pour le renforcement de nos forces 2 et 3 (distillat) affiche 46,69 % de CBD et un THC non détecté (GC-MS)."),
-          p("Le taux de CBD mesuré sur la fleur brute peut être inférieur au taux affiché sur certains sites concurrents : nous préférons publier des valeurs réelles et expliquer les forces de renforcement plutôt que d'afficher des pourcentages invérifiables."),
+          p("Notre Critical Berry (analyse du 9 février 2026, laboratoire CBD-THC Lab, méthode HPLC) affiche 12,43 % de CBD total pour 0,22 % de THC total. Notre résine 3X Filtré : 9,56 % de CBD pour 0,24 % de THC. L'extrait de cannabinoïdes utilisé pour enrichir nos forces 2 et 3 (distillat) affiche 46,69 % de CBD et un THC non détecté (GC-MS)."),
+          p("Le taux de CBD mesuré sur la fleur brute peut être inférieur au taux affiché sur certains sites concurrents : nous préférons publier des valeurs réelles et expliquer les forces d'enrichissement plutôt que d'afficher des pourcentages invérifiables."),
         ],
       },
       {
@@ -625,9 +633,9 @@ export const guides: Guide[] = [
       },
     ],
     faq: [
-      { q: "Pourquoi le taux de CBD affiché sur l'analyse est-il différent de celui de la fiche produit ?", a: "La fiche produit indique la force (Classique = taux naturel, Force 2/3 = renforcée). L'analyse porte sur un échantillon précis d'un lot ; des variations entre lots sont normales." },
+      { q: "Pourquoi le taux de CBD affiché sur l'analyse est-il différent de celui de la fiche produit ?", a: "La fiche produit indique la force (Classique = au naturel, Force 2/3 = enrichie en cannabinoïdes). L'analyse porte sur un échantillon précis d'un lot ; des variations entre lots sont normales." },
       { q: "Puis-je obtenir l'analyse d'un lot précis ?", a: "Oui, demandez-la via le formulaire de contact ou sur WhatsApp en indiquant le produit et la date d'achat." },
-      { q: "Qu'est-ce que le THC « non détecté » (ND) ?", a: "Le laboratoire n'a pas trouvé de THC au-dessus de son seuil de détection. C'est le cas de notre distillat de renforcement." },
+      { q: "Qu'est-ce que le THC « non détecté » (ND) ?", a: "Le laboratoire n'a pas trouvé de THC au-dessus de son seuil de détection. C'est le cas de notre distillat d'enrichissement." },
     ],
     relatedProducts: ["critical-berry-indoor-usa", "3x-filtre", "snow-white"],
     relatedGuides: ["cbd-legal-france-2026", "comment-choisir-fleur-cbd"],

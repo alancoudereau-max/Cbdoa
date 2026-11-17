@@ -38,10 +38,10 @@ warn = ParagraphStyle("w", fontName=font_b, fontSize=9.8, leading=14, textColor=
 sections = [
     ("Niveaux de force", [
         "La puissance dépend de la force choisie et de la quantité utilisée.",
-        "<b>Classique</b> — CBD naturel non renforcé. Idéal pour découvrir ou pour un usage en journée.",
-        "<b>Force 2 · Modéré</b> — renforcé en CBD (~10 à 15 %). Ressenti plus présent, plutôt en fin de journée.",
-        "<b>Force 3 · Puissant</b> — renforcé en CBD (~25 %). Réservé aux consommateurs habitués. Pas de conduite après usage.",
-        "<b>Force Maxi</b> — concentration la plus élevée de la gamme (Californienne Small Buds, Beldia, Piatella). Réservée aux adultes habitués, déconseillée aux débutants : très petite quantité, attendez les effets avant toute nouvelle prise, ni conduite ni machines après usage.",
+        "<b>Classique</b> — fleur ou résine au naturel, non enrichie. Idéal pour découvrir ou pour un usage en journée.",
+        "<b>Force 2 · Modérée</b> — enrichie en cannabinoïdes. Ressenti plus présent, plutôt en fin de journée.",
+        "<b>Force 3 · Puissante</b> — plus fortement enrichie en cannabinoïdes. Réservée aux consommateurs habitués. Pas de conduite après usage.",
+        "<b>Force Maxi</b> — l'enrichissement en cannabinoïdes le plus élevé de la gamme (Californienne Small Buds, Beldia, Piatella). Réservée aux adultes habitués, déconseillée aux débutants : très petite quantité, attendez les effets avant toute nouvelle prise, ni conduite ni machines après usage.",
     ]),
     ("Dosage : commencer bas, augmenter lentement", [
         "Prenez une petite quantité, attendez 15 à 30 minutes et évaluez le ressenti avant d'en reprendre.",
@@ -52,7 +52,7 @@ sections = [
         "<b>Application cutanée (huiles) :</b> usage local, à renouveler selon besoin. Ne pas ingérer.",
     ]),
     ("Conduite et activités à risque", [
-        "<b>Ne conduisez pas</b> après consommation, même à faible dose. Le CBD peut entraîner une somnolence et le dépistage salivaire routier ne distingue pas le CBD du THC. Par prudence, attendez une nuit complète avant de reprendre le volant.",
+        "<b>Ne conduisez pas</b> après consommation, même à faible dose. Le CBD peut entraîner une somnolence, et le dépistage salivaire routier recherche le THC : les traces présentes dans un produit légal peuvent suffire à le rendre positif. Par prudence, attendez une nuit complète avant de reprendre le volant.",
         "Évitez l'utilisation de machines et toute activité nécessitant une vigilance soutenue.",
     ]),
     ("Traitements et contre-indications", [

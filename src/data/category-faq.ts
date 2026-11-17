@@ -8,8 +8,8 @@ export const categoryFaq: Record<Category, FaqItem[]> = {
       a: "L'indoor est cultivé en intérieur sous lumière artificielle avec un contrôle total du climat : têtes denses et très aromatiques. L'hydroponie est une culture indoor hors-sol, sur substrat inerte et solution nutritive : croissance rapide, buds volumineux et propres. Le greenhouse (serre) profite du soleil avec une protection climatique : bon rapport qualité/prix. Les trois sont analysés et conformes (THC < 0,3 %).",
     },
     {
-      q: "Que signifie « fleur renforcée en CBD » (Force 2, Force 3) ?",
-      a: "La fleur est enrichie en CBD après récolte, ce qui augmente sa concentration totale en cannabidiol (environ +10 à +15 % en Force 2, +25 % en Force 3). Le taux de THC reste inférieur à 0,3 %. Le ressenti étant plus présent, ces forces s'adressent aux consommateurs habitués ; commencez par une petite quantité.",
+      q: "Que signifie « fleur enrichie en cannabinoïdes » (Force 2, Force 3) ?",
+      a: "La fleur reçoit, après la récolte, un extrait de chanvre concentré en cannabinoïdes : modérément en Force 2, plus fortement en Force 3. Le taux de THC reste inférieur à 0,3 %. Le ressenti étant plus présent, ces forces s'adressent aux consommateurs habitués ; commencez par une petite quantité.",
     },
     {
       q: "Comment utiliser une fleur de CBD ?",

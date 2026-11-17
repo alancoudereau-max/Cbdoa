@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
  * Chef d'orchestre des animations du site (monté une seule fois dans le layout) :
  *  - apparition au défilement des éléments marqués `data-reveal` (et des <section> de page qui n'en contiennent pas) ;
  *  - compteurs animés `data-count` ;
+ *  - reflet doré des titres de section, joué une fois à leur arrivée à l'écran ;
  *  - barre de progression de lecture en haut de l'écran ;
  *  - parallaxe légère `data-parallax`.
  *
@@ -35,6 +36,8 @@ export function MotionRoot() {
     }
     let counters = Array.from(document.querySelectorAll<HTMLElement>("[data-count]"));
     const parallax = reduced ? [] : Array.from(document.querySelectorAll<HTMLElement>("[data-parallax]"));
+    // Titres de section : le reflet doré les traverse une fois, à leur arrivée à l'écran
+    let headings = reduced ? [] : Array.from(document.querySelectorAll<HTMLElement>("main h2:not(.is-seen)")).filter((h) => h.querySelector("em"));
 
     const runCounter = (el: HTMLElement) => {
       const target = Number(el.dataset.count);
@@ -89,6 +92,14 @@ export function MotionRoot() {
         if (ready.length) {
           waiting = waiting.filter((el) => !ready.includes(el));
           ready.forEach((el, i) => show(el, Math.min(i, 4) * 60));
+        }
+      }
+      if (headings.length) {
+        const line = vh * 0.9;
+        const seen = headings.filter((el) => el.getBoundingClientRect().top < line);
+        if (seen.length) {
+          headings = headings.filter((el) => !seen.includes(el));
+          seen.forEach((el) => el.classList.add("is-seen"));
         }
       }
       if (counters.length) {

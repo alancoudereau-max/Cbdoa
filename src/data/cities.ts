@@ -16,6 +16,9 @@ export type City = {
   nearby: string[]; // slugs
 };
 
+/** « à Charquemont », « au Russey » : la préposition contractée avec l'article du nom de la commune. */
+export const inCity = (name: string) => (name.startsWith("Le ") ? `au ${name.slice(3)}` : name.startsWith("Les ") ? `aux ${name.slice(4)}` : `à ${name}`);
+
 export const cities: City[] = [
   {
     slug: "charquemont",

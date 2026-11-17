@@ -113,7 +113,7 @@ export const legalDocs: LegalDoc[] = [
     slug: "cgv",
     title: "Conditions générales de vente",
     description: `Conditions générales de vente ${site.name} : commande par WhatsApp, prix, paiement par lien sécurisé, livraison en France, rétractation, garanties, médiation.`,
-    updatedAt: "2026-11-16",
+    updatedAt: "2026-11-17",
     intro: `Les présentes conditions générales de vente (ci-après « CGV ») régissent les ventes de produits conclues à distance entre ${vendeur} (ci-après « le Vendeur » ou « ${site.name} ») et toute personne physique majeure agissant à des fins non professionnelles (ci-après « le Client ») sur le site ${site.url}.`,
     sections: [
       {
@@ -132,7 +132,7 @@ export const legalDocs: LegalDoc[] = [
             "Les produits ne sont pas des médicaments ; aucune allégation thérapeutique n'est formulée.",
             "Les produits sont destinés à un usage personnel. Toute revente est interdite.",
           ]),
-          p("La « force » indiquée (Classique, Force 2, Force 3, Maxi) désigne la concentration en CBD du produit. Les produits en Force 3 et Maxi sont réservés aux consommateurs adultes habitués ; le Client reconnaît avoir pris connaissance des conseils de prudence accessibles sur le Site."),
+          p("La « force » indiquée (Classique, Force 2, Force 3, Maxi) désigne le niveau d'enrichissement en cannabinoïdes du produit (la force Classique correspond au produit au naturel, non enrichi). Les produits en Force 3 et Maxi sont réservés aux consommateurs adultes habitués ; le Client reconnaît avoir pris connaissance des conseils de prudence accessibles sur le Site."),
         ],
       },
       {

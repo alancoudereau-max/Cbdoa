@@ -94,7 +94,7 @@ export default function HomePage() {
       {/* ───────────── Ouverture : la montre ───────────── */}
       <section className="relative overflow-hidden">
         <div aria-hidden className="glow" />
-        <GoldDust className="pointer-events-none absolute inset-0 h-full w-full" />
+        <GoldDust />
         {/* Sur téléphone : le titre, les boutons, la montre, puis le texte ; sur ordinateur : le texte à gauche, la montre à droite. */}
         <div className="relative wrap grid gap-y-7 pb-14 pt-8 sm:pt-12 lg:min-h-[min(52rem,calc(100svh-7.25rem))] lg:grid-cols-12 lg:content-center lg:gap-x-10 lg:gap-y-0 lg:pb-20 lg:pt-12">
           <h1 className="t-hero relative z-10 lg:col-span-7 lg:row-start-1">
@@ -104,12 +104,22 @@ export default function HomePage() {
             <em className="block">
               <span className="seq-line">
                 <span style={i(1)}>
-                  <span className="gold-text">À la bonne</span>
+                  <span className="gold-text">
+                    À la bonne
+                    <span aria-hidden className="gold-sheen">
+                      <span data-text="À la bonne" />
+                    </span>
+                  </span>
                 </span>
               </span>{" "}
               <span className="seq-line">
                 <span style={i(2)}>
-                  <span className="gold-text">heure.</span>
+                  <span className="gold-text">
+                    heure.
+                    <span aria-hidden className="gold-sheen">
+                      <span data-text="heure." />
+                    </span>
+                  </span>
                 </span>
               </span>
             </em>
@@ -272,7 +282,7 @@ export default function HomePage() {
             <h2 className="t-h2">
               Quatre forces, <em>de la plus douce à la plus intense.</em>
             </h2>
-            <p className="t-lead mt-6 measure">La force indique la concentration en CBD. Commencez toujours par la plus douce : la bonne quantité est la plus petite qui vous convient.</p>
+            <p className="t-lead mt-6 measure">La force indique le niveau d'enrichissement en cannabinoïdes : en Classique, la fleur est au naturel. Commencez toujours par la plus douce : la bonne quantité est la plus petite qui vous convient.</p>
             <p className="t-fine mt-6 measure">
               Produits réservés aux adultes. Ne conduisez pas après usage.{" "}
               <Link href="/conseils-prudence" className="link">
@@ -294,7 +304,17 @@ export default function HomePage() {
             <h2 className="t-h2">
               Ouverts quand <em>tout est fermé.</em>
             </h2>
-            <p className="t-lead mt-6 measure">Deux distributeurs CBDoux, à Charquemont et au Russey. {fr(vendingSupervision.short)}</p>
+            <p className="t-lead mt-6 measure">
+              Deux distributeurs CBDoux, à{" "}
+              <Link href="/cbd/charquemont" className="link">
+                Charquemont
+              </Link>{" "}
+              et au{" "}
+              <Link href="/cbd/le-russey" className="link">
+                Russey
+              </Link>
+              . {fr(vendingSupervision.short)}
+            </p>
             <p className="mt-6 flex items-center gap-3 text-[0.9688rem]">
               <span aria-hidden className="live-dot" />
               <LiveTime template="Il est {heure} dans le Haut-Doubs : les deux sont ouverts." fallback="Ouverts 24 h/24, 7 jours sur 7." />
@@ -344,7 +364,7 @@ export default function HomePage() {
         <div className="wrap">
           <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
             <h2 className="t-h2 lg:col-span-7">
-              Commandé avant 13&nbsp;h, <em>parti le jour même.</em>
+              <span className="inline-block">Commandé avant 13&nbsp;h,</span> <em>parti le jour même.</em>
             </h2>
             <div className="lg:col-span-4 lg:col-start-9 lg:self-end">
               <p className="t-lead">Sachets hermétiques inodores, colis neutre, numéro de suivi. Le port Colissimo est offert dès 60&nbsp;€ d'achat.</p>

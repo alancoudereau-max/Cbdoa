@@ -58,18 +58,18 @@ function strongCollection(): Collection {
     name: "CBD puissant",
     title: "CBD puissant : fleurs et résines Force 3 & Maxi",
     description:
-      "Notre sélection de CBD puissant : fleurs renforcées Force 3, Small Buds et résines Force Maxi (Beldia, Piatella). THC < 0,3 %, analyses labo, livraison 24/48 h.",
+      "Notre sélection de CBD puissant : fleurs enrichies Force 3, Small Buds et résines Force Maxi (Beldia, Piatella). THC < 0,3 %, analyses labo, livraison 24/48 h.",
     kicker: "Forces 3 & Maxi · THC < 0,3 %",
     h1: "CBD puissant",
     h1Italic: "nos références les plus concentrées.",
     intro:
-      "Vous cherchez un CBD plus concentré ? Voici les références les plus fortes de notre gamme : fleurs renforcées en Force 3, Small Buds et résines en Force Maxi. Des produits réservés aux adultes habitués, à utiliser en très petite quantité.",
+      "Vous cherchez un CBD plus puissant ? Voici les références les plus fortes de notre gamme : fleurs enrichies en cannabinoïdes (Force 3), Small Buds et résines en Force Maxi. Des produits réservés aux adultes habitués, à utiliser en très petite quantité.",
     products,
     sections: [
       {
         heading: "Ce qu'on appelle un CBD « puissant »",
         blocks: [
-          p("Un CBD est dit puissant quand sa concentration en cannabidiol est élevée. Nos fleurs affichent naturellement 18 à 24 % de CBD, nos résines 35 à 40 %. Les forces 2 et 3 sont renforcées en CBD après la récolte (environ +10 à +15 %, puis +25 %), et la Force Maxi correspond à la concentration la plus élevée de la gamme."),
+          p("On parle de CBD puissant pour les produits au ressenti le plus marqué. Nos fleurs affichent naturellement 18 à 24 % de CBD, nos résines 35 à 40 %. Les forces 2 et 3 sont enrichies en cannabinoïdes après la récolte, la Force 3 plus fortement que la Force 2, et la Force Maxi correspond à l'enrichissement le plus élevé de la gamme."),
           p("Puissant ne veut pas dire chargé en THC : toutes nos références restent sous 0,3 % de THC, conformément à la réglementation française, et chaque lot est analysé."),
         ],
       },
@@ -102,7 +102,7 @@ function strongCollection(): Collection {
         q: "Quel est le CBD le plus puissant chez CBDoux ?",
         a: `Les références en Force Maxi${maxi.length ? ` : ${maxi.join(", ")}` : ""}. Ce sont les concentrations les plus élevées de notre gamme, réservées aux adultes habitués.`,
       },
-      { q: "Un CBD puissant est-il légal ?", a: "Oui, dès lors que le THC reste inférieur à 0,3 % et que le renforcement est réalisé avec du CBD, et non avec un cannabinoïde interdit. Nos lots sont analysés." },
+      { q: "Un CBD puissant est-il légal ?", a: "Oui, dès lors que le THC reste inférieur à 0,3 % et que les cannabinoïdes utilisés pour l'enrichissement sont autorisés en France. Nos lots sont analysés." },
       { q: "Par quelle force commencer ?", a: "Par la force Classique, pour découvrir une variété. Passez à la Force 2, puis à la Force 3, seulement si le ressenti vous paraît trop léger. La Force Maxi n'est pas adaptée à une première commande." },
       { q: "Peut-on conduire après un CBD puissant ?", a: "Non. Le CBD peut diminuer la vigilance, et un test salivaire peut réagir aux traces de THC d'un produit légal. Après une Force 3 ou Maxi, attendez le lendemain pour reprendre le volant." },
     ],

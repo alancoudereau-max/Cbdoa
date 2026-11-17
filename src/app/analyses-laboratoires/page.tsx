@@ -105,7 +105,7 @@ export default function AnalysesPage() {
         <div className="border-t border-foreground/15 pt-8">
           <h2 className="t-h3">Comment lire ces rapports ?</h2>
           <p className="mt-4 text-foreground/80">
-            « CBD total » et « THC total » intègrent les formes acides (CBDA, THCA) converties. Le critère légal est le THC total, qui doit rester sous 0,3 %. Le taux de CBD mesuré sur la fleur brute correspond à la force Classique ; les forces 2, 3 et Maxi sont renforcées avec un extrait dont l'analyse figure ci-dessus (Distillat CSA).
+            « CBD total » et « THC total » intègrent les formes acides (CBDA, THCA) converties. Le critère légal est le THC total, qui doit rester sous 0,3 %. Le taux de CBD mesuré sur la fleur brute correspond à la force Classique ; les forces 2, 3 et Maxi sont enrichies en cannabinoïdes avec un extrait dont l'analyse figure ci-dessus (Distillat CSA).
           </p>
           <Link href="/guides/lire-analyse-laboratoire-coa" className="link mt-5 inline-block">
             Le guide complet

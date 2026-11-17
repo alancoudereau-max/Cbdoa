@@ -80,7 +80,7 @@ export default function ConseilsPrudencePage() {
 
             <Section title="Conduite et activités à risque">
               <p>
-                <strong>Ne conduisez pas</strong> après consommation, même à faible dose. Le CBD peut entraîner une somnolence et le dépistage salivaire routier ne distingue pas le CBD du THC. Par prudence, attendez une nuit complète avant de reprendre le volant.
+                <strong>Ne conduisez pas</strong> après consommation, même à faible dose. Le CBD peut entraîner une somnolence, et le dépistage salivaire routier recherche le THC : les traces présentes dans un produit légal peuvent suffire à le rendre positif. Par prudence, attendez une nuit complète avant de reprendre le volant.
               </p>
               <p>Évitez l'utilisation de machines et toute activité nécessitant une vigilance soutenue.</p>
             </Section>

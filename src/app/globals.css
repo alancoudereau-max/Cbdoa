@@ -161,6 +161,18 @@
   h1 em, h2 em, h3 em, h4 em, .font-serif em, .font-serif i, blockquote { font-family: var(--font-fraunces-italic), var(--font-serif); }
   /* L'accent des grands titres : la seconde moitié de la phrase, en italique doré */
   h1 em, h2 em { font-style: italic; font-weight: 300; color: var(--color-gold); letter-spacing: -0.03em; }
+  h2 em {
+    background: linear-gradient(105deg, #b8943f 0%, #d7b565 30%, #fbf0c8 48%, #d7b565 66%, #b8943f 100%);
+    background-size: 260% 100%; background-position: 0% 0;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    padding-inline: 0.04em 0.12em; margin-inline: -0.04em -0.12em;
+    /* la seconde moitié du titre passe à la ligne d'un bloc plutôt que de se couper au hasard */
+    display: inline-block; max-width: calc(100% + 0.16em);
+  }
+  /* le reflet traverse le titre une seule fois, quand il arrive à l'écran (classe posée par MotionRoot) :
+     au repos, plus rien ne bouge et le navigateur n'a rien à recalculer */
+  h2.is-seen em { animation: gold-sweep 1.9s cubic-bezier(0.4, 0, 0.2, 1) 0.4s 1 both; }
+  .paper h2 em, .ticket h2 em { background: none; -webkit-text-fill-color: currentColor; animation: none; }
   ::selection { background: var(--color-or); color: var(--color-nuit); }
   :focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; border-radius: 2px; }
   input, textarea, select, button { font: inherit; }
@@ -264,11 +276,13 @@
   .etiquette { position: relative; display: flex; flex-direction: column; border-radius: 3px; box-shadow: var(--shadow-paper); transition: transform 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out); }
   .etiquette-photo { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: 3px 3px 0 0; background: #e9dfc6; }
   .etiquette-photo img { transition: transform 1.1s var(--ease-out); }
+  .etiquette-photo::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, transparent 39%, rgb(255 250 232 / 0.46) 50%, transparent 61%); transform: translateX(-120%); }
   /* les photos sur fond blanc sont préparées à la couleur du papier (scripts/build-etiquettes.py) :
      aucune fusion n'est demandée au navigateur */
   @media (hover: hover) {
     .etiquette:hover { transform: translate3d(0, -6px, 0); box-shadow: 0 1px 0 rgb(0 0 0 / 0.3), 0 34px 54px -26px rgb(0 0 0 / 0.95), 0 0 0 1px rgb(215 181 101 / 0.55); }
     .etiquette:hover .etiquette-photo img { transform: scale(1.045); }
+    .etiquette:hover .etiquette-photo::after { transform: translateX(120%); transition: transform 1.05s cubic-bezier(0.45, 0.05, 0.3, 1); }
   }
 
   /* Pastille dorée (mentions : nouveauté, meilleure vente…) */
@@ -384,6 +398,10 @@
   /* En-tête */
   .site-header { position: sticky; top: 0; z-index: 50; background: var(--color-noir); transition: background-color 0.4s, box-shadow 0.4s; }
   .site-header[data-scrolled="true"] { box-shadow: 0 18px 40px -26px rgb(0 0 0 / 0.95); }
+  /* Verre fumé une fois la page défilée : presque opaque, pour rester propre là où le flou n'est pas rendu. */
+  @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .site-header[data-scrolled="true"] { background: rgb(12 11 9 / 0.9); -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5); }
+  }
   .nav-link { position: relative; padding: 0.4rem 0; font-size: 0.9375rem; color: color-mix(in oklab, var(--color-foreground) 82%, transparent); transition: color 0.25s; white-space: nowrap; }
   .nav-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--color-or); transform: scaleX(0); transform-origin: 0 50%; transition: transform 0.45s var(--ease-out); }
   .nav-link:hover, .nav-link[aria-current="page"] { color: var(--color-foreground); }
@@ -412,11 +430,28 @@
   .live-dot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: inherit; animation: pulse-ring 2.4s var(--ease-out) infinite; }
 
   /* Vérification d'âge : plein écran, se referme en cercle */
-  .gate { position: fixed; inset: 0; z-index: 100; overflow-y: auto; clip-path: circle(150vmax at 50% 46%); }
-  .gate[data-leaving="true"] { animation: gate-out 0.95s var(--ease-soft) forwards; pointer-events: none; }
+  /* Elle est dans le HTML de chaque page, masquée ; <html data-gate> (posé avant le premier affichage par
+     AgeGateFlag) la montre. « data-leaving » la garde le temps de sa fermeture. */
+  .gate { display: none; position: fixed; inset: 0; z-index: 100; overflow-y: auto; clip-path: circle(150vmax at 50% 46%); }
+  html[data-gate] .gate, .gate[data-leaving] { display: block; }
+  .gate[data-leaving] { animation: gate-out 0.95s var(--ease-soft) forwards; pointer-events: none; }
+  .gate-ask { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .gate-refused { display: none; flex-direction: column; align-items: center; }
+  .gate[data-refused] .gate-ask { display: none; }
+  .gate[data-refused] .gate-refused { display: flex; }
+  html[data-gate] body { overflow: hidden; }
+  /* La porte est écrite à la fin de la page (le contenu d'abord, pour les moteurs de recherche) : en attendant
+     qu'elle arrive, un voile de la même couleur couvre l'écran dès la première image. */
+  html[data-gate] body::before { content: ""; position: fixed; inset: 0; z-index: 99; background: var(--color-noir); }
+  .gate-title { font-variation-settings: "SOFT" 100; text-wrap: balance; }
 
   /* Bouton WhatsApp flottant */
   html[data-menu-open] .wa-fab, html[data-gate] .wa-fab { opacity: 0; pointer-events: none; }
+  .wa-fab { transition: translate 0.45s var(--ease-out), opacity 0.3s; }
+  @media (max-width: 1023px) { html[data-buybar] .wa-fab { translate: 0 -4.75rem; } html[data-buybar] footer { padding-bottom: 4.5rem; } }
+  .buybar { position: fixed; inset: auto 0 0 0; z-index: 39; transform: translateY(110%); transition: transform 0.45s var(--ease-out); border-top: 1px solid rgb(215 181 101 / 0.45); background: rgb(6 6 5 / 0.94); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); padding: 0.7rem var(--gutter) max(0.7rem, env(safe-area-inset-bottom)); }
+  .buybar[data-show="true"] { transform: none; }
+  html[data-menu-open] .buybar, html[data-gate] .buybar { transform: translateY(110%); }
 
   /* ── Noir et or ── */
   /* Bandeau vert de l'enseigne, liseré d'or (bandeau du haut, bandeau défilant) */
@@ -441,11 +476,34 @@
 
   /* Texte doré dont le reflet passe de temps en temps */
   .gold-text {
-    background: linear-gradient(105deg, #b8943f 0%, #d7b565 30%, #fbf0c8 48%, #d7b565 66%, #b8943f 100%);
-    background-size: 260% 100%; background-position: 0% 0;
+    position: relative; display: inline-block;
+    background: linear-gradient(105deg, #b8943f 0%, #d7b565 34%, #f3e0a6 52%, #d7b565 70%, #b8943f 100%);
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--color-or);
-    animation: gold-sweep 7s ease-in-out infinite;
+    padding-inline: 0.04em 0.12em; margin-inline: -0.04em -0.12em;
   }
+  .gold-sheen {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none; will-change: transform;
+    -webkit-mask-image: linear-gradient(105deg, transparent 30%, #000 50%, transparent 70%); mask-image: linear-gradient(105deg, transparent 30%, #000 50%, transparent 70%);
+    transform: translate3d(-115%, 0, 0); animation: sheen-window 7s cubic-bezier(0.45, 0, 0.25, 1) infinite; animation-delay: 2.2s;
+  }
+  .gold-sheen > span {
+    display: block; padding-inline: 0.04em 0.12em; color: #fff3c9; -webkit-text-fill-color: #fff3c9; will-change: transform;
+    transform: translate3d(115%, 0, 0); animation: sheen-text 7s cubic-bezier(0.45, 0, 0.25, 1) infinite; animation-delay: 2.2s;
+  }
+  /* le texte du reflet est fourni par l'attribut data-text : le titre ne contient ses mots qu'une fois */
+  .gold-sheen > span::before { content: attr(data-text); }
+
+  /* Poussière d'or : des grains qui montent lentement. Uniquement des déplacements et de l'opacité,
+     animés par la carte graphique (ni script, ni toile à redessiner). Valeurs posées par GoldDust.tsx. */
+  .dust { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  .dust i {
+    position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s);
+    margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); border-radius: 50%;
+    background: radial-gradient(circle, rgb(246 222 150) 0%, rgb(240 208 130 / 0.45) 35%, rgb(240 208 130 / 0) 70%);
+    opacity: 0; will-change: transform, opacity;
+    animation: dust var(--d) linear infinite; animation-delay: calc(var(--delay) * -1);
+  }
+  @media (max-width: 639px) { .dust i:nth-child(n + 17) { display: none; } }
 
   /* Chiffres clés */
   .stat-num { font-family: var(--font-serif); font-weight: 300; font-variation-settings: "SOFT" 100; font-size: clamp(2.6rem, 6.4vw, 4.5rem); line-height: 0.95; letter-spacing: -0.03em; color: var(--color-gold); font-variant-numeric: tabular-nums lining-nums; }
@@ -469,12 +527,16 @@
 
   /* ── La montre ── */
   .watch { position: relative; aspect-ratio: 1; }
+  /* le corps de la montre s'incline vers le pointeur (variables --rx / --ry posées par WatchDial) */
+  .watch-body { position: absolute; inset: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.7s var(--ease-out); }
   .watch-layer { position: absolute; inset: 0; width: 100%; height: 100%; }
   /* le cadran : vert profond « soleillé » (quatre rayons de lumière), bord assombri */
   .watch-face { position: absolute; inset: 9.4%; border-radius: 50%;
     background:
       radial-gradient(circle at 50% 50%, rgb(0 0 0 / 0) 52%, rgb(0 0 0 / 0.42) 100%),
-      conic-gradient(from 28deg, #0c2d22 0deg, #23745a 44deg, #0e3327 92deg, #1b5b47 136deg, #0a261d 180deg, #23745a 224deg, #0e3327 272deg, #1b5b47 316deg, #0c2d22 360deg); }
+      conic-gradient(from 28deg, #0c2d22 0deg, #23745a 44deg, #0e3327 92deg, #1b5b47 136deg, #0a261d 180deg, #23745a 224deg, #0e3327 272deg, #1b5b47 316deg, #0c2d22 360deg);
+    /* la lumière tourne sur le cadran quand la page défile (variable --light posée par WatchDial) */
+    transform: rotate(var(--light, 0deg)); transition: transform 0.9s var(--ease-out); will-change: transform; }
   .watch-hand { transform-origin: 50% 50%; will-change: transform; }
   .watch-hand-slow { transition: transform 2.4s cubic-bezier(0.3, 0, 0.1, 1); }
   .watch-seconds { animation: watch-turn 60s linear infinite; animation-delay: calc(var(--s0, 0) * -1s); }
@@ -483,7 +545,7 @@
   .watch-glass::before { content: ""; position: absolute; inset: -20% -60%; background: linear-gradient(105deg, transparent 42%, rgb(255 255 255 / 0.16) 50%, transparent 58%); transform: translateX(-70%); animation: glass-sweep 9s ease-in-out infinite; animation-delay: 2.5s; }
   .watch-glass::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(120% 90% at 30% 8%, rgb(255 255 255 / 0.13), transparent 46%); }
   .watch-shadow { position: absolute; inset: 86% 8% -8% 8%; background: radial-gradient(50% 50% at 50% 50%, rgb(0 0 0 / 0.75), transparent 72%); pointer-events: none; }
-  .watch-index { animation: index-in 0.7s var(--ease-out) both; animation-delay: calc(var(--k, 0) * 55ms + 500ms); }
+  .watch-index { transform-box: fill-box; transform-origin: center; animation: index-in 0.7s var(--ease-out) both; animation-delay: calc(var(--k, 0) * 55ms + 500ms); }
 }
 
 /* ───────────────────────────── Mouvement ───────────────────────────── */
@@ -501,7 +563,18 @@
 @keyframes sheen { from { transform: translateX(-130%) skewX(-18deg); } to { transform: translateX(230%) skewX(-18deg); } }
 @keyframes glow-drift { 0% { transform: translate3d(-3%, -2%, 0) rotate(0deg) scale(1); } 50% { transform: translate3d(3%, 3%, 0) rotate(5deg) scale(1.1); } 100% { transform: translate3d(-1%, 5%, 0) rotate(-4deg) scale(1.04); } }
 /* le reflet traverse le texte doré en 2,5 s, puis attend : le texte n'est redessiné que pendant le passage */
-@keyframes gold-sweep { 0%, 58% { background-position: 0% 0; } 96%, 100% { background-position: 100% 0; } }
+@keyframes gold-sweep { from { background-position: 0% 0; } to { background-position: 100% 0; } }
+@keyframes sheen-window { 0%, 62% { transform: translate3d(-115%, 0, 0); } 96%, 100% { transform: translate3d(115%, 0, 0); } }
+@keyframes sheen-text { 0%, 62% { transform: translate3d(115%, 0, 0); } 96%, 100% { transform: translate3d(-115%, 0, 0); } }
+@keyframes dust {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  10% { opacity: var(--a); }
+  30% { opacity: var(--a2); }
+  50% { transform: translate3d(var(--sway), calc(var(--rise) * -0.5), 0); opacity: var(--a); }
+  70% { opacity: var(--a2); }
+  90% { opacity: var(--a); }
+  100% { transform: translate3d(0, calc(var(--rise) * -1), 0); opacity: 0; }
+}
 @keyframes glass-sweep { 0%, 62% { transform: translateX(-70%); } 100% { transform: translateX(70%); } }
 @keyframes watch-turn { to { transform: rotate(360deg); } }
 @keyframes index-in { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
@@ -515,6 +588,9 @@
 
 /* Entrée de page (rejouée par app/template.tsx) */
 .page-enter { animation: page-in 0.55s var(--ease-out) both; }
+/* Tant que la vérification d'âge est affichée, l'ouverture de la page attend (la page reste entièrement
+   affichée dessous). Elle se joue au moment où l'on entre, pendant que la porte se referme. */
+html[data-gate] .seq-line > span, html[data-gate] .seq-in, html[data-gate] .seq-watch, html[data-gate] .watch-index, html[data-gate] .page-enter { animation: none; }
 
 /* Séquence d'ouverture de l'accueil : les lignes du titre montent, la montre se pose, ses index s'allument */
 .seq-line { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; white-space: nowrap; }
@@ -541,7 +617,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-  .spin-slow, .spin-slow-back, .live-dot::after, .marquee-track, .glow, .bob, .bob-slow, .watch-glass::before, .gold-text { animation: none !important; }
+  .spin-slow, .spin-slow-back, .live-dot::after, .marquee-track, .glow, .bob, .bob-slow, .watch-glass::before, h2.is-seen em { animation: none !important; }
+  .gold-sheen { display: none; }
+  .dust i { animation: none !important; opacity: var(--a2); }
   .watch-seconds { animation: none !important; transform: rotate(calc(var(--s0, 0) * 6deg)); }
   .rv-wait { opacity: 1 !important; transform: none !important; }
   .chat .bubble { opacity: 1 !important; }

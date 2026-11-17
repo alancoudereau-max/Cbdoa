@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Minus, Plus, AlertTriangle } from "lucide-react";
 import { type Product, type Variant, forceLabels, type TierKey } from "@/data/products";
@@ -27,6 +28,10 @@ export function AddToCart({ product, availability }: { product: Product; availab
   const [ack, setAck] = useState(false);
   const [ackLoaded, setAckLoaded] = useState(false);
   const [added, setAdded] = useState(false);
+  const panel = useRef<HTMLDivElement | null>(null);
+  // Barre d'achat (téléphone) : « before » tant que le bloc d'achat n'a pas été atteint, « after » une fois dépassé.
+  const [bar, setBar] = useState<"off" | "before" | "after">("off");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     try {
@@ -36,6 +41,22 @@ export function AddToCart({ product, availability }: { product: Product; availab
     }
     setAckLoaded(true);
   }, []);
+
+  // Sur téléphone, une barre d'achat reste en bas de l'écran tant que le bloc d'achat n'est pas à l'écran :
+  // avant de l'atteindre, elle donne le prix et y conduit ; après, elle ajoute au panier le choix en cours.
+  useEffect(() => {
+    setMounted(true);
+    const el = panel.current;
+    if (!el || !("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver(([e]) => setBar(e.isIntersecting ? "off" : e.boundingClientRect.top > 0 ? "before" : "after"));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  useEffect(() => {
+    const root = document.documentElement;
+    root.toggleAttribute("data-buybar", bar !== "off");
+    return () => root.removeAttribute("data-buybar");
+  }, [bar]);
 
   useEffect(() => {
     const first = tiers.find(([k]) => k === tier)?.[1][0];
@@ -69,6 +90,17 @@ export function AddToCart({ product, availability }: { product: Product; availab
     setTimeout(() => setAdded(false), 1800);
   };
 
+  const fromCents = Math.min(...product.variants.map((v) => v.priceCents));
+  const several = product.variants.length > 1;
+  // Ce que fait le bouton de la barre : conduire au choix tant qu'il reste à faire, sinon ajouter au panier.
+  const barGoes = !available || needsAck || (bar === "before" && several);
+  // Avant le bloc d'achat, le bouton y conduit (« Choisir ») ; après, il dit ce qui manque ou ajoute au panier.
+  const barLabel = added ? "Ajouté" : !available ? "Épuisé" : bar === "before" ? (several || needsAck ? "Choisir" : "Ajouter au panier") : needsAck ? "Cocher la case" : "Ajouter au panier";
+  const onBar = () => {
+    if (barGoes) panel.current?.scrollIntoView({ block: needsAck && bar === "after" ? "center" : "start", behavior: "smooth" });
+    else onAdd();
+  };
+
   const onAck = (checked: boolean) => {
     setAck(checked);
     try {
@@ -80,7 +112,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
   };
 
   return (
-    <div className="panel paper-object">
+    <div ref={panel} className="panel paper-object scroll-mt-28">
       <div className="space-y-6 p-5 sm:p-7">
         {/* Choix de la force */}
         {tiers.length > 1 && (
@@ -143,7 +175,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
               <Link href="/conseils-prudence" className="link">
                 conseils de prudence
               </Link>{" "}
-              : produit à concentration élevée, réservé aux adultes habitués, très petite quantité pour commencer, pas de conduite après usage.
+              : produit fortement enrichi en cannabinoïdes, réservé aux adultes habitués, très petite quantité pour commencer, pas de conduite après usage.
             </span>
           </label>
         )}
@@ -174,6 +206,25 @@ export function AddToCart({ product, availability }: { product: Product; availab
           {added ? "Ajouté au panier" : !available ? "Épuisé" : needsAck ? "Cochez la case ci-dessus" : "Ajouter au panier"}
         </button>
       </div>
+
+      {/* Barre d'achat qui suit, sur téléphone. Elle est rendue dans <body> : un parent animé la décrocherait de l'écran. */}
+      {mounted &&
+        createPortal(
+          <div className="buybar lg:hidden" data-show={bar !== "off"} aria-hidden={bar === "off"}>
+            <div className="flex items-center gap-3">
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[0.9375rem] font-medium leading-tight">{product.name}</p>
+                <p className="t-num mt-1 truncate text-[0.8125rem] leading-tight text-foreground/75">
+                  {bar === "before" && several ? `Dès ${formatEUR(fromCents)}` : `${variant.tierLabel}, ${variant.format} · ${formatEUR(variant.priceCents * qty)}`}
+                </p>
+              </div>
+              <button type="button" tabIndex={bar === "off" ? -1 : 0} onClick={onBar} disabled={!available && bar === "after"} className="btn btn-primary btn-sm shrink-0">
+                {barLabel}
+              </button>
+            </div>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

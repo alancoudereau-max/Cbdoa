@@ -23,7 +23,7 @@ export const homeFaq: FaqItem[] = [
   },
   {
     q: "Que signifient les forces Classique, 2, 3 et Maxi ?",
-    a: "La force indique la concentration en CBD du produit. Classique : CBD naturel, non renforcé. Force 2 et Force 3 : fleur ou résine renforcée en CBD (ressenti plus présent). Force Maxi : la concentration la plus élevée de la gamme, réservée aux adultes habitués et déconseillée aux débutants. Dans tous les cas, commencez par une petite quantité, attendez les effets et ne conduisez pas après usage.",
+    a: "La force indique le niveau d'enrichissement en cannabinoïdes. Classique : la fleur ou la résine au naturel, non enrichie. Force 2 et Force 3 : enrichie en cannabinoïdes (ressenti plus présent). Force Maxi : l'enrichissement le plus élevé de la gamme, réservé aux adultes habitués et déconseillée aux débutants. Dans tous les cas, commencez par une petite quantité, attendez les effets et ne conduisez pas après usage.",
   },
   {
     q: "Vos huiles CBD peuvent-elles être ingérées ?",
@@ -31,7 +31,11 @@ export const homeFaq: FaqItem[] = [
   },
   {
     q: "Puis-je conduire après avoir consommé du CBD ?",
-    a: "Nous le déconseillons. Même avec un THC inférieur à 0,3 %, le CBD peut entraîner une somnolence et les tests salivaires routiers ne distinguent pas le CBD du THC. Attendez plusieurs heures avant de prendre le volant.",
+    a: "Nous le déconseillons. Le CBD peut entraîner une somnolence, et le test salivaire routier recherche le THC : les traces présentes dans un produit légal (moins de 0,3 %) peuvent suffire à le rendre positif. Conduire après usage est alors sanctionné, quelle que soit la quantité détectée. Par prudence, attendez une nuit complète avant de reprendre le volant.",
+  },
+  {
+    q: "Le CBD rend-il positif à un dépistage du THC ?",
+    a: "Le dépistage ne recherche pas le CBD, mais le THC. Un produit au CBD qui en contient des traces peut donc donner un résultat positif, surtout en cas d'usage important ou régulier. Le risque dépend de la teneur en THC : plus elle est basse, plus il diminue. Une variété à moins de 0,01 % de THC en apporte bien moins qu'une fleur proche du plafond légal de 0,3 %. Le risque n'est toutefois jamais nul et aucun produit ne garantit un test négatif : le taux de THC de chaque lot figure sur son certificat d'analyse, et nous déconseillons de conduire après usage.",
   },
   {
     q: "Avez-vous une offre de bienvenue ?",

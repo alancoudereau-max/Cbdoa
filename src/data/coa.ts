@@ -89,7 +89,7 @@ export const coas: Coa[] = [
   {
     id: "distillat-csa",
     name: "Distillat CSA",
-    type: "Extrait / distillat (renforcement CBD)",
+    type: "Extrait / distillat (enrichissement en cannabinoïdes)",
     date: "16/06/2025",
     cbd: "46,69 %",
     thc: "ND",
