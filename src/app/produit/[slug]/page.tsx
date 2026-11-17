@@ -81,7 +81,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               {p.origin && <span>{commas(p.origin)}</span>}
               {p.badge && <span className="pastille ml-auto">{p.badge}</span>}
             </p>
-            <h1 className="mt-4 font-serif text-[clamp(2.3rem,5.6vw,4rem)] font-light leading-[1] tracking-[-0.03em]">{p.name}</h1>
+            <h1 className="mt-4 font-serif text-[clamp(2.3rem,5.6vw,4rem)] font-light leading-[1] tracking-[-0.03em]">{fr(p.name)}</h1>
             <p className="t-lead mt-5">{fr(p.short)}</p>
 
             <div className="mt-8" data-wa-topic={p.name}>
@@ -120,7 +120,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   Voir l'analyse de laboratoire
                 </Link>
                 <span className="t-fine mt-1.5 block">
-                  {coa.name}, CBD {coa.cbd}, THC {coa.thc}. {coa.lab}, {coa.date}.
+                  {fr(`${coa.name}, CBD ${coa.cbd}, THC ${coa.thc}. ${coa.lab}, ${coa.date}.`)}
                 </span>
               </p>
             )}
@@ -157,11 +157,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 {p.variants.map((v) => (
                   <tr key={v.sku} className={`border-b border-foreground/20 align-top ${availability[v.sku] === false ? "opacity-50" : ""}`}>
                     <td className="py-3 pr-2 sm:pr-3">
-                      <span className="block">{v.tierLabel}</span>
-                      <span className="block text-[0.8125rem] text-foreground/65">{v.cbdInfo}</span>
+                      <span className="block">{fr(v.tierLabel)}</span>
+                      <span className="block text-[0.8125rem] text-foreground/65">{fr(v.cbdInfo)}</span>
                     </td>
                     <td className="py-3 pr-2 sm:pr-3">
-                      {v.format}
+                      {fr(v.format)}
                       {availability[v.sku] === false && <span className="block text-[0.8125rem] text-foreground/65">épuisé</span>}
                     </td>
                     <td className="whitespace-nowrap py-3 text-right font-medium">
@@ -209,7 +209,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 <Link href={`/guides/${g.slug}`} className="group block py-5">
                   <p className="t-fine">{g.category}</p>
                   <h3 className="softens t-title mt-1.5">{fr(g.title)}</h3>
-                  <p className="mt-2 text-[0.9375rem] text-foreground/75 line-clamp-2">{g.description}</p>
+                  <p className="mt-2 text-[0.9375rem] text-foreground/75 line-clamp-2">{fr(g.description)}</p>
                 </Link>
               </li>
             ))}

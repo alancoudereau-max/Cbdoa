@@ -15,7 +15,7 @@ export const metadata: Metadata = buildMetadata({
 });
 
 const modeLabel: Record<string, string> = {
-  distributeur: "distributeur 24 h/24",
+  distributeur: "distributeur 24 h/24",
   retrait: "retrait gratuit",
   "livraison-locale": "livraison à domicile",
   expedition: "expédition 24/48 h",
@@ -41,7 +41,7 @@ export default function CbdIndexPage() {
           <div className="lg:sticky lg:top-28">
             <HautDoubsMap />
             <p className="t-fine mt-4 measure">
-              Livraison à domicile par nos soins dans un rayon de 30 km autour du Russey et de 10 km autour de Damprichard, côté français. Au-delà, expédition en 24/48 h.
+              Livraison à domicile par nos soins dans un rayon de 30 km autour du Russey et de 10 km autour de Damprichard, côté français. Au-delà, expédition en 24/48 h.
             </p>
           </div>
         </div>
@@ -55,14 +55,14 @@ export default function CbdIndexPage() {
                     {c.postalCode}, {c.department}
                   </p>
                   <p className="text-[0.9375rem] text-foreground/75 sm:col-span-2 first-letter:uppercase">
-                    {fr(c.modes.map((m) => (m === "distributeur" && !machineTowns.has(c.slug) ? "distributeur 24 h/24 à proximité" : modeLabel[m])).join(", "))}
+                    {fr(c.modes.map((m) => (m === "distributeur" && !machineTowns.has(c.slug) ? "distributeur 24 h/24 à proximité" : modeLabel[m])).join(", "))}
                   </p>
                 </Link>
               </li>
             ))}
           </ul>
           <p className="mt-10 measure-wide text-foreground/75">
-            Votre ville n'est pas listée ? Nous expédions partout en France métropolitaine :{" "}
+            Votre ville n'est pas listée ? Nous expédions partout en France métropolitaine :{" "}
             <Link href="/livraison" className="link">
               voir les modes et tarifs de livraison
             </Link>

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { type Product, startingPriceLabel, maxForce, categories } from "@/data/products";
 import { ForceBadge } from "@/components/ui/ForceBadge";
 import { labelImage } from "@/lib/etiquettes";
-import { cn, commas } from "@/lib/utils";
+import { cn, commas, fr } from "@/lib/utils";
 
 /**
  * Le nom tel qu'il s'imprime sur l'étiquette : sans tiret. La précision de rayon tombe quand la ligne
@@ -74,7 +74,7 @@ export function ProductCard({
       </div>
       <div aria-hidden className="rule-double" />
       <div className="flex flex-1 flex-col px-3.5 pb-3.5 pt-3 sm:px-5 sm:pb-5 sm:pt-4">
-        <Heading className="softens font-serif text-[1.1875rem] font-normal leading-[1.14] tracking-[-0.012em] sm:text-[1.4rem]">{labelName(p.name)}</Heading>
+        <Heading className="softens font-serif text-[1.1875rem] font-normal leading-[1.14] tracking-[-0.012em] sm:text-[1.4rem]">{fr(labelName(p.name))}</Heading>
         <p className="mt-1.5 text-[0.8125rem] leading-snug text-foreground/70">{commas(p.origin ?? categories[p.category].name)}</p>
         {/* Force et prix : l'un sous l'autre sur une étiquette étroite, face à face dès que l'étiquette elle-même est assez large */}
         <div className="etiquette-pied mt-auto">

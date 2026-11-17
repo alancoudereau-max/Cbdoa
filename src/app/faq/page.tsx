@@ -34,11 +34,11 @@ export default function FaqPage() {
         }
         lead={
           <>
-            Vous ne trouvez pas votre réponse ?{" "}
+            Vous ne trouvez pas votre réponse ?{" "}
             <Link href="/contact" className="link">
               Écrivez-nous
             </Link>
-            , nous répondons 7 jours sur 7.
+            , nous répondons 7 jours sur 7.
           </>
         }
       />

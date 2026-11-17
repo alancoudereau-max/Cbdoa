@@ -63,7 +63,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         }
       >
         <p className="t-num text-[0.9688rem] text-foreground/75">
-          {products.length} référence{products.length > 1 ? "s" : ""}, THC inférieur à 0,3 %
+          {products.length} référence{products.length > 1 ? "s" : ""}, THC inférieur à 0,3 %
         </p>
       </PageHero>
 
@@ -105,7 +105,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               <p key={p}>{fr(p)}</p>
             ))}
             <p>
-              Tous nos produits sont réservés aux personnes majeures et ne sont pas des médicaments. Fleurs et résines sont destinées à la vaporisation (ni combustion, ni usage alimentaire) ; nos huiles sont à usage cutané exclusivement. Consultez nos{" "}
+              Tous nos produits sont réservés aux personnes majeures et ne sont pas des médicaments. Fleurs et résines sont destinées à la vaporisation (ni combustion, ni usage alimentaire) ; nos huiles sont à usage cutané exclusivement. Consultez nos{" "}
               <Link href="/conseils-prudence">conseils de prudence</Link> et nos <Link href="/analyses-laboratoires">analyses de laboratoire</Link>.
             </p>
           </div>

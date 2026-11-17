@@ -21,7 +21,7 @@ export function WhatsAppPlaque({ className }: { className?: string }) {
         <span aria-hidden className="rule-double mx-auto mt-6 block w-20" />
         <span className="mt-7 block text-foreground/80">Pour nous rejoindre sur WhatsApp</span>
         <span className="softens t-num mt-3 block whitespace-nowrap font-serif text-[clamp(2.2rem,8vw,3rem)] font-light leading-none tracking-[-0.02em]">{site.phoneDisplay}</span>
-        <span className="t-fine mx-auto mt-5 block max-w-[22rem]">Conseil, commande, suivi de colis : une vraie personne vous répond, 7 jours sur 7.</span>
+        <span className="t-fine mx-auto mt-5 block max-w-[22rem]">Conseil, commande, suivi de colis : une vraie personne vous répond, 7 jours sur 7.</span>
       </span>
     </a>
   );

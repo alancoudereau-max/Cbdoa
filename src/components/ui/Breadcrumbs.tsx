@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo";
+import { fr } from "@/lib/utils";
 
 export type Crumb = { name: string; path: string };
 
@@ -17,12 +18,12 @@ export function Breadcrumbs({ items, className = "" }: { items: Crumb[]; classNa
             <li key={c.path} className={last ? "min-w-0" : "inline-flex shrink-0 items-center gap-2"}>
               {last ? (
                 <span aria-current="page" className="block truncate text-foreground/90">
-                  {c.name}
+                  {fr(c.name)}
                 </span>
               ) : (
                 <>
                   <Link href={c.path} className="transition-colors hover:text-foreground">
-                    {c.name}
+                    {fr(c.name)}
                   </Link>
                   <span aria-hidden className="crumb-sep" />
                 </>

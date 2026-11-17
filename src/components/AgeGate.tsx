@@ -41,7 +41,8 @@ export function AgeGate() {
   return (
     <>
       <div id="gate" role="dialog" aria-modal="true" aria-labelledby="agegate-title" className="gate bg-noir" data-nosnippet="" suppressHydrationWarning>
-        <div aria-hidden className="guilloche guilloche-rosace spin-slow opacity-[0.16] left-1/2 top-[46%] w-[170vmin] max-w-[1150px] -translate-x-1/2 -translate-y-1/2" />
+        {/* gravure fixée à l'écran : en position absolue, elle dépassait de la porte et la laissait glisser de côté sous le doigt */}
+        <div aria-hidden className="guilloche guilloche-rosace spin-slow fixed opacity-[0.16] left-1/2 top-[46%] w-[170vmin] max-w-[1150px] -translate-x-1/2 -translate-y-1/2" />
         <div aria-hidden className="gate-cadre coins" />
         <div className="relative mx-auto flex min-h-full max-w-xl flex-col items-center justify-center px-6 py-14 text-center">
           <Logo weight="fine" className="h-12 sm:h-14" />
@@ -49,14 +50,14 @@ export function AgeGate() {
 
           <div className="gate-ask">
             <p id="agegate-title" className="gate-title t-h2 mt-9">
-              Avez-vous 18 ans ou plus ?
+              Avez-vous 18 ans ou plus ?
             </p>
             <p className="t-lead mt-5 max-w-md">
               Nos produits sont réservés aux adultes. Ils contiennent moins de 0,3&nbsp;% de THC, comme l'exige la loi française, et ne sont pas des médicaments.
             </p>
             <div className="mt-9 flex w-full max-w-sm flex-col gap-3">
               <button type="button" data-gate-act="yes" className="btn btn-primary w-full">
-                Oui, j'ai 18 ans ou plus
+                Oui, j'ai 18 ans ou plus
               </button>
               <button type="button" data-gate-act="no" className="btn btn-ghost w-full">
                 Non, je suis mineur

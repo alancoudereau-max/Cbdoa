@@ -29,7 +29,7 @@ const commitments = [
   "Sélection goûtée et validée, conservation à 20 °C en sachets biphase.",
   "Aucune promesse miracle : des descriptions honnêtes et des conseils de prudence clairs.",
   "Vente réservée aux adultes, discrétion totale en ligne comme sur place.",
-  "Un interlocuteur humain sur WhatsApp, 7 jours sur 7.",
+  "Un interlocuteur humain sur WhatsApp, 7 jours sur 7.",
 ];
 
 export default function AboutPage() {
@@ -86,7 +86,7 @@ export default function AboutPage() {
       {/* Engagements, sur papier */}
       <section className="nuit section">
         <div className="wrap grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-10">
-          <blockquote className="t-h1 lg:col-span-6">« La petite douceur du Haut-Doubs. »</blockquote>
+          <blockquote className="t-h1 lg:col-span-6">« La petite douceur du Haut-Doubs. »</blockquote>
           <div className="lg:col-span-5 lg:col-start-8">
             <h2 className="font-sans text-base font-semibold tracking-normal">Nos engagements</h2>
             <ul className="mt-4">

@@ -63,7 +63,7 @@ export default function DistributeursPage() {
         }
       >
         <ul className="points grid max-w-[44rem] text-[0.9688rem] sm:grid-cols-3">
-          {["Ouverts 24 h/24, 7 jours sur 7", "Caméra connectée avec haut-parleur", "Majorité vérifiée à chaque vente"].map((t, n) => (
+          {["Ouverts 24 h/24, 7 jours sur 7", "Caméra connectée avec haut-parleur", "Majorité vérifiée à chaque vente"].map((t, n) => (
             <li key={t} className={`text-balance border-t border-foreground/15 py-3.5 sm:border-b sm:pr-4 ${n ? "sm:border-l sm:pl-9 sm:before:left-4" : ""} ${n === 2 ? "border-b" : ""}`}>
               {t}
             </li>
@@ -107,11 +107,11 @@ export default function DistributeursPage() {
               <dl className="mt-7 text-[0.9688rem]">
                 {[
                   ["Adresse", <address key="a">{m.place}<br />{m.street ? `${m.street}, ` : ""}{m.postalCode} {m.city}</address>],
-                  ["Horaires", `Ouvert ${m.hours.replace(" — ", ", ")}`],
+                  ["Horaires", fr(`Ouvert ${m.hours.replace(" — ", ", ")}`)],
                   ["Vente", "Validée en direct par caméra connectée"],
                   ["Paiement", m.payment],
                   ["Conservation", "À 20 °C, en sachets biphase"],
-                  ["Assistance", <span key="p"><a href={`tel:${site.phoneE164}`} className="link t-num">{site.phoneDisplay}</a>, appel ou WhatsApp, 7 jours sur 7</span>],
+                  ["Assistance", <span key="p"><a href={`tel:${site.phoneE164}`} className="link t-num">{site.phoneDisplay}</a>, appel ou WhatsApp, 7 jours sur 7</span>],
                 ].map(([term, value]) => (
                   <div key={String(term)} className="grid grid-cols-[7rem_1fr] gap-x-4 border-t border-foreground/15 py-3 last:border-b">
                     <dt className="text-foreground/65">{term}</dt>
@@ -180,7 +180,7 @@ export default function DistributeursPage() {
               </div>
             ))}
             <p className="border-t border-foreground/15 pt-5 text-foreground/80">
-              Livraison à domicile par nos soins dans un rayon de 30 km autour du Russey et 10 km autour de Damprichard (10 €, offerte dès 100 €).{" "}
+              Livraison à domicile par nos soins dans un rayon de 30 km autour du Russey et 10 km autour de Damprichard (10 €, offerte dès 100 €).{" "}
               <Link href="/livraison" className="link">
                 Tous les détails
               </Link>

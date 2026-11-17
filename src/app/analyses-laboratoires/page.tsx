@@ -1,3 +1,4 @@
+import { fr } from "@/lib/utils";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -56,11 +57,11 @@ export default function AnalysesPage() {
                   <dl className="mt-5 grid grid-cols-2 border-y border-foreground/25">
                     <div className="py-3 pr-3">
                       <dt className="t-fine">CBD total</dt>
-                      <dd className="t-num mt-0.5 font-serif text-[1.5rem] leading-tight">{coa.cbd}</dd>
+                      <dd className="t-num mt-0.5 font-serif text-[1.5rem] leading-tight">{fr(coa.cbd)}</dd>
                     </div>
                     <div className="border-l border-foreground/25 py-3 pl-4">
                       <dt className="t-fine">Δ9-THC total</dt>
-                      <dd className="t-num mt-0.5 font-serif text-[1.5rem] leading-tight">{coa.thc}</dd>
+                      <dd className="t-num mt-0.5 font-serif text-[1.5rem] leading-tight">{fr(coa.thc)}</dd>
                     </div>
                   </dl>
                   <p className="t-fine mt-4">

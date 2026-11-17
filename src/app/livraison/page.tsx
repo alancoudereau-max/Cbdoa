@@ -101,7 +101,7 @@ export default function LivraisonPage() {
             </tbody>
           </table>
           <p className="t-fine mt-5 measure-wide">
-            Livraison en France métropolitaine uniquement. Délais indicatifs hors jours fériés et aléas transporteur. Livraison locale : rayon de 30 km autour du Russey et 10 km autour de Damprichard, offerte dès {formatEUR(LOCAL_FREE_FROM_CENTS)}.
+            Livraison en France métropolitaine uniquement. Délais indicatifs hors jours fériés et aléas transporteur. Livraison locale : rayon de 30 km autour du Russey et 10 km autour de Damprichard, offerte dès {formatEUR(LOCAL_FREE_FROM_CENTS)}.
           </p>
         </div>
       </section>
@@ -150,7 +150,7 @@ export default function LivraisonPage() {
             <Faq items={shippingFaq} />
             <div className="mt-12 border-t border-foreground/25 pt-8">
               <h2 className="t-h3">Une question sur votre adresse ou votre colis ?</h2>
-              <p className="mt-3 text-foreground/80">Écrivez-nous sur WhatsApp au {site.phoneDisplay} ou via le formulaire : nous vérifions ensemble la meilleure option pour vous.</p>
+              <p className="mt-3 text-foreground/80">Écrivez-nous sur WhatsApp au {site.phoneDisplay} ou via le formulaire : nous vérifions ensemble la meilleure option pour vous.</p>
               <div className="mt-6 flex flex-wrap gap-2.5">
                 <Link href="/boutique" className="btn btn-primary">
                   Commander

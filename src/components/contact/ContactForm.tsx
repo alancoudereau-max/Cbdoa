@@ -43,7 +43,7 @@ export function ContactForm() {
         </a>
       </div>
       <p className="t-fine">
-        {ready ? "Réponse généralement dans la journée, 7 jours sur 7." : "Indiquez votre nom et votre message pour activer l'envoi."} Vos données servent uniquement à vous répondre (voir notre politique de confidentialité).
+        {ready ? "Réponse généralement dans la journée, 7 jours sur 7." : "Indiquez votre nom et votre message pour activer l'envoi."} Vos données servent uniquement à vous répondre (voir notre politique de confidentialité).
       </p>
     </form>
   );

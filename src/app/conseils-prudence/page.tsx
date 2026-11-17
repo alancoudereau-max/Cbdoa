@@ -68,14 +68,14 @@ export default function ConseilsPrudencePage() {
 
             <Section title="Dosage : commencer doucement">
               <p>
-                La règle d'or : <strong>commencer bas, augmenter lentement</strong>. Prenez une petite quantité, attendez 15 à 30 minutes et évaluez le ressenti avant d'en reprendre.
+                La règle d'or : <strong>commencer bas, augmenter lentement</strong>. Prenez une petite quantité, attendez 15 à 30 minutes et évaluez le ressenti avant d'en reprendre.
               </p>
               <p>Le ressenti varie selon la sensibilité, le poids, le métabolisme et le moment de la journée. Un même produit peut agir différemment d'une personne à l'autre.</p>
             </Section>
 
             <Section title="Délai d'action et durée">
               <p>
-                <strong>Vaporisation :</strong> ressenti en quelques minutes, durée 1 à 3 heures.
+                <strong>Vaporisation :</strong> ressenti en quelques minutes, durée 1 à 3 heures.
               </p>
               <p>
                 <strong>Application cutanée (huiles) :</strong> usage local, à renouveler selon besoin. Ne pas ingérer.

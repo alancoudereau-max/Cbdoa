@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ ville: st
 }
 
 const modeCards = {
-  distributeur: { title: "Distributeur ouvert 24 h/24", text: "Servez-vous à toute heure, paiement par carte, produits conservés à 20 °C.", href: "/distributeurs", cta: "Voir les distributeurs" },
+  distributeur: { title: "Distributeur ouvert 24 h/24", text: "Servez-vous à toute heure, paiement par carte, produits conservés à 20 °C.", href: "/distributeurs", cta: "Voir les distributeurs" },
   retrait: { title: "Retrait gratuit", text: "Commandez en ligne, retirez sur rendez-vous. Paiement par lien sécurisé ou sur place.", href: "/livraison", cta: "Comment ça marche" },
   "livraison-locale": { title: "Livraison à domicile", text: "Par nos soins, sous 24 à 48 h, remise en main propre. 10 €, offerte dès 100 €.", href: "/livraison", cta: "Zone et tarifs" },
   expedition: { title: "Expédition en 24/48 h", text: "Colissimo 48 h offert dès 60 €, Chronopost le lendemain, colis neutre.", href: "/livraison", cta: "Délais et tarifs" },
@@ -68,7 +68,7 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
         <ul className="grid sm:grid-cols-2">
           {c.modes.map((m, n) => {
             // Sans distributeur dans la commune même, la carte dit où sont les plus proches.
-            const card = m === "distributeur" && !machine ? { ...modeCards[m], title: "Distributeurs 24 h/24 à proximité", text: "À Charquemont et au Russey : servez-vous à toute heure, paiement par carte, produits conservés à 20 °C." } : modeCards[m];
+            const card = m === "distributeur" && !machine ? { ...modeCards[m], title: "Distributeurs 24 h/24 à proximité", text: "À Charquemont et au Russey : servez-vous à toute heure, paiement par carte, produits conservés à 20 °C." } : modeCards[m];
             return (
               <li key={m} className={`border-t border-foreground/15 py-7 sm:pr-8 ${n % 2 ? "sm:border-l sm:pl-8" : ""} ${n >= c.modes.length - (c.modes.length % 2 === 0 ? 2 : 1) ? "sm:border-b" : ""}`}>
                 <h2 className="t-h3">{fr(card.title)}</h2>
@@ -100,7 +100,7 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
             <div className="lg:col-span-6 lg:col-start-7">
               <p className="flex items-center gap-3 text-[0.9688rem]">
                 <span aria-hidden className="live-dot" />
-                <LiveTime template="Il est {heure} : ouvert." fallback="Ouvert 24 h/24." />
+                <LiveTime template="Il est {heure} : ouvert." fallback="Ouvert 24 h/24." />
               </p>
               <h2 className="t-h2 mt-4">
                 Le distributeur <em>{c.name.startsWith("Le ") ? `du ${c.name.slice(3)}` : `de ${c.name}`}</em>
@@ -179,7 +179,7 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
             <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
               Demander conseil sur WhatsApp
             </a>
-            <p className="t-num text-foreground/75">{site.phoneDisplay}, 7 jours sur 7</p>
+            <p className="t-num text-foreground/75">{site.phoneDisplay}, 7 jours sur 7</p>
           </div>
         </div>
       </section>

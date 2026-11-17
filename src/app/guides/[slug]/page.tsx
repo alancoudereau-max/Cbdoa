@@ -116,7 +116,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
           )}
           <div className="border-t border-foreground/15 pt-6">
             <p className="t-title">Un doute ? Demandez conseil.</p>
-            <p className="mt-2 text-[0.9375rem] text-foreground/75">Nous répondons sur WhatsApp 7 jours sur 7, avant votre achat.</p>
+            <p className="mt-2 text-[0.9375rem] text-foreground/75">Nous répondons sur WhatsApp 7 jours sur 7, avant votre achat.</p>
             <Link href="/contact" className="btn btn-primary btn-sm mt-5">
               Nous contacter
             </Link>

@@ -64,6 +64,7 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 - **Le panier** : l'article ajouté s'éclaire un instant ; quand il manque 12 € ou moins pour le port offert, le panier propose un gramme à ajouter d'un geste.
 - **Les finitions** (17 novembre 2026, vocabulaire d'horlogerie, tout est dans `globals.css`) : grain léger sur les fonds sombres (`--grain-dark`), graduation de cadran en haut des sections noires (`.minuterie`, posée d'office sur `main section.nuit`), fleuron entre deux sections de même fond (`<Fleuron />`, variante `motif="losange"` à côté du logo), coins gravés (`.coins`), panneaux à double filet (`.panel`), boutons d'or biseautés, médaillons numérotés pour les vraies étapes (`.steps`, `.step-num`), cadre imprimé et prix en caractères de titre sur les étiquettes produit, bon de bienvenue avec talon détachable et code à copier (`.ticket`, `<CopyCode />`), poinçon de la maison en pied de page (`<Poincon />`), jauge graduée du port offert (`.jauge`), lettrine dorée en tête des guides (`.prose-lettrine`), nombre de références en exposant dans le menu.
 - **Les titres de page** suivent la règle des titres de section : la fin de la phrase en italique doré (`<em>` dans le `title` de `<PageHero />`). Ne jamais mettre d'espace insécable dans cet `<em>` : le doré est un dégradé découpé sur le texte, tout ce qui dépasse de la boîte devient invisible.
+- **Un décor ne doit jamais faire défiler** : dans un panneau qui défile (vérification d'âge, menu), une gravure en position absolue qui dépasse crée un défilement « dans le vide ». Elle est donc fixée à l'écran (classe `fixed`).
 - **L'étiquette produit s'adapte à sa propre largeur** (requêtes de conteneur) : très étroite, l'unité s'abrège (« /g ») ; large, la force et le prix se font face ; entre les deux, ils sont l'un sous l'autre.
 
 | Besoin | Fichier |
@@ -77,7 +78,7 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 | Carte | `src/components/content/HautDoubsMap.tsx`, données dans `src/data/carte-haut-doubs.json` (générées) |
 | Loupe, engagements, partage (fiche produit) | `src/components/product/ProductMedia.tsx`, `Reassurance.tsx`, `ShareButton.tsx` |
 
-Règles de typographie : titres en Fraunces, la seconde moitié de la phrase en italique doré (`<em>`) ; phrases en minuscules, pas de flèche dans les boutons, numéros uniquement pour de vraies étapes. Les espaces insécables françaises sont posées automatiquement sur les textes du catalogue par `fr()` (`src/lib/utils.ts`) et écrites telles quelles dans les pages.
+Règles de typographie : titres en Fraunces, la seconde moitié de la phrase en italique doré (`<em>`) ; phrases en minuscules, pas de flèche dans les boutons, numéros uniquement pour de vraies étapes. Les espaces insécables françaises sont posées automatiquement sur les textes du catalogue par `fr()` (`src/lib/utils.ts`) et écrites telles quelles dans les pages : avant « ? ! : ; », entre un nombre et son unité (« 18 ans », « 30 km », « 73 microns », « 10 % »), et « 7 jours sur 7 » d'un seul tenant. Tout nom de produit, format ou libellé venu des données s'affiche à travers `fr()` (ou `commas()`, qui l'applique aussi) ; les comparaisons et le message WhatsApp gardent le texte brut.
 
 ## Structure
 

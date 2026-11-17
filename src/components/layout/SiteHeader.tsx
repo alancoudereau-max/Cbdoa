@@ -124,7 +124,8 @@ export function SiteHeader({ counts = {} }: { counts?: Record<string, number> })
         data-open={open}
         style={{ "--mx": "calc(100% - 2.6rem)", "--my": "2.6rem" } as CSSProperties}
       >
-        <div aria-hidden className="guilloche guilloche-rosace opacity-[0.13] w-[150vw] max-w-[820px] -right-[55vw] sm:-right-56 -bottom-[38vw] sm:-bottom-60" />
+        {/* gravure fixée à l'écran : en position absolue, elle prolongeait le menu d'un grand vide qu'on pouvait faire défiler */}
+        <div aria-hidden className="guilloche guilloche-rosace fixed opacity-[0.13] w-[150vw] max-w-[820px] -right-[55vw] sm:-right-56 -bottom-[38vw] sm:-bottom-60" />
         <div className="relative wrap flex min-h-full flex-col pb-10">
           <div className="flex h-[var(--header-h)] shrink-0 items-center justify-between gap-4">
             <Link href="/" aria-label="CBDoux, retour à l'accueil" tabIndex={open ? 0 : -1}>
@@ -176,7 +177,7 @@ export function SiteHeader({ counts = {} }: { counts?: Record<string, number> })
             <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-primary w-full sm:w-auto">
               Écrire sur WhatsApp, {site.phoneDisplay}
             </a>
-            <p className="t-fine mt-4">Une vraie personne vous répond, 7 jours sur 7.</p>
+            <p className="menu-note t-fine mt-4">Une vraie personne vous répond, 7 jours sur 7.</p>
           </div>
         </div>
       </div>

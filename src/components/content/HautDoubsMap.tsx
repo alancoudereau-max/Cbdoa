@@ -80,14 +80,14 @@ export function HautDoubsMap({ className, focus }: { className?: string; /** Com
         </Link>
 
         <span aria-hidden className="carte-echelle" style={{ width: `${carte.echelle10km}%` }}>
-          10 km
+          10 km
         </span>
       </div>
 
       <figcaption className="carte-legende">
         <span>
           <i aria-hidden className="carte-point carte-point-distributeur" />
-          Distributeur 24 h/24
+          Distributeur 24 h/24
         </span>
         <span>
           <i aria-hidden className="carte-point carte-point-retrait" />

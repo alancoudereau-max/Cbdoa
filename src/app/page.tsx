@@ -60,7 +60,7 @@ const forceLinks: Record<string, { href: string; cta: string }> = {
 const stats = [
   { count: visibleProducts.length, before: "", after: "", label: "références analysées", note: "Les certificats sont publiés.", href: "/analyses-laboratoires" },
   { count: null, before: "<\u00a00,3\u00a0%", after: "", label: "de THC, pour chaque lot", note: "Conforme à la loi française." },
-  { count: 60, before: "", after: "\u00a0€", label: "port offert dès 60\u00a0€", note: "Colis neutre, parti le jour même." },
+  { count: 60, before: "", after: "\u00a0€", label: "d'achat, et le port est offert", note: "Colis neutre, parti le jour même." },
   { count: 24, before: "", after: "\u00a0h/24", label: "distributeurs ouverts", note: "À Charquemont et au Russey." },
 ];
 
@@ -68,17 +68,17 @@ const stats = [
 const tileLayout = ["col-span-2 aspect-[5/4] lg:row-span-2 lg:aspect-auto lg:min-h-[38rem]", "aspect-[4/5] lg:aspect-auto lg:min-h-[18.25rem]", "aspect-[4/5] lg:aspect-auto lg:min-h-[18.25rem]", "col-span-2 aspect-[16/9] lg:aspect-auto lg:min-h-[18.25rem]"];
 
 const journey = [
-  { when: "Avant 13 h", what: "Vous commandez" },
+  { when: "Avant 13 h", what: "Vous commandez" },
   { when: "Le jour même", what: "Votre colis part" },
-  { when: "Le lendemain", what: "Chronopost 24 h" },
-  { when: "Sous 48 h", what: "Colissimo, offert dès 60 €" },
+  { when: "Le lendemain", what: "Chronopost 24 h" },
+  { when: "Sous 48 h", what: "Colissimo, offert dès 60 €" },
 ];
 
 const localDelivery = shippingMethods.find((m) => m.id === "livraison-locale")!;
 const nearby = [
-  { t: "Distributeurs 24 h/24", d: "À Charquemont et au Russey, jour et nuit, paiement par carte." },
+  { t: "Distributeurs 24 h/24", d: "À Charquemont et au Russey, jour et nuit, paiement par carte." },
   { t: "Retrait gratuit", d: "À Damprichard ou au Russey, sur rendez-vous convenu par WhatsApp." },
-  { t: "Livraison à domicile", d: `30 km autour du Russey, 10 km autour de Damprichard : ${formatEUR(localDelivery.priceCents)}, offerte dès ${formatEUR(LOCAL_FREE_FROM_CENTS)}.` },
+  { t: "Livraison à domicile", d: `30 km autour du Russey, 10 km autour de Damprichard : ${formatEUR(localDelivery.priceCents)}, offerte dès ${formatEUR(LOCAL_FREE_FROM_CENTS)}.` },
 ];
 
 const orderSteps = [
@@ -176,7 +176,7 @@ export default function HomePage() {
         <ul className="marquee-track">
           {[...visibleProducts, ...visibleProducts].map((p, n) => (
             <li key={`${p.slug}-${n}`} className="flex items-center gap-11 whitespace-nowrap">
-              <span className="t-note text-[1.5rem] leading-none sm:text-[1.875rem]">{p.name.split(/\s+[—–]\s+/)[0]}</span>
+              <span className="t-note text-[1.5rem] leading-none sm:text-[1.875rem]">{fr(p.name.split(/\s+[—–]\s+/)[0])}</span>
               <Rosette className="h-5 w-5 sm:h-6 sm:w-6" />
             </li>
           ))}
@@ -324,7 +324,7 @@ export default function HomePage() {
             </p>
             <p className="mt-6 flex items-center gap-3 text-[0.9688rem]">
               <span aria-hidden className="live-dot" />
-              <LiveTime template="Il est {heure} dans le Haut-Doubs : les deux sont ouverts." fallback="Ouverts 24 h/24, 7 jours sur 7." />
+              <LiveTime template="Il est {heure} dans le Haut-Doubs : les deux sont ouverts." fallback="Ouverts 24 h/24, 7 jours sur 7." />
             </p>
 
             <ol className="steps mt-10">
@@ -449,7 +449,7 @@ export default function HomePage() {
                 </span>
                 <div className="leading-tight">
                   <p className="text-[0.9375rem] font-medium">CBDoux</p>
-                  <p className="text-[0.75rem] text-etiquette/70">répond 7 jours sur 7</p>
+                  <p className="text-[0.75rem] text-etiquette/70">répond 7 jours sur 7</p>
                 </div>
               </div>
               <div className="min-h-[21rem] space-y-2.5 px-3.5 py-5" aria-label="Exemple d'échange lors d'une commande">
@@ -538,7 +538,7 @@ export default function HomePage() {
           <h2 className="t-h1 mx-auto max-w-[14ch]">
             Une question&nbsp;? <em>On vous répond.</em>
           </h2>
-          <p className="t-lead mx-auto mt-6 max-w-xl">Conseil sur une force, suivi de colis, commande : une vraie personne vous répond sur WhatsApp, 7 jours sur 7.</p>
+          <p className="t-lead mx-auto mt-6 max-w-xl">Conseil sur une force, suivi de colis, commande : une vraie personne vous répond sur WhatsApp, 7 jours sur 7.</p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">
             <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
               Écrire sur WhatsApp, {site.phoneDisplay}

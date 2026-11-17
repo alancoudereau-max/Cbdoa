@@ -4,17 +4,21 @@ export function cn(...classes: Array<string | false | null | undefined>): string
   return classes.filter(Boolean).join(" ");
 }
 
-/** Typographie française : pas de retour à la ligne avant « ? ! : ; » ni entre un nombre et son unité. */
+/**
+ * Typographie française : pas de retour à la ligne avant « ? ! : ; » ni entre un nombre et son unité
+ * (« 18 ans », « 30 km », « 73 microns »), et « 7 jours sur 7 » d'un seul tenant.
+ */
 export function fr(text: string): string {
   return text
     .replace(/ ([?!:;»])/g, "\u00a0$1")
     .replace(/« /g, "«\u00a0")
-    .replace(/(\d) (%|€|h\b|g\b|km\b|°C|ml\b|min\b)/g, "$1\u00a0$2");
+    .replace(/(\d) (jours?) sur (\d)/g, "$1\u00a0$2\u00a0sur\u00a0$3")
+    .replace(/(\d) (%|€|°C|h\b|g\b|kg\b|mg\b|ml\b|km\b|cm\b|mm\b|min\b|grammes?\b|ans?\b|jours?\b|heures?\b|minutes?\b|semaines?\b|mois\b|microns?\b|références?\b)/g, "$1\u00a0$2");
 }
 
-/** Les énumérations « A · B » des données s'affichent « A, B ». */
+/** Les énumérations « A · B » des données s'affichent « A, B », avec la typographie française (voir `fr`). */
 export function commas(text: string): string {
-  return text.replace(/\s·\s/g, ", ");
+  return fr(text.replace(/\s·\s/g, ", "));
 }
 
 export function formatEUR(cents: number): string {

@@ -3,12 +3,12 @@ import { cn, fr } from "@/lib/utils";
 
 const items: { text: string; icon: ReactNode }[] = [
   {
-    text: "THC inférieur à 0,3 %",
+    text: "THC inférieur à 0,3 %",
     // Fiole d'analyse
     icon: <path d="M7 2.6h4M8 2.6v4.1l-3.7 6.6a1.5 1.5 0 0 0 1.3 2.2h6.8a1.5 1.5 0 0 0 1.3-2.2L10 6.7V2.6M6.1 11.2h5.8" />,
   },
   {
-    text: "Expédié sous 24 h",
+    text: "Expédié sous 24 h",
     // Cadran
     icon: (
       <>

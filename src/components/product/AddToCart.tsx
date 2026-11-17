@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Minus, Plus, AlertTriangle } from "lucide-react";
 import { type Product, type Variant, forceLabels, type TierKey } from "@/data/products";
 import { useCart } from "@/lib/cart-store";
-import { formatEUR, cn } from "@/lib/utils";
+import { formatEUR, cn, fr } from "@/lib/utils";
 import { ForceBadge } from "@/components/ui/ForceBadge";
 
 const ACK_KEY = "cbdoux-prudence-ack";
@@ -138,7 +138,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
                 return (
                   <button key={key} type="button" role="radio" aria-checked={active} onClick={() => setTier(key)} className="choice choice-pill px-4 py-2 text-[0.9375rem]">
                     <span className="font-medium">{forceLabels[f].label}</span>
-                    <span className="ml-2 text-[0.8125rem] opacity-70">{vs[0].cbdInfo}</span>
+                    <span className="ml-2 text-[0.8125rem] opacity-70">{fr(vs[0].cbdInfo)}</span>
                   </button>
                 );
               })}
@@ -157,7 +157,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
               const less = saving(v);
               return (
                 <button key={v.sku} type="button" role="radio" aria-checked={active} disabled={!ok} onClick={() => setSku(v.sku)} className="choice t-num relative px-3.5 py-3">
-                  <span className="block font-medium">{v.format}</span>
+                  <span className="block font-medium">{fr(v.format)}</span>
                   <span className="block">{formatEUR(v.priceCents)}</span>
                   {pg !== null && <span className="block text-[0.75rem] opacity-70">{formatEUR(Math.round(pg))} le gramme</span>}
                   {!ok && <span className="block text-[0.75rem] opacity-70">Épuisé</span>}
@@ -176,13 +176,13 @@ export function AddToCart({ product, availability }: { product: Product; availab
         {/* Ce que contient la variante choisie */}
         <p className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[0.875rem] text-foreground/80">
           <ForceBadge force={variant.force} />
-          <span>{variant.cbdInfo}</span>
+          <span>{fr(variant.cbdInfo)}</span>
           <span>THC &lt; 0,3 %</span>
         </p>
 
         {variant.warning && (
           <p className="flex items-start gap-2.5 text-[0.875rem] leading-snug text-danger">
-            <AlertTriangle aria-hidden size={16} className="mt-0.5 shrink-0" /> <span>{variant.warning}</span>
+            <AlertTriangle aria-hidden size={16} className="mt-0.5 shrink-0" /> <span>{fr(variant.warning)}</span>
           </p>
         )}
 
@@ -194,8 +194,8 @@ export function AddToCart({ product, availability }: { product: Product; availab
               J'ai lu les{" "}
               <Link href="/conseils-prudence" className="link">
                 conseils de prudence
-              </Link>{" "}
-              : produit fortement enrichi en cannabinoïdes, réservé aux adultes habitués, très petite quantité pour commencer, pas de conduite après usage.
+              </Link>
+              &nbsp;: produit fortement enrichi en cannabinoïdes, réservé aux adultes habitués, très petite quantité pour commencer, pas de conduite après usage.
             </span>
           </label>
         )}
@@ -239,9 +239,9 @@ export function AddToCart({ product, availability }: { product: Product; availab
           <div className="buybar lg:hidden" data-show={bar !== "off"} aria-hidden={bar === "off"}>
             <div className="buybar-row">
               <div className="buybar-text">
-                <p className="truncate text-[0.9375rem] font-medium leading-tight">{product.name}</p>
+                <p className="truncate text-[0.9375rem] font-medium leading-tight">{fr(product.name)}</p>
                 <p className="buybar-price t-num truncate text-[0.8125rem] leading-tight text-foreground/75">
-                  {bar === "before" && several ? `Dès ${formatEUR(fromCents)}` : `${variant.tierLabel}, ${variant.format} · ${formatEUR(variant.priceCents * qty)}`}
+                  {bar === "before" && several ? `Dès ${formatEUR(fromCents)}` : fr(`${variant.tierLabel}, ${variant.format} · ${formatEUR(variant.priceCents * qty)}`)}
                 </p>
               </div>
               <button type="button" tabIndex={bar === "off" ? -1 : 0} onClick={onBar} disabled={!available && bar === "after"} className="btn btn-primary btn-sm shrink-0">

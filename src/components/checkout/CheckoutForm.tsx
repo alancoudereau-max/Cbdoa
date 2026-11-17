@@ -297,7 +297,7 @@ export function CheckoutForm() {
             </Field>
             <div className="mt-5 space-y-2.5">
               <Check checked={form.ageConfirmed} onChange={set("ageConfirmed")} error={errors.ageConfirmed}>
-                Je certifie être <strong>majeur(e) (18 ans ou plus)</strong>. La vente de CBD est interdite aux mineurs.
+                Je certifie être <strong>majeur(e) (18 ans ou plus)</strong>. La vente de CBD est interdite aux mineurs.
               </Check>
               <Check checked={form.prudenceAck} onChange={set("prudenceAck")} error={errors.prudenceAck}>
                 J'ai lu les{" "}

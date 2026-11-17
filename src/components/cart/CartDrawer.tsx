@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 import { X, Minus, Plus } from "lucide-react";
 import { useCart, cartSubtotalCents } from "@/lib/cart-store";
 import { FREE_SHIPPING_FROM_CENTS } from "@/lib/shipping";
-import { formatEUR, commas } from "@/lib/utils";
+import { formatEUR, commas, fr } from "@/lib/utils";
 import type { CartSuggestion } from "@/lib/suggestions";
 
 /** En dessous de ce reste à atteindre, le panier propose un petit format pour gagner le port offert. */
@@ -23,7 +23,7 @@ function Idea({ s, onAdd, focusable }: { s: CartSuggestion; onAdd: () => void; f
       <span className="min-w-0 flex-1">
         <span className="block truncate text-[0.9375rem] font-medium leading-tight">{s.name}</span>
         <span className="t-num mt-0.5 block text-[0.8125rem] text-foreground/70">
-          {s.format}, {formatEUR(s.unitPriceCents)}
+          {fr(s.format)}, {formatEUR(s.unitPriceCents)}
         </span>
       </span>
       <button type="button" onClick={onAdd} aria-label={`Ajouter ${s.name}, ${s.format}, au panier`} className="btn btn-ghost btn-sm shrink-0" tabIndex={focusable ? 0 : -1}>
