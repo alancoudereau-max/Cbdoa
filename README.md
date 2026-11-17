@@ -26,7 +26,8 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 | `python3 -I scripts/build-conseils-pdf.py` | régénère `public/conseils-prudence.pdf` |
 | `python3 scripts/build-brand.py` | régénère le logo, les icônes, l'image de partage et le bandeau |
 | `python3 -I scripts/build-guilloche.py` | régénère les deux gravures de fond (`public/images/brand/guilloche-*.svg`) |
-| `python3 -I scripts/build-etiquettes.py` | prépare les photos produit sur fond blanc à la couleur du papier des étiquettes (`public/images/etiquettes/`) |
+| `python3 -I scripts/build-etiquettes.py` | prépare les photos produit sur fond blanc à la couleur du papier des étiquettes (`public/images/etiquettes/`) et note la taille de chaque photo (`src/data/photos.json`, pour la loupe) |
+| `python3 -I scripts/build-carte.py` | régénère la carte du Haut-Doubs (`src/data/carte-haut-doubs.json`) : communes, zones de livraison, contour du Doubs |
 | `python3 -I scripts/normalize-product-photos.py <photo.jpg>` | ramène au blanc le fond grisâtre d'une photo produit, avant de lancer la commande précédente |
 | `python3 -I scripts/patch-fonts.py` | à relancer si un fichier de police est remplacé : l'apostrophe du clavier s'affiche en apostrophe typographique |
 
@@ -41,6 +42,8 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 | FAQ (accueil, livraison, catégories) | `src/data/faq.ts`, `src/data/category-faq.ts` |
 | Guides / blog SEO | `src/data/guides.ts` |
 | Pages locales (villes) | `src/data/cities.ts` |
+| Carte du Haut-Doubs (communes affichées, rayons de livraison) | `scripts/build-carte.py`, puis relancer le script |
+| Suggestions du panier pour atteindre le port offert | `src/lib/suggestions.ts` (un gramme en Classique, fleurs et résines) |
 | Analyses laboratoire (COA) | `src/data/coa.ts` + `public/images/coa/` |
 | Textes légaux (CGV, confidentialité…) | `src/data/legal.ts` |
 
@@ -55,6 +58,10 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 - **La vitesse fait partie du dessin.** Les animations permanentes ne font que déplacer ou fondre des éléments (poussière d'or en CSS, reflet du titre, bandeau défilant) : le navigateur n'a rien à recalculer au repos. Le reflet doré des titres de section ne passe qu'une fois, à leur arrivée à l'écran.
 - **Vérification d'âge** (`src/components/AgeGate.tsx`) : écrite dans le HTML de chaque page et pilotée par deux petits scripts, elle s'affiche dès la première image, sans attendre le reste du JavaScript. L'ouverture de la page se joue au moment où l'on entre.
 - **Fiche produit sur téléphone** : une barre d'achat reste en bas de l'écran (`AddToCart.tsx`). Avant le bloc d'achat, elle donne le prix et y conduit ; après, elle ajoute au panier le choix en cours.
+- **La loupe d'horloger** (`src/components/product/ProductMedia.tsx`) : sur la photo d'une fiche produit, une loupe cerclée d'or grossit le détail. À la souris elle suit le pointeur ; au doigt, on touche la photo pour la poser et on la promène en glissant ; au clavier, le bouton la pose et les flèches la déplacent. Elle n'apparaît que si la photo d'origine est assez grande (voir `src/data/photos.json`) : préférez des photos d'au moins 1 000 px de côté.
+- **La carte du Haut-Doubs** (`src/components/content/HautDoubsMap.tsx`) : distributeurs, points de retrait et zone de livraison à domicile, dessinés à partir des coordonnées officielles des mairies. Elle figure sur l'accueil, la page livraison, la page distributeurs, « CBD près de chez vous » et chaque page de ville (la commune y est cerclée).
+- **Le défilement** : là où le navigateur le permet, les photos des rayons glissent dans leur cadre et les cartes postales se décalent pendant qu'on fait défiler la page (CSS seul, `animation-timeline`). Ailleurs, rien ne bouge et rien ne manque.
+- **Le panier** : l'article ajouté s'éclaire un instant ; quand il manque 12 € ou moins pour le port offert, le panier propose un gramme à ajouter d'un geste.
 
 | Besoin | Fichier |
 |---|---|
@@ -64,6 +71,8 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 | Animations (apparitions, compteurs, barre de lecture) | `src/components/motion/MotionRoot.tsx` : marquer un bloc `data-reveal`, un chiffre `data-count` |
 | Fiche produit en forme d'étiquette | `src/components/product/ProductCard.tsx` |
 | Photos produit sur papier | `python3 -I scripts/build-etiquettes.py` (à relancer après tout ajout de photo) |
+| Carte | `src/components/content/HautDoubsMap.tsx`, données dans `src/data/carte-haut-doubs.json` (générées) |
+| Loupe, engagements, partage (fiche produit) | `src/components/product/ProductMedia.tsx`, `Reassurance.tsx`, `ShareButton.tsx` |
 
 Règles de typographie : titres en Fraunces, la seconde moitié de la phrase en italique doré (`<em>`) ; phrases en minuscules, pas de flèche dans les boutons, numéros uniquement pour de vraies étapes. Les espaces insécables françaises sont posées automatiquement sur les textes du catalogue par `fr()` (`src/lib/utils.ts`) et écrites telles quelles dans les pages.
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { shippingMethods, FREE_SHIPPING_FROM_CENTS, LOCAL_FREE_FROM_CENTS } from "@/lib/shipping";
 import { shippingFaq } from "@/data/faq";
 import { locations, site } from "@/data/site";
+import { HautDoubsMap } from "@/components/content/HautDoubsMap";
 import { PageHero } from "@/components/ui/PageHero";
 import { Faq } from "@/components/ui/Faq";
 import { buildMetadata } from "@/lib/seo";
@@ -100,31 +101,36 @@ export default function LivraisonPage() {
       </section>
 
       {/* Sur place */}
-      <section className="wrap grid gap-12 pb-20 lg:grid-cols-2 lg:gap-16">
-        <div className="border-t border-foreground/15 pt-8">
-          <h2 className="t-h3">Retrait gratuit dans le Haut-Doubs</h2>
-          <p className="mt-4 text-foreground/80">
-            Choisissez « Retrait gratuit » à la commande. Nous convenons ensemble d'un rendez-vous par WhatsApp, généralement dès le lendemain. Paiement par lien sécurisé ou sur place.
-          </p>
-          <ul className="mt-5 space-y-2 text-[0.9688rem] text-foreground/85">
-            {locations.pickupPoints.map((pp) => (
-              <li key={pp.id}>
-                <strong className="font-medium text-foreground">
-                  {pp.name} ({pp.postalCode})
-                </strong>{" "}
-                : {pp.description.charAt(0).toLowerCase() + pp.description.slice(1)}
-              </li>
-            ))}
-          </ul>
+      <section className="wrap grid gap-12 pb-20 lg:grid-cols-12 lg:gap-10">
+        <div className="lg:col-span-5">
+          <HautDoubsMap />
         </div>
-        <div className="border-t border-foreground/15 pt-8">
-          <h2 className="t-h3">Distributeurs ouverts 24 h/24</h2>
-          <p className="mt-4 text-foreground/80">
-            Besoin tout de suite ? Nos distributeurs automatiques de Charquemont et du Russey sont accessibles jour et nuit, paiement par carte, produits conservés à 20 °C.
-          </p>
-          <Link href="/distributeurs" className="btn btn-ghost mt-6">
-            Voir les distributeurs
-          </Link>
+        <div className="grid content-start gap-12 lg:col-span-6 lg:col-start-7">
+          <div className="border-t border-foreground/15 pt-8">
+            <h2 className="t-h3">Retrait gratuit dans le Haut-Doubs</h2>
+            <p className="mt-4 text-foreground/80">
+              Choisissez « Retrait gratuit » à la commande. Nous convenons ensemble d'un rendez-vous par WhatsApp, généralement dès le lendemain. Paiement par lien sécurisé ou sur place.
+            </p>
+            <ul className="mt-5 space-y-2 text-[0.9688rem] text-foreground/85">
+              {locations.pickupPoints.map((pp) => (
+                <li key={pp.id}>
+                  <strong className="font-medium text-foreground">
+                    {pp.name} ({pp.postalCode})
+                  </strong>{" "}
+                  : {pp.description.charAt(0).toLowerCase() + pp.description.slice(1)}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="border-t border-foreground/15 pt-8">
+            <h2 className="t-h3">Distributeurs ouverts 24 h/24</h2>
+            <p className="mt-4 text-foreground/80">
+              Besoin tout de suite ? Nos distributeurs automatiques de Charquemont et du Russey sont accessibles jour et nuit, paiement par carte, produits conservés à 20 °C.
+            </p>
+            <Link href="/distributeurs" className="btn btn-ghost mt-6">
+              Voir les distributeurs
+            </Link>
+          </div>
         </div>
       </section>
 

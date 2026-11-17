@@ -249,6 +249,8 @@
   }
   .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 20px 40px -18px rgb(215 181 101 / 0.65); }
   .btn-primary:hover:not(:disabled)::after { animation: sheen 0.9s ease; }
+  /* Bouton d'ouverture : le reflet repasse de lui-même de temps en temps (les téléphones n'ont pas de survol) */
+  .btn-shine::after { animation: sheen-loop 6.5s ease-in-out 2.6s infinite; }
   /* sur papier et sur le bon doré, le bouton reprend le vert de l'enseigne ou l'encre */
   .paper .btn-primary { background: var(--color-sapin); color: var(--color-etiquette); box-shadow: none; }
   .paper .btn-primary:hover:not(:disabled) { background: #0c2a20; }
@@ -456,6 +458,115 @@
   .buybar-price { margin-top: 0.25rem; }
   html[data-menu-open] .buybar, html[data-gate] .buybar { transform: translateY(110%); }
 
+  /* ── Carte du Haut-Doubs (HautDoubsMap.tsx) ── */
+  .carte { margin: 0; }
+  .carte-cadre { position: relative; overflow: hidden; border-radius: 4px; background: #070706; box-shadow: inset 0 0 0 1px rgb(215 181 101 / 0.28), var(--shadow-deep); font-family: var(--font-sans); isolation: isolate; }
+  .carte-fond { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .carte-terre { fill: rgb(215 181 101 / 0.075); }
+  .carte-frontiere { fill: none; stroke: #d7b565; stroke-width: 1px; stroke-linejoin: round; opacity: 0.6; vector-effect: non-scaling-stroke; }
+  .carte-zone { fill: rgb(215 181 101 / 0.085); }
+  .carte-zone, .carte-zone-bord { transform-box: fill-box; transform-origin: center; }
+  .carte-repere { fill: none; stroke: #d7b565; stroke-width: 1px; opacity: 0.22; vector-effect: non-scaling-stroke; }
+  .carte-zone-bord { fill: none; stroke: #ecd9a0; stroke-width: 1.3px; stroke-dasharray: 5 5; opacity: 0.8; vector-effect: non-scaling-stroke; }
+  .carte-pays { position: absolute; translate: -50% -50%; font-family: var(--font-serif); font-style: italic; font-weight: 300; font-size: clamp(0.95rem, 2.6vw, 1.3rem); letter-spacing: 0.22em; color: rgb(242 234 214 / 0.34); pointer-events: none; white-space: nowrap; }
+
+  .carte-ville { position: absolute; display: block; width: 0; height: 0; color: var(--color-etiquette); font-size: clamp(0.7188rem, 1.9vw, 0.8438rem); line-height: 1; text-decoration: none; }
+  .carte-ville .carte-point { position: absolute; left: 0; top: 0; translate: -50% -50%; }
+  .carte-nom { position: absolute; white-space: nowrap; padding: 0.3rem 0.1rem; text-shadow: 0 0 6px #070706, 0 0 3px #070706; transition: color 0.3s; }
+  .carte-cote-d .carte-nom { left: 0.7rem; top: 0; translate: 0 -50%; }
+  .carte-cote-g .carte-nom { right: 0.7rem; top: 0; translate: 0 -50%; }
+  .carte-cote-b .carte-nom { left: 0; top: 0.45rem; translate: -50% 0; }
+  .carte-cote-h .carte-nom { left: 0; bottom: 0.45rem; translate: -50% 0; }
+  .carte-distributeur .carte-nom, .carte-retrait .carte-nom { font-weight: 600; color: var(--color-or-clair); }
+  .carte-distributeur.carte-cote-d .carte-nom { left: 0.95rem; }
+  .carte-distributeur.carte-cote-g .carte-nom { right: 0.95rem; }
+  @media (hover: hover) { .carte-ville:hover .carte-nom, .carte-cap a:hover, a.carte-cap:hover { color: #fff; } }
+
+  .carte-point { display: block; width: 0.34rem; height: 0.34rem; border-radius: 50%; background: var(--color-etiquette); }
+  .carte-distributeur .carte-point, .carte-point-distributeur { width: 0.72rem; height: 0.72rem; background: radial-gradient(circle at 35% 30%, #fbf0c8, #d7b565 55%, #a07a26); box-shadow: 0 0 0 2px #070706, 0 0 0 3px rgb(215 181 101 / 0.9); }
+  .carte-retrait .carte-point, .carte-point-retrait { width: 0.62rem; height: 0.62rem; background: #070706; box-shadow: inset 0 0 0 2px #d7b565; }
+  /* Les distributeurs battent doucement : ouverts jour et nuit */
+  .carte-distributeur .carte-point::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 1px solid #ecd9a0; opacity: 0; animation: carte-pouls 3.2s ease-out infinite; }
+  .carte-distributeur:nth-of-type(2n) .carte-point::after { animation-delay: 1.6s; }
+  @keyframes carte-pouls { 0% { transform: scale(1); opacity: 0.75; } 70%, 100% { transform: scale(3.4); opacity: 0; } }
+
+  /* Sur la page d'une commune : elle est cerclée et son nom ressort */
+  .carte-ici::before { content: ""; position: absolute; left: 0; top: 0; width: 2.2rem; height: 2.2rem; translate: -50% -50%; border-radius: 50%; border: 1px solid rgb(236 217 160 / 0.95); background: rgb(215 181 101 / 0.12); }
+  .carte-ville.carte-ici .carte-nom { color: #fff; font-weight: 600; }
+  .carte-ville.carte-ici.carte-cote-d .carte-nom { left: 1.45rem; }
+  .carte-ville.carte-ici.carte-cote-g .carte-nom { right: 1.45rem; }
+  .carte-ville.carte-ici.carte-cote-b .carte-nom { top: 1.2rem; }
+  .carte-cap.carte-ici { color: #fff; box-shadow: inset 0 0 0 1px #ecd9a0; }
+  .carte-cap.carte-ici::before { content: none; }
+
+  .carte-cap { position: absolute; z-index: 1; display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.55rem; border-radius: 999px; background: rgb(7 7 6 / 0.86); box-shadow: inset 0 0 0 1px rgb(215 181 101 / 0.22); font-size: clamp(0.6875rem, 1.8vw, 0.8125rem); line-height: 1; color: rgb(242 234 214 / 0.8); white-space: nowrap; text-decoration: none; }
+  .carte-cap a { color: inherit; }
+  .carte-cap-ouest { left: 0.55rem; translate: 0 -50%; }
+  .carte-cap-nord { top: 0.55rem; translate: -50% 0; }
+  .carte-echelle { position: absolute; right: 5%; bottom: 5%; border: solid rgb(242 234 214 / 0.6); border-width: 0 1px 1px; padding-bottom: 0.3rem; text-align: center; font-size: 0.6875rem; line-height: 1; color: rgb(242 234 214 / 0.7); }
+
+  .carte-legende { display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; margin-top: 0.95rem; padding-left: 3px; font-size: 0.8438rem; color: rgb(242 234 214 / 0.82); }
+  .carte-legende > span { display: inline-flex; align-items: center; gap: 0.55rem; }
+  .carte-legende .carte-point { flex: none; }
+  .carte-trait { display: block; flex: none; width: 1.5rem; height: 0; border-top: 1.5px dashed #ecd9a0; }
+
+  /* À l'arrivée de la carte : la zone de livraison s'étend depuis son centre, les communes se posent une à une */
+  html.js .carte.rv-wait .carte-zone, html.js .carte.rv-wait .carte-zone-bord { opacity: 0; }
+  html.js .carte.is-in .carte-zone, html.js .carte.is-in .carte-zone-bord { animation: carte-etend 1.5s var(--ease-out) 0.2s both; }
+  @keyframes carte-etend { from { transform: scale(0.15); opacity: 0; } }
+  html.js .carte.rv-wait .carte-ville { opacity: 0; }
+  html.js .carte.is-in .carte-ville { animation: carte-pose 0.6s var(--ease-out) both; animation-delay: calc(0.5s + var(--n, 0) * 70ms); }
+  @keyframes carte-pose { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+  /* Loupe d'horloger sur la photo d'une fiche produit (ProductMedia.tsx).
+     La loupe est déplacée par « translate » et apparaît par « scale » : deux propriétés animées par la carte graphique. */
+  .loupe-wrap { position: relative; }
+  .loupe-frame[data-zoom] img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+  .loupe-frame[data-held] { touch-action: none; }
+  .loupe {
+    position: absolute; left: 0; top: 0; z-index: 3; width: 13rem; height: 13rem; border-radius: 50%; pointer-events: none;
+    background-color: #e9dfc6; background-repeat: no-repeat; opacity: 0; scale: 0.5; will-change: translate;
+    box-shadow: 0 0 0 1px rgb(12 11 9 / 0.9), 0 0 0 3px #d7b565, 0 0 0 11px #0c0b09, 0 0 0 12px rgb(215 181 101 / 0.55), 0 24px 46px -10px rgb(0 0 0 / 0.8);
+    transition: opacity 0.2s, scale 0.5s var(--ease-out);
+  }
+  .loupe::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(115% 85% at 26% 10%, rgb(255 255 255 / 0.3), transparent 48%); box-shadow: inset 0 0 20px rgb(0 0 0 / 0.3); }
+  .loupe-wrap[data-loupe] .loupe { opacity: 1; scale: 1; }
+  @media (pointer: coarse) { .loupe { width: 10.25rem; height: 10.25rem; } }
+  @media (hover: hover) and (pointer: fine) {
+    .loupe-frame[data-zoom] { cursor: zoom-in; }
+    .loupe-wrap[data-loupe] .loupe-frame { cursor: none; }
+  }
+  .loupe-btn {
+    position: absolute; left: 0.7rem; bottom: 0.7rem; z-index: 2; display: inline-flex; align-items: center; justify-content: center;
+    width: 2.75rem; height: 2.75rem; border-radius: 50%; background: rgb(12 11 9 / 0.84); color: var(--color-or-clair);
+    box-shadow: inset 0 0 0 1px rgb(215 181 101 / 0.65), 0 10px 22px -10px rgb(0 0 0 / 0.8);
+    transition: background-color 0.25s, color 0.25s, scale 0.3s var(--ease-out); animation: loupe-btn-in 0.5s var(--ease-out) both;
+  }
+  .loupe-btn:hover { scale: 1.06; }
+  .loupe-btn[aria-pressed="true"] { background: var(--color-or); color: var(--color-nuit); }
+  @keyframes loupe-btn-in { from { opacity: 0; transform: scale(0.6); } }
+
+  /* Économie au gramme d'un grand format, posée sur le coin de sa case */
+  .save-chip {
+    position: absolute; right: -1px; top: -0.55rem; padding: 0.2rem 0.45rem; border-radius: 999px;
+    background: var(--color-or); color: var(--color-nuit); font-size: 0.6875rem; font-weight: 700; line-height: 1.1; letter-spacing: 0.01em;
+    box-shadow: 0 0 0 2px var(--color-panel, #14120e);
+  }
+
+  /* Le total du bloc d'achat se pose quand il change (force, format, quantité) */
+  .price-tick { animation: price-tick 0.45s var(--ease-out) both; }
+  @keyframes price-tick { from { opacity: 0; transform: translateY(0.3em); } }
+
+  /* Partager la fiche */
+  .share-link { display: inline-flex; align-items: center; gap: 0.55rem; font-size: 0.9375rem; color: color-mix(in oklab, var(--color-foreground) 80%, transparent); transition: color 0.25s; }
+  .share-link:hover { color: var(--color-gold-light); }
+
+  /* Panier : sur un petit écran, une seule idée pour laisser la place aux articles */
+  @media (max-height: 740px) { .cart-ideas > li + li { display: none; } }
+  /* Panier : l'article qu'on vient d'ajouter s'éclaire un instant */
+  .cart-line[data-fresh] { animation: cart-fresh 1.9s ease-out both; }
+  @keyframes cart-fresh { 0%, 25% { background-color: rgb(215 181 101 / 0.16); box-shadow: inset 2px 0 0 #d7b565; } 100% { background-color: transparent; box-shadow: inset 2px 0 0 transparent; } }
+
   /* Badge « Powered by Netlify » : tant que l'hébergeur l'affiche (cadre #nl-badge-frame, en bas à droite,
      64 px de haut), nos éléments se rangent autour de lui au lieu de passer dessous. Sans badge, rien ne change. */
   html:has(#nl-badge-frame) .wa-fab { translate: 0 -4.5rem; }
@@ -579,6 +690,8 @@
 @keyframes bubble-in { from { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.96); } to { opacity: 1; transform: none; } }
 @keyframes marquee { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
 @keyframes sheen { from { transform: translateX(-130%) skewX(-18deg); } to { transform: translateX(230%) skewX(-18deg); } }
+/* le reflet traverse le bouton en moins d'une seconde, puis attend le tour suivant */
+@keyframes sheen-loop { 0% { transform: translateX(-130%) skewX(-18deg); } 13%, 100% { transform: translateX(230%) skewX(-18deg); } }
 @keyframes glow-drift { 0% { transform: translate3d(-3%, -2%, 0) rotate(0deg) scale(1); } 50% { transform: translate3d(3%, 3%, 0) rotate(5deg) scale(1.1); } 100% { transform: translate3d(-1%, 5%, 0) rotate(-4deg) scale(1.04); } }
 /* le reflet traverse le texte doré en 2,5 s, puis attend : le texte n'est redessiné que pendant le passage */
 @keyframes gold-sweep { from { background-position: 0% 0; } to { background-position: 100% 0; } }
@@ -633,9 +746,23 @@ html[data-gate] .seq-line > span, html[data-gate] .seq-in, html[data-gate] .seq-
 /* Aiguille de la jauge des forces : un aller-retour quand la jauge apparaît */
 .is-in .needle-intro { animation: needle-sweep 1.9s var(--ease-soft) both; animation-delay: 0.25s; }
 
+/* Pendant qu'on fait défiler la page, les photos des rayons glissent doucement dans leur cadre et les cartes
+   postales se décalent l'une par rapport à l'autre. Le navigateur s'en charge seul (animation-timeline), sans
+   script et sans jamais masquer une image ; là où ce n'est pas géré, rien ne bouge. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    /* Un cadre en « overflow: hidden » deviendrait le repère du défilement ; « clip » rogne de la même façon sans le devenir. */
+    .tile, main section.overflow-hidden:has(.postcard) { overflow: clip; }
+    .tile > img { top: -8% !important; bottom: auto !important; height: 116% !important; animation: drift-photo linear both; animation-timeline: view(); }
+    .postcard { animation: drift-card linear both; animation-timeline: view(); }
+  }
+}
+@keyframes drift-photo { from { translate: 0 -6.4%; } to { translate: 0 6.4%; } }
+@keyframes drift-card { from { translate: var(--tw-translate-x, 0px) var(--drift, 10px); } to { translate: var(--tw-translate-x, 0px) calc(var(--drift, 10px) * -1); } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-  .spin-slow, .spin-slow-back, .live-dot::after, .marquee-track, .glow, .bob, .bob-slow, .watch-glass::before, h2.is-seen em { animation: none !important; }
+  .spin-slow, .spin-slow-back, .live-dot::after, .marquee-track, .glow, .bob, .bob-slow, .watch-glass::before, h2.is-seen em, .btn-shine::after, .carte-distributeur .carte-point::after { animation: none !important; }
   .gold-sheen { display: none; }
   .dust i { animation: none !important; opacity: var(--a2); }
   .watch-seconds { animation: none !important; transform: rotate(calc(var(--s0, 0) * 6deg)); }

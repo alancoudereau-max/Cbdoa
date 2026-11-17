@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
+import type { CSSProperties } from "react";
 import { notFound } from "next/navigation";
 import { cities, getCity, inCity } from "@/data/cities";
 import { featuredProducts } from "@/data/products";
 import { locations, site } from "@/data/site";
 import { ProductCard } from "@/components/product/ProductCard";
 import { PageHero } from "@/components/ui/PageHero";
+import { HautDoubsMap } from "@/components/content/HautDoubsMap";
 import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
+import { LiveTime } from "@/components/motion/ParisTime";
 import { buildMetadata, vendingMachineJsonLd } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
 import { fr } from "@/lib/utils";
@@ -59,11 +63,12 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
       <section className="wrap">
         <ul className="grid sm:grid-cols-2">
           {c.modes.map((m, n) => {
-            const card = modeCards[m];
+            // Sans distributeur dans la commune même, la carte dit où sont les plus proches.
+            const card = m === "distributeur" && !machine ? { ...modeCards[m], title: "Distributeurs 24 h/24 à proximité", text: "À Charquemont et au Russey : servez-vous à toute heure, paiement par carte, produits conservés à 20 °C." } : modeCards[m];
             return (
               <li key={m} className={`border-t border-foreground/15 py-7 sm:pr-8 ${n % 2 ? "sm:border-l sm:pl-8" : ""} ${n >= c.modes.length - (c.modes.length % 2 === 0 ? 2 : 1) ? "sm:border-b" : ""}`}>
-                <h2 className="t-h3">{card.title}</h2>
-                <p className="mt-3 text-foreground/80">{card.text}</p>
+                <h2 className="t-h3">{fr(card.title)}</h2>
+                <p className="mt-3 text-foreground/80">{fr(card.text)}</p>
                 <Link href={card.href} className="link mt-4 inline-block">
                   {card.cta}
                 </Link>
@@ -73,15 +78,77 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
         </ul>
       </section>
 
-      <section className="wrap-narrow section">
-        <div className="panel sheet prose-cbd">
-          {c.body.map((para) => (
-            <p key={para}>{fr(para)}</p>
-          ))}
-          <p>
-            Tous nos produits respectent la réglementation française (THC &lt; 0,3 %), sont réservés aux adultes et accompagnés d'analyses de laboratoire. Consultez nos <Link href="/conseils-prudence">conseils de prudence</Link> avant utilisation.
-          </p>
+      {/* La commune a son distributeur : sa fiche (photo, adresse, itinéraire), comme sur la page Distributeurs */}
+      {machine && (
+        <section className="nuit section mt-16 sm:mt-20">
+          <div className="wrap grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-10">
+            <div className="lg:col-span-5">
+              <figure data-reveal="left" className="paper postcard mx-auto w-[80%] max-w-[23rem]" style={{ "--tilt": "-1.6deg", "--drift": "12px" } as CSSProperties}>
+                <div className="overflow-hidden">
+                  <Image src={machine.image} alt={machine.imageAlt} width={machine.imageSize[0]} height={machine.imageSize[1]} sizes="(max-width: 1024px) 80vw, 370px" className="block h-auto w-full" />
+                </div>
+                <figcaption>
+                  <span className="t-note text-[1.1875rem] leading-tight">{machine.city}</span>
+                  <span className="text-[0.8125rem] text-foreground/70">{machine.id === "charquemont" ? "La cabine" : "Le chalet"}</span>
+                </figcaption>
+              </figure>
+            </div>
+            <div className="lg:col-span-6 lg:col-start-7">
+              <p className="flex items-center gap-3 text-[0.9688rem]">
+                <span aria-hidden className="live-dot" />
+                <LiveTime template="Il est {heure} : ouvert." fallback="Ouvert 24 h/24." />
+              </p>
+              <h2 className="t-h2 mt-4">
+                Le distributeur <em>{c.name.startsWith("Le ") ? `du ${c.name.slice(3)}` : `de ${c.name}`}</em>
+              </h2>
+              <dl className="mt-7 text-[0.9688rem]">
+                {[
+                  [
+                    "Adresse",
+                    <address key="a" className="not-italic">
+                      {machine.place}
+                      <br />
+                      {machine.street ? `${machine.street}, ` : ""}
+                      {machine.postalCode} {machine.city}
+                    </address>,
+                  ],
+                  ["Horaires", fr(`Ouvert ${machine.hours.replace(" — ", ", ")}`)],
+                  ["Vente", "Validée en direct par caméra et interphone"],
+                  ["Paiement", machine.payment],
+                ].map(([term, value]) => (
+                  <div key={String(term)} className="grid grid-cols-[7rem_1fr] gap-x-4 border-t border-foreground/15 py-3 last:border-b">
+                    <dt className="text-foreground/65">{term}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="mt-8 flex flex-wrap gap-2.5">
+                {machine.mapsUrl && (
+                  <a href={machine.mapsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                    Itinéraire
+                  </a>
+                )}
+                <Link href={`/distributeurs#${machine.id}`} className="btn btn-ghost">
+                  Comment ça marche
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="wrap section grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-10">
+        <div className="lg:col-span-7">
+          <div className="panel sheet prose-cbd">
+            {c.body.map((para) => (
+              <p key={para}>{fr(para)}</p>
+            ))}
+            <p>
+              Tous nos produits respectent la réglementation française (THC &lt; 0,3 %), sont réservés aux adultes et accompagnés d'analyses de laboratoire. Consultez nos <Link href="/conseils-prudence">conseils de prudence</Link> avant utilisation.
+            </p>
+          </div>
         </div>
+        <HautDoubsMap focus={c.slug} className="lg:col-span-5" />
       </section>
 
       <section className="wrap">

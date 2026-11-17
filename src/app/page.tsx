@@ -13,11 +13,13 @@ import { AutoVideo } from "@/components/motion/AutoVideo";
 import { LiveTime } from "@/components/motion/ParisTime";
 import { WatchDial } from "@/components/home/WatchDial";
 import { GoldDust } from "@/components/motion/GoldDust";
+import { HautDoubsMap } from "@/components/content/HautDoubsMap";
 import { ForceGauge, type ForceOption } from "@/components/home/ForceGauge";
 import { Rosette } from "@/components/brand/Logo";
 import { itemListJsonLd, buildMetadata } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
-import { fr } from "@/lib/utils";
+import { shippingMethods, LOCAL_FREE_FROM_CENTS } from "@/lib/shipping";
+import { formatEUR, fr } from "@/lib/utils";
 
 export const metadata: Metadata = buildMetadata({
   title: "CBDoux — CBD premium du Haut-Doubs, livraison France 24/48 h",
@@ -67,6 +69,13 @@ const journey = [
   { when: "Le jour même", what: "Votre colis part" },
   { when: "Le lendemain", what: "Chronopost 24 h" },
   { when: "Sous 48 h", what: "Colissimo, offert dès 60 €" },
+];
+
+const localDelivery = shippingMethods.find((m) => m.id === "livraison-locale")!;
+const nearby = [
+  { t: "Distributeurs 24 h/24", d: "À Charquemont et au Russey, jour et nuit, paiement par carte." },
+  { t: "Retrait gratuit", d: "À Damprichard ou au Russey, sur rendez-vous convenu par WhatsApp." },
+  { t: "Livraison à domicile", d: `30 km autour du Russey, 10 km autour de Damprichard : ${formatEUR(localDelivery.priceCents)}, offerte dès ${formatEUR(LOCAL_FREE_FROM_CENTS)}.` },
 ];
 
 const orderSteps = [
@@ -128,7 +137,7 @@ export default function HomePage() {
             Fleurs, résines, huiles et vape analysés en laboratoire. Expédiés en 24/48&nbsp;h partout en France, ou servis jour et nuit par nos distributeurs du Haut-Doubs.
           </p>
           <div className="seq-in relative z-10 order-2 flex gap-2.5 sm:gap-3 lg:order-none lg:col-span-7 lg:row-start-3 lg:mt-9" style={i(4)}>
-            <Link href="/boutique" className="btn btn-primary max-sm:flex-1 max-sm:px-3 max-sm:text-[0.9063rem]">
+            <Link href="/boutique" className="btn btn-primary btn-shine max-sm:flex-1 max-sm:px-3 max-sm:text-[0.9063rem]">
               Voir la boutique
             </Link>
             <Link href="/distributeurs" className="btn btn-ghost max-sm:flex-[1.3] max-sm:whitespace-nowrap max-sm:px-3 max-sm:text-[0.9063rem]">
@@ -337,7 +346,7 @@ export default function HomePage() {
           </div>
 
           <div className="relative lg:col-span-5 lg:col-start-8 lg:pt-4">
-            <figure data-reveal="left" className="paper postcard relative z-[2] w-[47%] max-w-[15.5rem]" style={{ "--tilt": "-2.6deg" } as CSSProperties}>
+            <figure data-reveal="left" className="paper postcard relative z-[2] w-[47%] max-w-[15.5rem]" style={{ "--tilt": "-2.6deg", "--drift": "30px" } as CSSProperties}>
               <div className="overflow-hidden">
                 <Image src={charquemont.image} alt={charquemont.imageAlt} width={charquemont.imageSize[0]} height={charquemont.imageSize[1]} sizes="250px" className="block h-auto w-full" />
               </div>
@@ -346,7 +355,7 @@ export default function HomePage() {
                 <span className="text-[0.75rem] text-foreground/70">La cabine</span>
               </figcaption>
             </figure>
-            <figure data-reveal="right" className="paper postcard relative z-[1] -mt-[24%] ml-auto w-[80%] max-w-[27rem]" style={{ "--tilt": "1.5deg" } as CSSProperties}>
+            <figure data-reveal="right" className="paper postcard relative z-[1] -mt-[24%] ml-auto w-[80%] max-w-[27rem]" style={{ "--tilt": "1.5deg", "--drift": "8px" } as CSSProperties}>
               <div className="overflow-hidden">
                 <Image src={russey.image} alt={russey.imageAlt} width={russey.imageSize[0]} height={russey.imageSize[1]} sizes="(max-width: 1024px) 80vw, 430px" className="block h-auto w-full" />
               </div>
@@ -387,6 +396,25 @@ export default function HomePage() {
               </li>
             ))}
           </ol>
+
+          {/* Sur place : la carte du Haut-Doubs */}
+          <div className="mt-16 grid gap-10 border-t border-foreground/15 pt-12 sm:mt-24 sm:pt-16 lg:grid-cols-12 lg:items-center lg:gap-10">
+            <HautDoubsMap className="lg:col-span-5" />
+            <div className="lg:col-span-6 lg:col-start-7">
+              <h3 className="t-h3">Dans le Haut-Doubs, encore plus près.</h3>
+              <dl className="mt-7">
+                {nearby.map((n) => (
+                  <div key={n.t} className="grid gap-x-8 gap-y-1 border-t border-foreground/15 py-4 last:border-b sm:grid-cols-[13rem_1fr]">
+                    <dt className="font-medium">{n.t}</dt>
+                    <dd className="text-foreground/75">{fr(n.d)}</dd>
+                  </div>
+                ))}
+              </dl>
+              <Link href="/cbd" className="btn btn-ghost mt-8">
+                Trouver votre commune
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

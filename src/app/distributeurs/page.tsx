@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import { locations, site, vendingSupervision } from "@/data/site";
+import { HautDoubsMap } from "@/components/content/HautDoubsMap";
 import { PageHero } from "@/components/ui/PageHero";
 import { WatchDial } from "@/components/home/WatchDial";
 import { LiveTime } from "@/components/motion/ParisTime";
@@ -71,7 +72,7 @@ export default function DistributeursPage() {
         <section key={m.id} id={m.id} className={`${i % 2 ? "" : "nuit"} section scroll-mt-24`}>
           <div className="wrap grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-10">
             <div className={`relative lg:col-span-6 ${i % 2 ? "lg:order-2 lg:col-start-7" : ""}`}>
-              <figure className="paper postcard relative z-[1] mx-auto w-[88%] max-w-[30rem]" style={{ "--tilt": i % 2 ? "1.4deg" : "-1.4deg" } as CSSProperties}>
+              <figure className="paper postcard relative z-[1] mx-auto w-[88%] max-w-[30rem]" style={{ "--tilt": i % 2 ? "1.4deg" : "-1.4deg", "--drift": "8px" } as CSSProperties}>
                 <div className="overflow-hidden">
                   <Image src={m.image} alt={m.imageAlt} width={m.imageSize[0]} height={m.imageSize[1]} sizes="(max-width: 1024px) 88vw, 480px" className="block h-auto w-full" priority={i === 0} />
                 </div>
@@ -81,7 +82,7 @@ export default function DistributeursPage() {
                 </figcaption>
               </figure>
               {m.secondImage && (
-                <figure className="paper postcard relative z-[2] -mt-[22%] ml-auto mr-0 w-[52%] max-w-[17rem] sm:mr-4" style={{ "--tilt": "-2.2deg" } as CSSProperties}>
+                <figure className="paper postcard relative z-[2] -mt-[22%] ml-auto mr-0 w-[52%] max-w-[17rem] sm:mr-4" style={{ "--tilt": "-2.2deg", "--drift": "28px" } as CSSProperties}>
                   <div className="overflow-hidden">
                     <Image src={m.secondImage.src} alt={m.secondImage.alt} width={m.secondImage.size[0]} height={m.secondImage.size[1]} sizes="(max-width: 1024px) 52vw, 270px" className="block h-auto w-full" />
                   </div>
@@ -159,12 +160,13 @@ export default function DistributeursPage() {
       {/* Points de retrait */}
       <section className="wrap section">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-5">
             <h2 className="t-h2">Points de retrait et livraison locale</h2>
+            <HautDoubsMap className="mt-9" />
           </div>
-          <div className="lg:col-span-7 lg:col-start-6">
+          <div className="lg:col-span-6 lg:col-start-7 lg:pt-2">
             {locations.pickupPoints.map((pp) => (
-              <div key={pp.id} className="grid gap-x-8 gap-y-1 border-t border-foreground/15 py-5 sm:grid-cols-[15rem_1fr]">
+              <div key={pp.id} className="grid gap-x-8 gap-y-1 border-t border-foreground/15 py-5 sm:grid-cols-[15rem_1fr] lg:max-xl:grid-cols-1">
                 <h3 className="t-h3">{pp.name}</h3>
                 <p className="text-foreground/80 sm:pt-2">
                   <strong className="font-medium text-foreground">Retrait gratuit.</strong> {pp.description.replace("Retrait gratuit sur rendez-vous", "Sur rendez-vous")}

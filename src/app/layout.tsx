@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { AgeGate, AgeGateFlag } from "@/components/AgeGate";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { cartSuggestions } from "@/lib/suggestions";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { JsonLd } from "@/components/JsonLd";
 import { MotionRoot } from "@/components/motion/MotionRoot";
@@ -98,7 +99,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   // La gravure de la vérification d'âge est le plus grand élément du premier écran d'un nouveau visiteur : on la charge tôt.
-  preload("/images/brand/guilloche-rosace.svg", { as: "image" });
+  preload("/images/brand/guilloche-rosace.svg", { as: "image", fetchPriority: "high" });
   return (
     <html lang="fr" suppressHydrationWarning className={`${fraunces.variable} ${frauncesItalic.variable} ${hanken.variable} ${hankenItalic.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
@@ -116,7 +117,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <SiteFooter />
-        <CartDrawer />
+        <CartDrawer suggestions={cartSuggestions()} />
         <AgeGate />
         <WhatsAppFab />
       </body>

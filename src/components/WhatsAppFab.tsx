@@ -11,6 +11,11 @@ export function WhatsAppFab() {
   return (
     <a
       href={`${site.whatsapp}?text=${encodeURIComponent("Bonjour CBDoux, j'aimerais un conseil.")}`}
+      onClick={(e) => {
+        // Sur une fiche produit, le message nomme le produit regardé : la conversation démarre au bon endroit.
+        const topic = document.querySelector<HTMLElement>("[data-wa-topic]")?.dataset.waTopic;
+        e.currentTarget.href = `${site.whatsapp}?text=${encodeURIComponent(topic ? `Bonjour CBDoux, j'aimerais un conseil sur ${topic}.` : "Bonjour CBDoux, j'aimerais un conseil.")}`;
+      }}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Nous écrire sur WhatsApp"

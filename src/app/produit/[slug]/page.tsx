@@ -7,6 +7,9 @@ import { coas } from "@/data/coa";
 import { AddToCart } from "@/components/product/AddToCart";
 import { ProductCard } from "@/components/product/ProductCard";
 import { ProductMedia } from "@/components/product/ProductMedia";
+import { Reassurance } from "@/components/product/Reassurance";
+import { ShareButton } from "@/components/product/ShareButton";
+import { labelImage, photoSize } from "@/lib/etiquettes";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
@@ -64,14 +67,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           {/* Média */}
           <div className="lg:col-span-6">
             <div className="lg:sticky lg:top-28">
-              <ProductMedia product={p} />
-              <ul className="mt-5 grid grid-cols-2 text-[0.875rem] text-foreground/80">
-                {["THC inférieur à 0,3 %", "Expédié sous 24 h", "Colis neutre", "Paiement par lien sécurisé"].map((t, n) => (
-                  <li key={t} className={`border-t border-foreground/15 py-3 ${n % 2 ? "border-l pl-4" : "pr-4"} ${n >= 2 ? "border-b" : ""}`}>
-                    {t}
-                  </li>
-                ))}
-              </ul>
+              <ProductMedia product={p} src={labelImage(p.image)} natural={photoSize(p.image)} />
+              <Reassurance className="mt-5 hidden lg:grid" />
             </div>
           </div>
 
@@ -87,9 +84,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <h1 className="mt-4 font-serif text-[clamp(2.3rem,5.6vw,4rem)] font-light leading-[1] tracking-[-0.03em]">{p.name}</h1>
             <p className="t-lead mt-5">{fr(p.short)}</p>
 
-            <div className="mt-8">
+            <div className="mt-8" data-wa-topic={p.name}>
               <AddToCart product={p} availability={availability} />
             </div>
+            {/* Sur téléphone, les engagements viennent après le choix, pas entre la photo et le titre */}
+            <Reassurance className="mt-6 lg:hidden" />
 
             <dl className="mt-9">
               {[
@@ -102,6 +101,17 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   <dd className="text-[0.9688rem] leading-relaxed text-foreground/80">{fr(text)}</dd>
                 </div>
               ))}
+              {(p.category === "fleurs" || p.category === "resines") && (
+                <div className="grid gap-x-6 gap-y-1 border-t border-foreground/15 py-4 last:border-b sm:grid-cols-[7.5rem_1fr]">
+                  <dt className="font-medium">Conservation</dt>
+                  <dd className="text-[0.9688rem] leading-relaxed text-foreground/80">
+                    {fr("Dans son sachet hermétique d'origine, refermé après chaque utilisation, à l'abri de la lumière et autour de 20 °C.")}{" "}
+                    <Link href="/guides/conserver-fleurs-resines-cbd" className="link">
+                      Les bons gestes
+                    </Link>
+                  </dd>
+                </div>
+              )}
             </dl>
 
             {coa && (
@@ -114,6 +124,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 </span>
               </p>
             )}
+            <ShareButton title={`${p.name}, CBDoux`} text={p.short} className="share-link mt-6" />
           </div>
         </div>
       </section>

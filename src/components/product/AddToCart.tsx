@@ -69,6 +69,14 @@ export function AddToCart({ product, availability }: { product: Product; availab
   const strong = variant.force === 3 || variant.force === "maxi";
   const needsAck = strong && !ack;
   const perGram = variant.grams > 1 && /g$/.test(variant.format) ? variant.priceCents / variant.grams : null;
+  // Économie au gramme d'un grand format, par rapport au plus petit format de la même force (affichée dès 5 %).
+  const smallest = formats.filter((f) => /g$/.test(f.format)).sort((a, b) => a.grams - b.grams)[0];
+  const saving = (v: Variant) => {
+    if (!smallest || !/g$/.test(v.format) || v.grams <= smallest.grams) return 0;
+    const pct = Math.round((1 - v.priceCents / v.grams / (smallest.priceCents / smallest.grams)) * 100);
+    return pct >= 5 ? pct : 0;
+  };
+  const variantSaving = saving(variant);
 
   const onAdd = () => {
     if (!available || needsAck) return;
@@ -88,6 +96,11 @@ export function AddToCart({ product, availability }: { product: Product; availab
     );
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
+    try {
+      navigator.vibrate?.(12); // un léger tic sous le doigt, sur les téléphones qui le permettent
+    } catch {
+      /* ignore */
+    }
   };
 
   const fromCents = Math.min(...product.variants.map((v) => v.priceCents));
@@ -141,12 +154,19 @@ export function AddToCart({ product, availability }: { product: Product; availab
               const active = v.sku === sku;
               const ok = availability[v.sku] !== false;
               const pg = v.grams > 1 && /g$/.test(v.format) ? v.priceCents / v.grams : null;
+              const less = saving(v);
               return (
-                <button key={v.sku} type="button" role="radio" aria-checked={active} disabled={!ok} onClick={() => setSku(v.sku)} className="choice t-num px-3.5 py-3">
+                <button key={v.sku} type="button" role="radio" aria-checked={active} disabled={!ok} onClick={() => setSku(v.sku)} className="choice t-num relative px-3.5 py-3">
                   <span className="block font-medium">{v.format}</span>
                   <span className="block">{formatEUR(v.priceCents)}</span>
                   {pg !== null && <span className="block text-[0.75rem] opacity-70">{formatEUR(Math.round(pg))} le gramme</span>}
                   {!ok && <span className="block text-[0.75rem] opacity-70">Épuisé</span>}
+                  {less > 0 && (
+                    <span className="save-chip">
+                      <span aria-hidden>−{less}&nbsp;%</span>
+                      <span className="sr-only">, {less} % de moins au gramme</span>
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -187,8 +207,14 @@ export function AddToCart({ product, availability }: { product: Product; availab
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="t-fine">Total</p>
-            <p className="t-num mt-0.5 font-serif text-[2.25rem] font-light leading-none tracking-[-0.02em]">{formatEUR(variant.priceCents * qty)}</p>
-            {perGram !== null && <p className="t-fine t-num mt-1.5">soit {formatEUR(Math.round(perGram))} le gramme</p>}
+            <p key={variant.priceCents * qty} className="price-tick t-num mt-0.5 font-serif text-[2.25rem] font-light leading-none tracking-[-0.02em]">
+              {formatEUR(variant.priceCents * qty)}
+            </p>
+            {perGram !== null && (
+              <p className="t-fine t-num mt-1.5">
+                soit {formatEUR(Math.round(perGram))} le gramme{variantSaving > 0 && <>, {variantSaving}&nbsp;% de moins qu'au détail</>}
+              </p>
+            )}
           </div>
           <div className="inline-flex shrink-0 items-center rounded-full border border-foreground/35">
             <button type="button" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Diminuer la quantité" className="flex h-12 w-11 items-center justify-center">

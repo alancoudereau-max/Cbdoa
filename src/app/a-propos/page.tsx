@@ -58,14 +58,14 @@ export default function AboutPage() {
           </ol>
           <div className="lg:col-span-4 lg:col-start-9">
             <div className="lg:sticky lg:top-28">
-              <figure className="paper postcard mx-auto w-[78%] max-w-[19rem] lg:w-full" style={{ "--tilt": "1.8deg" } as CSSProperties}>
+              <figure className="paper postcard relative z-[2] mx-auto w-[78%] max-w-[19rem] lg:w-full" style={{ "--tilt": "1.8deg", "--drift": "26px" } as CSSProperties}>
                 <Image src={charquemont.image} alt={charquemont.imageAlt} width={charquemont.imageSize[0]} height={charquemont.imageSize[1]} sizes="(max-width: 1024px) 78vw, 300px" className="block h-auto w-full" />
                 <figcaption>
                   <span className="t-note text-[1.125rem] leading-tight">Charquemont</span>
                   <span className="text-[0.8125rem] text-foreground/70">La cabine</span>
                 </figcaption>
               </figure>
-              <figure className="paper postcard relative mx-auto -mt-10 w-[64%] max-w-[15rem] lg:ml-auto lg:mr-0 lg:w-[72%]" style={{ "--tilt": "-2.4deg" } as CSSProperties}>
+              <figure className="paper postcard relative z-[1] mx-auto -mt-12 w-[64%] max-w-[15rem] translate-x-[14%] lg:ml-auto lg:mr-0 lg:w-[72%] lg:translate-x-0" style={{ "--tilt": "-2.4deg", "--drift": "7px" } as CSSProperties}>
                 <Image src={russey.image} alt={russey.imageAlt} width={russey.imageSize[0]} height={russey.imageSize[1]} sizes="240px" className="block h-auto w-full" />
                 <figcaption>
                   <span className="t-note text-[1.125rem] leading-tight">Le Russey</span>

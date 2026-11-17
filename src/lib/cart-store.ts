@@ -21,6 +21,8 @@ type CartState = {
   isOpen: boolean;
   promoCode: string | null;
   hydrated: boolean;
+  /** Dernier article ajouté (non conservé) : le panier le met en évidence à l'ouverture. */
+  lastAdded: { sku: string; at: number } | null;
   add: (line: Omit<CartLine, "quantity">, quantity?: number) => void;
   remove: (sku: string) => void;
   setQuantity: (sku: string, quantity: number) => void;
@@ -39,6 +41,7 @@ export const useCart = create<CartState>()(
       isOpen: false,
       promoCode: null,
       hydrated: false,
+      lastAdded: null,
       add: (line, quantity = 1) =>
         set((state) => {
           const existing = state.lines.find((l) => l.sku === line.sku);
@@ -47,7 +50,7 @@ export const useCart = create<CartState>()(
                 l.sku === line.sku ? { ...l, quantity: Math.min(MAX_QTY_PER_LINE, l.quantity + quantity) } : l,
               )
             : [...state.lines, { ...line, quantity: Math.min(MAX_QTY_PER_LINE, quantity) }];
-          return { lines, isOpen: true };
+          return { lines, isOpen: true, lastAdded: { sku: line.sku, at: Date.now() } };
         }),
       remove: (sku) => set((state) => ({ lines: state.lines.filter((l) => l.sku !== sku) })),
       setQuantity: (sku, quantity) =>

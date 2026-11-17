@@ -10,6 +10,9 @@ sombres) sont laissées telles quelles. La liste des copies est écrite dans src
 le site s'en sert pour choisir la bonne image (src/lib/etiquettes.ts) et retombe sur la photo d'origine
 si la copie n'existe pas. Aucun effet de fusion n'est demandé au navigateur : l'image est déjà finie.
 
+Le script note aussi la taille de chaque photo dans src/data/photos.json : la fiche produit s'en sert pour
+savoir si la photo est assez grande pour être examinée à la loupe (src/components/product/ProductMedia.tsx).
+
 À relancer après avoir ajouté ou remplacé une photo dans public/images/products/.
 """
 import json
@@ -22,6 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "public" / "images" / "products"
 OUT = ROOT / "public" / "images" / "etiquettes"
 MANIFEST = ROOT / "src" / "data" / "etiquettes.json"
+PHOTOS = ROOT / "src" / "data" / "photos.json"
 PAPIER = np.array([233, 223, 198], dtype=np.float32)  # #e9dfc6, la zone photo de l'étiquette (globals.css)
 
 
@@ -37,8 +41,11 @@ def fond_blanc(a: np.ndarray) -> bool:
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     faits = []
+    tailles = {}
     for f in sorted(SRC.glob("*.jpg")):
-        a = np.asarray(Image.open(f).convert("RGB")).astype(np.float32)
+        photo = Image.open(f)
+        tailles[f.name] = list(photo.size)
+        a = np.asarray(photo.convert("RGB")).astype(np.float32)
         if not fond_blanc(a):
             print(f"  plein cadre, laissée telle quelle : {f.name}")
             continue
@@ -51,6 +58,7 @@ def main() -> None:
         if old.name not in faits:
             old.unlink()
     MANIFEST.write_text(json.dumps(faits, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    PHOTOS.write_text(json.dumps(tailles, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"{len(faits)} photo(s) sur papier, liste écrite dans {MANIFEST.relative_to(ROOT)}")
 
 

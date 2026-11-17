@@ -3,16 +3,27 @@
 import Link from "next/link";
 import Image from "next/image";
 import { labelImage } from "@/lib/etiquettes";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { X, Minus, Plus } from "lucide-react";
 import { useCart, cartSubtotalCents } from "@/lib/cart-store";
 import { FREE_SHIPPING_FROM_CENTS } from "@/lib/shipping";
 import { formatEUR, commas } from "@/lib/utils";
+import type { CartSuggestion } from "@/lib/suggestions";
 
-export function CartDrawer() {
-  const { lines, isOpen, setOpen, setQuantity, remove } = useCart();
+/** En dessous de ce reste à atteindre, le panier propose un petit format pour gagner le port offert. */
+const SUGGEST_WITHIN_CENTS = 1200;
+
+export function CartDrawer({ suggestions = [] }: { suggestions?: CartSuggestion[] }) {
+  const { lines, isOpen, setOpen, setQuantity, remove, add, lastAdded } = useCart();
+  const list = useRef<HTMLUListElement>(null);
   const subtotal = cartSubtotalCents(lines);
   const remaining = Math.max(0, FREE_SHIPPING_FROM_CENTS - subtotal);
+  // Deux idées au plus, parmi ce qui n'est pas déjà au panier : de préférence celles qui suffisent à elles seules
+  // (les moins chères d'abord), sinon les premières du catalogue.
+  const candidates = remaining > 0 && remaining <= SUGGEST_WITHIN_CENTS ? suggestions.filter((s) => !lines.some((l) => l.slug === s.slug)) : [];
+  const enough = candidates.filter((s) => s.unitPriceCents >= remaining).sort((x, y) => x.unitPriceCents - y.unitPriceCents);
+  const oneIsEnough = enough.length > 0;
+  const picks = (oneIsEnough ? enough : candidates).slice(0, 2);
   const progress = Math.min(100, Math.round((subtotal / FREE_SHIPPING_FROM_CENTS) * 100));
 
   useEffect(() => {
@@ -25,6 +36,19 @@ export function CartDrawer() {
       document.body.style.overflow = "";
     };
   }, [isOpen, setOpen]);
+
+  // L'article qu'on vient d'ajouter : amené à l'écran s'il est plus bas dans la liste, et souligné d'un reflet doré.
+  useEffect(() => {
+    if (!lastAdded) return;
+    const line = Array.from(list.current?.children ?? []).find((li) => (li as HTMLElement).dataset.sku === lastAdded.sku) as HTMLElement | undefined;
+    if (!line) return;
+    line.scrollIntoView({ block: "nearest" });
+    line.removeAttribute("data-fresh");
+    void line.offsetWidth; // relance l'animation si le même article est ajouté deux fois de suite
+    line.setAttribute("data-fresh", "");
+    const t = setTimeout(() => line.removeAttribute("data-fresh"), 2000);
+    return () => clearTimeout(t);
+  }, [lastAdded]);
 
   return (
     <div className={isOpen ? "fixed inset-0 z-[90]" : "pointer-events-none fixed inset-0 z-[90]"} aria-hidden={!isOpen}>
@@ -68,13 +92,36 @@ export function CartDrawer() {
                 )}
               </p>
               <div className="mt-2.5 h-[3px] overflow-hidden rounded-full bg-foreground/15" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label="Progression vers le port offert">
-                <div className="h-full rounded-full bg-foreground transition-[width] duration-700" style={{ width: `${progress}%` }} />
+                <div className={`h-full rounded-full transition-[width,background-color] duration-700 ${remaining > 0 ? "bg-foreground" : "bg-or"}`} style={{ width: `${progress}%` }} />
               </div>
+              {picks.length > 0 && (
+                <div className="mt-4">
+                  <p className="t-fine">{oneIsEnough ? "Un gramme de plus, et le port est offert :" : "Une idée pour vous en approcher :"}</p>
+                  <ul className="cart-ideas mt-2 grid gap-2">
+                    {picks.map((s) => (
+                      <li key={s.sku} className="flex items-center gap-3 rounded-[3px] border border-foreground/20 p-2">
+                        <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-[2px] bg-[#e9dfc6]">
+                          <Image src={labelImage(s.image)} alt="" fill sizes="44px" className="object-cover" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-[0.9375rem] font-medium leading-tight">{s.name}</span>
+                          <span className="t-num mt-0.5 block text-[0.8125rem] text-foreground/70">
+                            {s.format}, {formatEUR(s.unitPriceCents)}
+                          </span>
+                        </span>
+                        <button type="button" onClick={() => add(s)} aria-label={`Ajouter ${s.name}, ${s.format}, au panier`} className="btn btn-ghost btn-sm shrink-0" tabIndex={isOpen ? 0 : -1}>
+                          Ajouter
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
-            <ul className="flex-1 overflow-y-auto px-5 sm:px-6">
+            <ul ref={list} className="flex-1 overflow-y-auto px-5 sm:px-6">
               {lines.map((l) => (
-                <li key={l.sku} className="flex gap-4 border-t border-foreground/20 py-4">
+                <li key={l.sku} data-sku={l.sku} className="cart-line flex gap-4 border-t border-foreground/20 py-4">
                   <Link href={`/produit/${l.slug}`} onClick={() => setOpen(false)} className="relative h-[4.75rem] w-[4.75rem] shrink-0 overflow-hidden rounded-[3px] bg-[#e9dfc6]" tabIndex={isOpen ? 0 : -1}>
                     <Image src={labelImage(l.image)} alt={l.name} fill sizes="76px" className="object-cover" />
                   </Link>
