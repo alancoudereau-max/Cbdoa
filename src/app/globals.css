@@ -561,6 +561,8 @@
   .share-link { display: inline-flex; align-items: center; gap: 0.55rem; font-size: 0.9375rem; color: color-mix(in oklab, var(--color-foreground) 80%, transparent); transition: color 0.25s; }
   .share-link:hover { color: var(--color-gold-light); }
 
+  /* Panier : lien vers le panier détaillé, centré sous le bouton */
+  .drawer-detail { display: block; text-align: center; }
   /* Panier : sur un petit écran, une seule idée pour laisser la place aux articles */
   @media (max-height: 740px) { .cart-ideas > li + li { display: none; } }
   /* Panier : l'article qu'on vient d'ajouter s'éclaire un instant */
@@ -570,6 +572,8 @@
   /* Badge « Powered by Netlify » : tant que l'hébergeur l'affiche (cadre #nl-badge-frame, en bas à droite,
      64 px de haut), nos éléments se rangent autour de lui au lieu de passer dessous. Sans badge, rien ne change. */
   html:has(#nl-badge-frame) .wa-fab { translate: 0 -4.5rem; }
+  /* … et, dans le panier, le lien du bas se range à gauche du badge au lieu de passer dessous. */
+  html:has(#nl-badge-frame) .drawer-detail { text-align: left; max-width: calc(100% - 201px + 0.75rem); }
   @media (max-width: 1023px) {
     /* barre d'achat : le nom et le prix sur une ligne au-dessus du badge, le bouton à sa gauche */
     html:has(#nl-badge-frame) .buybar-row { flex-direction: column; align-items: flex-start; gap: 0.55rem; }

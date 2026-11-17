@@ -61,9 +61,12 @@ export function ProductMedia({ product: p, src, natural }: Props) {
     const { x, y, above } = point.current;
     const px = x * W;
     const py = y * H;
-    // Au doigt, la loupe se tient au-dessus du doigt (qui cacherait ce qu'on regarde) et ne déborde pas sur les côtés.
+    // Au doigt, la loupe se tient au-dessus du doigt (qui cacherait ce qu'on regarde), ne déborde pas sur les côtés
+    // et ne monte pas se glisser sous l'en-tête du site.
     const cx = above ? Math.min(W - d / 2, Math.max(d / 2, px)) : px;
-    const cy = above ? Math.max(-d * 0.42, py - d * 0.68) : py;
+    const header = document.querySelector(".site-header")?.getBoundingClientRect().bottom ?? 0;
+    const ceiling = Math.max(-d * 0.42, header + 10 - f.getBoundingClientRect().top + d / 2);
+    const cy = above ? Math.max(ceiling, py - d * 0.68) : py;
     l.style.translate = `${cx - d / 2}px ${cy - d / 2}px`;
     // Même cadrage que la photo (elle couvre le cadre, centrée), agrandi.
     const [nw, nh] = natural ?? [1, 1];

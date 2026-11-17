@@ -162,7 +162,7 @@ export function CartDrawer({ suggestions = [] }: { suggestions?: CartSuggestion[
               <Link href="/commande" onClick={() => setOpen(false)} className="btn btn-primary w-full" tabIndex={isOpen ? 0 : -1}>
                 Finaliser ma commande
               </Link>
-              <Link href="/panier" onClick={() => setOpen(false)} className="link block text-center text-[0.9375rem]" tabIndex={isOpen ? 0 : -1}>
+              <Link href="/panier" onClick={() => setOpen(false)} className="link drawer-detail text-[0.9375rem]" tabIndex={isOpen ? 0 : -1}>
                 Voir le panier détaillé
               </Link>
             </div>
