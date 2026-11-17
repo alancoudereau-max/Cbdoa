@@ -166,7 +166,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     </td>
                     <td className="whitespace-nowrap py-3 text-right font-medium">
                       {formatPrice(v.priceCents)}
-                      {v.grams > 1 && /g$/.test(v.format) && <span className="block text-[0.8125rem] font-normal text-foreground/65">{formatPrice(Math.round(v.priceCents / v.grams))} le gramme</span>}
+                      {v.grams > 1 && /g$/.test(v.format) && (
+                        <span className="block text-[0.8125rem] font-normal text-foreground/65">
+                          {formatPrice(Math.round(v.priceCents / v.grams))}
+                          {/* sur un très petit écran, l'unité s'abrège pour que le tableau tienne dans son cadre */}
+                          <span className="max-[359px]:hidden"> le gramme</span>
+                          <span className="hidden max-[359px]:inline">/g</span>
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))}

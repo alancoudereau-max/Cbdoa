@@ -13,6 +13,26 @@ import type { CartSuggestion } from "@/lib/suggestions";
 /** En dessous de ce reste à atteindre, le panier propose un petit format pour gagner le port offert. */
 const SUGGEST_WITHIN_CENTS = 1200;
 
+/** Une idée d'ajout : vignette, nom, format et prix, bouton « Ajouter ». */
+function Idea({ s, onAdd, focusable }: { s: CartSuggestion; onAdd: () => void; focusable: boolean }) {
+  return (
+    <li className="flex items-center gap-3 rounded-[3px] border border-foreground/20 p-2">
+      <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-[2px] bg-[#e9dfc6]">
+        <Image src={labelImage(s.image)} alt="" fill sizes="44px" className="object-cover" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[0.9375rem] font-medium leading-tight">{s.name}</span>
+        <span className="t-num mt-0.5 block text-[0.8125rem] text-foreground/70">
+          {s.format}, {formatEUR(s.unitPriceCents)}
+        </span>
+      </span>
+      <button type="button" onClick={onAdd} aria-label={`Ajouter ${s.name}, ${s.format}, au panier`} className="btn btn-ghost btn-sm shrink-0" tabIndex={focusable ? 0 : -1}>
+        Ajouter
+      </button>
+    </li>
+  );
+}
+
 export function CartDrawer({ suggestions = [] }: { suggestions?: CartSuggestion[] }) {
   const { lines, isOpen, setOpen, setQuantity, remove, add, lastAdded } = useCart();
   const list = useRef<HTMLUListElement>(null);
@@ -25,6 +45,8 @@ export function CartDrawer({ suggestions = [] }: { suggestions?: CartSuggestion[
   const oneIsEnough = enough.length > 0;
   const picks = (oneIsEnough ? enough : candidates).slice(0, 2);
   const progress = Math.min(100, Math.round((subtotal / FREE_SHIPPING_FROM_CENTS) * 100));
+  // Panier vide : les trois premiers petits formats du catalogue, pour ne pas laisser le panneau nu.
+  const starters = lines.length === 0 ? suggestions.slice(0, 3) : [];
 
   useEffect(() => {
     if (!isOpen) return;
@@ -71,12 +93,24 @@ export function CartDrawer({ suggestions = [] }: { suggestions?: CartSuggestion[
         <div aria-hidden className="rule-double" />
 
         {lines.length === 0 ? (
-          <div className="flex flex-1 flex-col items-start justify-center px-6 sm:px-8">
-            <p className="t-h3">Votre panier est vide.</p>
-            <p className="mt-3 text-foreground/75">Fleurs, résines, huiles, vape : découvrez la sélection CBDoux.</p>
-            <Link href="/boutique" onClick={() => setOpen(false)} className="btn btn-primary mt-7" tabIndex={isOpen ? 0 : -1}>
-              Voir la boutique
-            </Link>
+          <div className="flex flex-1 flex-col overflow-y-auto px-5 pb-6 sm:px-6">
+            <div className="flex flex-1 flex-col items-start justify-center py-10">
+              <p className="t-h3">Votre panier est vide.</p>
+              <p className="mt-3 text-foreground/75">Fleurs, résines, huiles, vape : découvrez la sélection CBDoux.</p>
+              <Link href="/boutique" onClick={() => setOpen(false)} className="btn btn-primary mt-7" tabIndex={isOpen ? 0 : -1}>
+                Voir la boutique
+              </Link>
+            </div>
+            {starters.length > 0 && (
+              <div className="border-t border-foreground/20 pt-5">
+                <p className="t-fine">Pour commencer, un gramme en force Classique :</p>
+                <ul className="cart-starters mt-2.5 grid gap-2">
+                  {starters.map((s) => (
+                    <Idea key={s.sku} s={s} onAdd={() => add(s)} focusable={isOpen} />
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         ) : (
           <>
@@ -91,28 +125,15 @@ export function CartDrawer({ suggestions = [] }: { suggestions?: CartSuggestion[
                   <strong>Port Colissimo offert.</strong>
                 )}
               </p>
-              <div className="mt-2.5 h-[3px] overflow-hidden rounded-full bg-foreground/15" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label="Progression vers le port offert">
-                <div className={`h-full rounded-full transition-[width,background-color] duration-700 ${remaining > 0 ? "bg-foreground" : "bg-or"}`} style={{ width: `${progress}%` }} />
+              <div className="jauge mt-3" data-full={remaining === 0} role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label="Progression vers le port offert">
+                <span style={{ width: `${progress}%` }} />
               </div>
               {picks.length > 0 && (
                 <div className="mt-4">
                   <p className="t-fine">{oneIsEnough ? "Un gramme de plus, et le port est offert :" : "Une idée pour vous en approcher :"}</p>
                   <ul className="cart-ideas mt-2 grid gap-2">
                     {picks.map((s) => (
-                      <li key={s.sku} className="flex items-center gap-3 rounded-[3px] border border-foreground/20 p-2">
-                        <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-[2px] bg-[#e9dfc6]">
-                          <Image src={labelImage(s.image)} alt="" fill sizes="44px" className="object-cover" />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-[0.9375rem] font-medium leading-tight">{s.name}</span>
-                          <span className="t-num mt-0.5 block text-[0.8125rem] text-foreground/70">
-                            {s.format}, {formatEUR(s.unitPriceCents)}
-                          </span>
-                        </span>
-                        <button type="button" onClick={() => add(s)} aria-label={`Ajouter ${s.name}, ${s.format}, au panier`} className="btn btn-ghost btn-sm shrink-0" tabIndex={isOpen ? 0 : -1}>
-                          Ajouter
-                        </button>
-                      </li>
+                      <Idea key={s.sku} s={s} onAdd={() => add(s)} focusable={isOpen} />
                     ))}
                   </ul>
                 </div>

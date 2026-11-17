@@ -199,7 +199,7 @@ p{{font:400 25px/1.35 Hanken,sans-serif;color:rgba(242,234,214,.82);margin:0}}
 </style><div class="g"></div><div class="verre"></div>
 <div class="rule" style="top:34px"></div><div class="rule" style="bottom:34px"></div>
 <div class="in">{logo_svg(L, "fine", ' class="logo"')}
-<h1>Du bon CBD.<br>À la bonne heure.</h1>
+<h1>Du CBD de qualité<br>à toute heure.</h1>
 <p>Fleurs, résines, huiles et vape analysés en laboratoire.<br>Livraison en France, distributeurs ouverts 24 h/24.</p></div>"""
 
 

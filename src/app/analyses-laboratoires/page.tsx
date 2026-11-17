@@ -25,7 +25,11 @@ export default function AnalysesPage() {
     <div>
       <PageHero
         crumbs={[{ name: "Analyses laboratoires", path: "/analyses-laboratoires" }]}
-        title="Analyses de laboratoire"
+        title={
+          <>
+            Analyses <em>de laboratoire</em>
+          </>
+        }
         lead="Chaque lot est analysé par un laboratoire indépendant. Taux de CBD, THC et méthode d'analyse sont consultables ci-dessous : touchez un rapport pour l'ouvrir en haute résolution."
       />
 

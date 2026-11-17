@@ -38,7 +38,11 @@ export default function AboutPage() {
     <div>
       <PageHero
         crumbs={[{ name: "À propos", path: "/a-propos" }]}
-        title="L'histoire de CBDoux"
+        title={
+          <>
+            L'histoire <em>de CBDoux</em>
+          </>
+        }
         lead="Une marque pensée pour celles et ceux qui veulent du CBD légal, premium, bien conservé et disponible sans compromis, dans le Haut-Doubs comme partout en France."
       />
 
@@ -48,7 +52,9 @@ export default function AboutPage() {
           <ol className="lg:col-span-7">
             {chapters.map((ch, n) => (
               <li key={ch.title} className="grid grid-cols-[2.75rem_1fr] gap-x-4 border-t border-foreground/15 py-8 last:border-b sm:grid-cols-[5rem_1fr]">
-                <span className="t-num font-serif text-[2rem] font-light leading-none text-or sm:text-[2.75rem]">{n + 1}</span>
+                <span aria-hidden className="step-num sm:h-[3.1rem] sm:w-[3.1rem] sm:text-[1.4375rem]">
+                  {n + 1}
+                </span>
                 <div>
                   <h2 className="t-h3">{ch.title}</h2>
                   <p className="mt-3.5 measure-wide text-foreground/80">{ch.body}</p>

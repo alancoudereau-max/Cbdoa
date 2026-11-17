@@ -27,7 +27,11 @@ export default function FaqPage() {
       <JsonLd data={faqJsonLd(all)} />
       <PageHero
         crumbs={[{ name: "FAQ", path: "/faq" }]}
-        title="Tout ce qu'il faut savoir"
+        title={
+          <>
+            Tout ce qu'il <em>faut savoir</em>
+          </>
+        }
         lead={
           <>
             Vous ne trouvez pas votre réponse ?{" "}

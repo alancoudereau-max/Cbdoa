@@ -15,7 +15,7 @@ import { fr } from "@/lib/utils";
 export const metadata: Metadata = buildMetadata({
   title: "Distributeur CBD 24h/24 : Charquemont & Le Russey",
   description:
-    "Deux distributeurs automatiques de CBD ouverts 24 h/24 dans le Doubs, à Charquemont et au Russey. Chaque vente est validée en direct par caméra et interphone.",
+    "Deux distributeurs automatiques de CBD ouverts 24 h/24 dans le Doubs, à Charquemont et au Russey. Chaque vente est validée en direct par caméra connectée.",
   path: "/distributeurs",
   image: "/images/distributeurs/le-russey-chalet.jpg",
   keywords: ["distributeur cbd", "distributeur automatique cbd", "distributeur cbd 24h", "distributeur cbd doubs", "cbd charquemont", "cbd le russey"],
@@ -24,15 +24,15 @@ export const metadata: Metadata = buildMetadata({
 const faq = [
   {
     q: "Comment fonctionne un distributeur automatique de CBD ?",
-    a: "Vous vous présentez devant la caméra du distributeur. Un membre de l'équipe vous répond par l'interphone, vérifie que vous êtes majeur, vous conseille si besoin, puis vous communique le code qui déverrouille l'achat. Vous choisissez votre produit, payez par carte bancaire et récupérez votre sachet.",
+    a: "Vous vous présentez devant la caméra connectée du distributeur. Un membre de l'équipe vous voit, vous répond par son haut-parleur intégré, vérifie que vous êtes majeur, vous conseille si besoin, puis vous communique le code qui déverrouille l'achat. Vous choisissez votre produit, payez par carte bancaire et récupérez votre sachet.",
   },
   {
     q: "Le distributeur est-il vraiment ouvert 24 h/24 ?",
-    a: "Oui, 7 j/7, jours fériés compris. La validation par caméra et interphone fonctionne de jour comme de nuit.",
+    a: "Oui, 7 j/7, jours fériés compris. La validation par caméra connectée fonctionne de jour comme de nuit.",
   },
   {
     q: "Un mineur peut-il acheter au distributeur ?",
-    a: "Non. La vente de CBD est interdite aux mineurs et la machine reste verrouillée tant qu'un membre de l'équipe n'a pas vérifié, par caméra, que le client est majeur : une pièce d'identité peut vous être demandée. Sans le code communiqué par l'interphone, aucune vente n'est possible.",
+    a: "Non. La vente de CBD est interdite aux mineurs et la machine reste verrouillée tant qu'un membre de l'équipe n'a pas vérifié, par caméra, que le client est majeur : une pièce d'identité peut vous être demandée. Sans le code que nous vous communiquons par le haut-parleur de la caméra, aucune vente n'est possible.",
   },
   { q: "Quels moyens de paiement sont acceptés ?", a: "La carte bancaire, sans contact ou avec code." },
   { q: "Les produits sont-ils les mêmes qu'en ligne ?", a: "Oui : mêmes lots, mêmes analyses de laboratoire. La sélection du distributeur est plus restreinte (références phares) et réassortie régulièrement." },
@@ -48,7 +48,11 @@ export default function DistributeursPage() {
 
       <PageHero
         crumbs={[{ name: "Distributeurs 24/7", path: "/distributeurs" }]}
-        title="Distributeurs de CBD ouverts 24 h/24, validés en direct"
+        title={
+          <>
+            Distributeurs de CBD ouverts 24 h/24, <em>validés en direct</em>
+          </>
+        }
         titleClassName="max-w-[15ch]"
         lead="Deux distributeurs automatiques CBDoux dans le Doubs, à Charquemont et au Russey. Vous êtes servi à toute heure, et jamais seul : chaque vente est validée en direct par un membre de l'équipe."
         guilloche={false}
@@ -58,9 +62,9 @@ export default function DistributeursPage() {
           </div>
         }
       >
-        <ul className="grid max-w-[40rem] text-[0.9688rem] sm:grid-cols-3">
-          {["Ouverts 24 h/24, 7 jours sur 7", "Caméra et interphone en direct", "Majorité vérifiée à chaque vente"].map((t, n) => (
-            <li key={t} className={`text-balance border-t border-foreground/15 py-3.5 sm:border-b sm:pr-4 ${n ? "sm:border-l sm:pl-4" : ""} ${n === 2 ? "border-b" : ""}`}>
+        <ul className="points grid max-w-[44rem] text-[0.9688rem] sm:grid-cols-3">
+          {["Ouverts 24 h/24, 7 jours sur 7", "Caméra connectée avec haut-parleur", "Majorité vérifiée à chaque vente"].map((t, n) => (
+            <li key={t} className={`text-balance border-t border-foreground/15 py-3.5 sm:border-b sm:pr-4 ${n ? "sm:border-l sm:pl-9 sm:before:left-4" : ""} ${n === 2 ? "border-b" : ""}`}>
               {t}
             </li>
           ))}
@@ -104,7 +108,7 @@ export default function DistributeursPage() {
                 {[
                   ["Adresse", <address key="a">{m.place}<br />{m.street ? `${m.street}, ` : ""}{m.postalCode} {m.city}</address>],
                   ["Horaires", `Ouvert ${m.hours.replace(" — ", ", ")}`],
-                  ["Vente", "Validée en direct par caméra et interphone"],
+                  ["Vente", "Validée en direct par caméra connectée"],
                   ["Paiement", m.payment],
                   ["Conservation", "À 20 °C, en sachets biphase"],
                   ["Assistance", <span key="p"><a href={`tel:${site.phoneE164}`} className="link t-num">{site.phoneDisplay}</a>, appel ou WhatsApp, 7 jours sur 7</span>],
@@ -147,8 +151,10 @@ export default function DistributeursPage() {
           <ol className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4">
             {vendingSupervision.steps.map((s, n) => (
               <li key={s.title} className={`border-t border-foreground/15 py-6 sm:pr-7 lg:border-b ${n ? "lg:border-l lg:pl-7" : ""} ${n % 2 ? "sm:border-l sm:pl-7" : ""}`}>
-                <p className="t-num font-serif text-[2.5rem] font-light leading-none text-or">{n + 1}</p>
-                <h3 className="t-title mt-4">{s.title}</h3>
+                <span aria-hidden className="step-num step-num-lg">
+                  {n + 1}
+                </span>
+                <h3 className="t-title mt-5">{s.title}</h3>
                 <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-foreground/75">{fr(s.text)}</p>
               </li>
             ))}
@@ -164,7 +170,7 @@ export default function DistributeursPage() {
             <h2 className="t-h2">Points de retrait et livraison locale</h2>
             <HautDoubsMap className="mt-9" />
           </div>
-          <div className="lg:col-span-6 lg:col-start-7 lg:pt-2">
+          <div className="lg:col-span-6 lg:col-start-7 lg:self-center">
             {locations.pickupPoints.map((pp) => (
               <div key={pp.id} className="grid gap-x-8 gap-y-1 border-t border-foreground/15 py-5 sm:grid-cols-[15rem_1fr] lg:max-xl:grid-cols-1">
                 <h3 className="t-h3">{pp.name}</h3>
@@ -191,7 +197,7 @@ export default function DistributeursPage() {
           <div className="lg:col-span-7 lg:col-start-6">
             <Faq items={faq} />
             <Link href="/boutique" className="btn btn-primary mt-10">
-              Commander en ligne, livré partout en France
+              Commander en ligne
             </Link>
           </div>
         </div>

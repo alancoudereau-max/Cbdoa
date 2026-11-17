@@ -29,7 +29,11 @@ export default function LivraisonPage() {
     <div>
       <PageHero
         crumbs={[{ name: "Livraison & retrait", path: "/livraison" }]}
-        title="Partout en France, en 24 à 48 h, en toute discrétion"
+        title={
+          <>
+            Partout en France, en 24 à 48 h, <em>en toute discrétion</em>
+          </>
+        }
         titleClassName="max-w-[17ch]"
         lead={fr(`Port Colissimo offert dès ${formatEUR(FREE_SHIPPING_FROM_CENTS)} d'achat. Et dans le Haut-Doubs : retrait gratuit, livraison à domicile par nos soins et distributeurs ouverts jour et nuit.`)}
       >
@@ -43,8 +47,10 @@ export default function LivraisonPage() {
         <ol className="wrap grid sm:grid-cols-2 lg:grid-cols-4">
           {steps.map(({ t, d }, n) => (
             <li key={t} className={`border-t border-foreground/15 py-6 sm:pr-7 lg:border-b ${n ? "lg:border-l lg:pl-7" : ""} ${n % 2 ? "sm:border-l sm:pl-7" : ""}`}>
-              <p className="t-num font-serif text-[2.5rem] font-light leading-none text-or">{n + 1}</p>
-              <h2 className="t-title mt-4">{t}</h2>
+              <span aria-hidden className="step-num step-num-lg">
+                  {n + 1}
+                </span>
+              <h2 className="t-title mt-5">{t}</h2>
               <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-foreground/75">{d}</p>
             </li>
           ))}

@@ -49,7 +49,7 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 
 ## Direction artistique
 
-« Noir, or et cadran » (troisième version, 17 novembre 2026) : l'ambiance noir et or voulue par Alan, avec la finition de la refonte précédente.
+« Noir, or et cadran » (troisième version, 17 novembre 2026, finitions reprises le même jour) : l'ambiance noir et or voulue par Alan, avec la finition de la refonte précédente.
 
 - **Fond noir, métal or.** Le vert de l'enseigne n'est qu'un accent : bandeau du haut, bandeau défilant, cadran de la montre, boutons posés sur papier.
 - **Le papier crème est réservé aux objets** : étiquettes produit, cartes postales des distributeurs, certificats d'analyse. Tout le reste (formulaires, textes longs, tableaux, récapitulatifs) vit sur des panneaux sombres liserés d'or (`.panel`).
@@ -62,6 +62,9 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 - **La carte du Haut-Doubs** (`src/components/content/HautDoubsMap.tsx`) : distributeurs, points de retrait et zone de livraison à domicile, dessinés à partir des coordonnées officielles des mairies. Elle figure sur l'accueil, la page livraison, la page distributeurs, « CBD près de chez vous » et chaque page de ville (la commune y est cerclée).
 - **Le défilement** : là où le navigateur le permet, les photos des rayons glissent dans leur cadre et les cartes postales se décalent pendant qu'on fait défiler la page (CSS seul, `animation-timeline`). Ailleurs, rien ne bouge et rien ne manque.
 - **Le panier** : l'article ajouté s'éclaire un instant ; quand il manque 12 € ou moins pour le port offert, le panier propose un gramme à ajouter d'un geste.
+- **Les finitions** (17 novembre 2026, vocabulaire d'horlogerie, tout est dans `globals.css`) : grain léger sur les fonds sombres (`--grain-dark`), graduation de cadran en haut des sections noires (`.minuterie`, posée d'office sur `main section.nuit`), fleuron entre deux sections de même fond (`<Fleuron />`, variante `motif="losange"` à côté du logo), coins gravés (`.coins`), panneaux à double filet (`.panel`), boutons d'or biseautés, médaillons numérotés pour les vraies étapes (`.steps`, `.step-num`), cadre imprimé et prix en caractères de titre sur les étiquettes produit, bon de bienvenue avec talon détachable et code à copier (`.ticket`, `<CopyCode />`), poinçon de la maison en pied de page (`<Poincon />`), jauge graduée du port offert (`.jauge`), lettrine dorée en tête des guides (`.prose-lettrine`), nombre de références en exposant dans le menu.
+- **Les titres de page** suivent la règle des titres de section : la fin de la phrase en italique doré (`<em>` dans le `title` de `<PageHero />`). Ne jamais mettre d'espace insécable dans cet `<em>` : le doré est un dégradé découpé sur le texte, tout ce qui dépasse de la boîte devient invisible.
+- **L'étiquette produit s'adapte à sa propre largeur** (requêtes de conteneur) : très étroite, l'unité s'abrège (« /g ») ; large, la force et le prix se font face ; entre les deux, ils sont l'un sous l'autre.
 
 | Besoin | Fichier |
 |---|---|
@@ -93,4 +96,4 @@ Métadonnées par page, canonical, Open Graph (image générée par produit), JS
 
 ## Conformité CBD
 
-Vérification d'âge 18+, bandeau et pages légales (LCEN, CGV, RGPD, cookies, rétractation), aucune allégation thérapeutique, THC < 0,3 %, conseils de prudence (page + PDF), case de prudence obligatoire pour les forces 3 et Maxi, huiles présentées à usage cutané (interdiction alimentaire du 15 mai 2026), analyses labo publiées.
+Vocabulaire des distributeurs : « caméra connectée avec haut-parleur intégré », jamais « interphone ». Vérification d'âge 18+, bandeau et pages légales (LCEN, CGV, RGPD, cookies, rétractation), aucune allégation thérapeutique, THC < 0,3 %, conseils de prudence (page + PDF), case de prudence obligatoire pour les forces 3 et Maxi, huiles présentées à usage cutané (interdiction alimentaire du 15 mai 2026), analyses labo publiées.

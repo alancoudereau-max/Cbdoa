@@ -28,7 +28,11 @@ export default function ConseilsPrudencePage() {
     <div className="print-area">
       <PageHero
         crumbs={[{ name: "Conseils & prudence", path: "/conseils-prudence" }]}
-        title="Conseils et prudence"
+        title={
+          <>
+            Conseils <em>et prudence</em>
+          </>
+        }
         lead="Nos produits CBD sont conçus pour des moments de détente. Pour en profiter sereinement, lisez attentivement les recommandations ci-dessous."
       >
         <div className="no-print flex flex-wrap gap-2.5">

@@ -716,7 +716,7 @@ export const guides: Guide[] = [
         blocks: [
           p("Notre premier distributeur automatique est installé à Charquemont, à la Station Lavage Central (rue de la Vierge), dans une ancienne cabine téléphonique entièrement rénovée. Un objet du quotidien transformé en point d'accès discret, ouvert 24 h/24 et 7 j/7, avec paiement par carte bancaire."),
           p("Un second distributeur est installé au Russey, à l'Hôtel du Commerce (15 place Dominique Parrenin), en face de la mairie. Même principe : accès simple, discret, à toute heure."),
-          p("Sur les deux machines, chaque vente est validée en direct : vous vous présentez devant la caméra, un membre de l'équipe vous répond par l'interphone, vérifie votre majorité et vous communique le code d'achat. De jour comme de nuit."),
+          p("Sur les deux machines, chaque vente est validée en direct : vous vous présentez devant la caméra connectée, un membre de l'équipe vous répond par son haut-parleur intégré, vérifie votre majorité et vous communique le code d'achat. De jour comme de nuit."),
         ],
       },
       {

@@ -30,7 +30,7 @@ export const cities: City[] = [
     description: "CBD à Charquemont (25140) : distributeur automatique CBDoux ouvert 24 h/24 rue de la Vierge, vente validée en direct, livraison à domicile. THC < 0,3 %.",
     intro: "Charquemont est le berceau de CBDoux : c'est ici, dans une ancienne cabine téléphonique rénovée installée à la Station Lavage Central, rue de la Vierge, qu'a ouvert notre premier distributeur automatique de CBD, accessible jour et nuit.",
     body: [
-      "Le distributeur de Charquemont propose nos références phares (fleurs, résines, huiles cutanées) conservées à 20 °C dans des sachets hermétiques biphase, avec paiement par carte bancaire. Chaque vente y est validée en direct, par caméra et interphone : un membre de l'équipe vérifie votre majorité et vous communique le code d'achat. Il fonctionne 24 h/24, 7 j/7, même les jours fériés — pratique après une journée de travail en Suisse voisine ou un week-end de randonnée sur le plateau.",
+      "Le distributeur de Charquemont propose nos références phares (fleurs, résines, huiles cutanées) conservées à 20 °C dans des sachets hermétiques biphase, avec paiement par carte bancaire. Chaque vente y est validée en direct, par caméra connectée avec haut-parleur intégré : un membre de l'équipe vérifie votre majorité et vous communique le code d'achat. Il fonctionne 24 h/24, 7 j/7, même les jours fériés — pratique après une journée de travail en Suisse voisine ou un week-end de randonnée sur le plateau.",
       "Vous préférez choisir tranquillement parmi les 18 références du catalogue ? Commandez en ligne et faites-vous livrer à domicile à Charquemont par nos soins (10 €, offert dès 100 €), ou retirez gratuitement votre commande à Damprichard ou au Russey, à quelques minutes.",
     ],
     faq: [
@@ -49,7 +49,7 @@ export const cities: City[] = [
     description: "CBD au Russey (25210) : distributeur automatique CBDoux 24 h/24 place Dominique Parrenin, face à la mairie, retrait gratuit et livraison à domicile.",
     intro: "Au Russey, CBDoux est au cœur du village : notre distributeur automatique est installé à l'Hôtel du Commerce, 15 place Dominique Parrenin, en face de la mairie, et le bourg est aussi l'un de nos deux points de retrait gratuit.",
     body: [
-      "Le distributeur du Russey fonctionne 24 h/24 et 7 j/7, avec paiement par carte. Chaque vente est validée en direct par caméra et interphone : un membre de l'équipe vérifie votre majorité et vous communique le code d'achat. Les produits y sont conservés à 20 °C en sachets hermétiques, exactement comme dans notre boutique en ligne. Idéal pour les habitants du plateau — Le Bélieu, Narbief, Bonnétage, Les Fontenelles, Noël-Cerneux — comme pour les frontaliers de passage.",
+      "Le distributeur du Russey fonctionne 24 h/24 et 7 j/7, avec paiement par carte. Chaque vente est validée en direct par caméra connectée avec haut-parleur intégré : un membre de l'équipe vérifie votre majorité et vous communique le code d'achat. Les produits y sont conservés à 20 °C en sachets hermétiques, exactement comme dans notre boutique en ligne. Idéal pour les habitants du plateau — Le Bélieu, Narbief, Bonnétage, Les Fontenelles, Noël-Cerneux — comme pour les frontaliers de passage.",
       "Le Russey est également le centre de notre zone de livraison à domicile : dans un rayon de 30 km, nous livrons nous-mêmes votre commande (10 €, offerte dès 100 €) sur un créneau convenu par WhatsApp. Et pour un retrait gratuit, choisissez simplement « Retrait — Le Russey » à la commande.",
     ],
     faq: [

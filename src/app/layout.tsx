@@ -2,12 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { preload } from "react-dom";
 import localFont from "next/font/local";
 import "./globals.css";
-import { site, SITE_URL } from "@/data/site";
+import { site, locations, SITE_URL } from "@/data/site";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { AgeGate, AgeGateFlag } from "@/components/AgeGate";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { cartSuggestions } from "@/lib/suggestions";
+import { visibleProducts, categories } from "@/data/products";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { JsonLd } from "@/components/JsonLd";
 import { MotionRoot } from "@/components/motion/MotionRoot";
@@ -100,6 +101,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   // La gravure de la vérification d'âge est le plus grand élément du premier écran d'un nouveau visiteur : on la charge tôt.
   preload("/images/brand/guilloche-rosace.svg", { as: "image", fetchPriority: "high" });
+  // Le menu indique, à côté de chaque rayon, combien de références il compte.
+  const menuCounts: Record<string, number> = { "/boutique": visibleProducts.length, "/distributeurs": locations.vendingMachines.length };
+  for (const [key, cat] of Object.entries(categories)) menuCounts[`/${cat.slug}`] = visibleProducts.filter((p) => p.category === key).length;
   return (
     <html lang="fr" suppressHydrationWarning className={`${fraunces.variable} ${frauncesItalic.variable} ${hanken.variable} ${hankenItalic.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
@@ -112,7 +116,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Aller au contenu
         </a>
-        <SiteHeader />
+        <SiteHeader counts={menuCounts} />
         <main id="contenu" className="flex-1">
           {children}
         </main>

@@ -19,7 +19,7 @@ export const homeFaq: FaqItem[] = [
   },
   {
     q: "Comment fonctionnent vos distributeurs automatiques ?",
-    a: "Nos deux distributeurs, à Charquemont et au Russey, sont ouverts 24 h/24. Chaque vente est validée en direct : vous vous présentez devant la caméra, un membre de l'équipe vérifie votre majorité par l'interphone, vous conseille si besoin, puis vous communique le code qui déverrouille l'achat. Paiement par carte bancaire.",
+    a: "Nos deux distributeurs, à Charquemont et au Russey, sont ouverts 24 h/24. Chaque vente est validée en direct : vous vous présentez devant la caméra connectée, un membre de l'équipe vous répond par son haut-parleur intégré, vérifie votre majorité, vous conseille si besoin, puis vous communique le code qui déverrouille l'achat. Paiement par carte bancaire.",
   },
   {
     q: "Que signifient les forces Classique, 2, 3 et Maxi ?",

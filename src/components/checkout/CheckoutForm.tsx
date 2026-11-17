@@ -420,8 +420,10 @@ export function CheckoutForm() {
 function Section({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
     <section className="mt-10 border-t border-foreground/25 pt-9 first:mt-0 first:border-t-0 first:pt-0">
-      <h2 className="mb-6 flex items-baseline gap-4">
-        <span className="t-num font-serif text-[1.75rem] font-light leading-none text-gold">{n}</span>
+      <h2 className="mb-6 flex items-center gap-4">
+        <span aria-hidden className="step-num">
+          {n}
+        </span>
         <span className="t-h3">{title}</span>
       </h2>
       {children}

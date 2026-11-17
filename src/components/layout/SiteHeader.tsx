@@ -18,7 +18,8 @@ const secondaryNav = [
 ];
 const primaryNav = [{ href: "/boutique", label: "Toute la boutique" }, ...mainNav.filter((l) => !["/boutique", "/livraison", "/guides"].includes(l.href))];
 
-export function SiteHeader() {
+/** `counts` : nombre de références par rayon (calculé côté serveur), affiché en exposant dans le menu plein écran. */
+export function SiteHeader({ counts = {} }: { counts?: Record<string, number> }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -143,9 +144,19 @@ export function SiteHeader() {
                   <Link
                     href={l.href}
                     aria-current={isActive(l.href) ? "page" : undefined}
-                    className="group flex items-baseline justify-between gap-4 py-3.5 font-serif font-light text-[clamp(1.85rem,8.4vw,3rem)] leading-[1.08] tracking-[-0.025em] aria-[current=page]:text-or"
+                    className="group flex items-baseline gap-2.5 py-3.5 font-serif font-light text-[clamp(1.85rem,8.4vw,3rem)] leading-[1.08] tracking-[-0.025em] aria-[current=page]:text-or"
                   >
                     <span className="softens">{l.label}</span>
+                    {counts[l.href] != null && (
+                      <>
+                        <span aria-hidden className="menu-count t-num">
+                          {counts[l.href]}
+                        </span>
+                        <span className="sr-only">
+                          , {counts[l.href]} {l.href === "/distributeurs" ? "distributeurs" : "références"}
+                        </span>
+                      </>
+                    )}
                   </Link>
                 </li>
               ))}

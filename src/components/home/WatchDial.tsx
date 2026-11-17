@@ -45,14 +45,14 @@ function Hand({ d, ridgeTo, id }: { d: string; ridgeTo: number; id: string }) {
 /**
  * La montre CBDoux : un cadran 12 heures original (rosace de la marque à midi, index appliqués, aiguilles
  * « feuille », guichet de date, guichet jour et nuit) qui donne l'heure exacte du Haut-Doubs. Le pays est
- * horloger, les distributeurs ne ferment jamais : « Du bon CBD. À la bonne heure. »
+ * horloger, les distributeurs ne ferment jamais : « Du CBD de qualité à toute heure. »
  *
  *  - Sans JavaScript, elle affiche 10 h 10, comme en vitrine. Une fois la page active, les aiguilles rejoignent
  *    l'heure réelle, puis la trotteuse tourne sans à-coup (animation gérée par la carte graphique).
  *  - Le guichet du bas montre le soleil le jour et la lune la nuit : les distributeurs sont ouverts sous les deux.
  *  - La lumière du cadran tourne quand on fait défiler la page ; sur ordinateur, la montre s'incline vers le pointeur.
  *  - Un clic ou un appui « remonte » la montre : les aiguilles font un tour et reviennent à l'heure.
- *  - Avec « réduire les animations », tout est immobile, à la bonne heure.
+ *  - Avec « réduire les animations », tout est immobile, à l'heure exacte.
  */
 export function WatchDial({ className, caption = true }: { className?: string; caption?: boolean }) {
   const now = useParisTime();

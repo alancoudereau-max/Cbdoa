@@ -6,6 +6,7 @@ import { getProduct } from "@/data/products";
 import { Blocks } from "@/components/content/Blocks";
 import { PageHero } from "@/components/ui/PageHero";
 import { Faq } from "@/components/ui/Faq";
+import { Fleuron } from "@/components/ui/Fleuron";
 import { ProductCard } from "@/components/product/ProductCard";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, articleJsonLd } from "@/lib/seo";
@@ -58,7 +59,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
             <ol className="mt-3 space-y-1.5 text-[0.9688rem]">
               {g.sections.map((s, i) => (
                 <li key={s.heading} className="grid grid-cols-[1.6rem_1fr]">
-                  <span className="t-num text-foreground/60">{i + 1}</span>
+                  <span className="t-num text-or/90">{i + 1}</span>
                   <a href={`#s${i + 1}`} className="link">
                     {fr(s.heading)}
                   </a>
@@ -67,7 +68,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
             </ol>
           </nav>
 
-          <div className="prose-cbd">
+          <div className="prose-cbd prose-lettrine">
             {g.sections.map((s, i) => (
               <section key={s.heading} id={`s${i + 1}`} className="scroll-mt-28">
                 <h2>{fr(s.heading)}</h2>
@@ -76,7 +77,8 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
             ))}
           </div>
 
-          <p className="t-fine mt-10 border-t border-foreground/25 pt-6">
+          <Fleuron className="mt-12" />
+          <p className="t-fine mt-8">
             Informations à caractère général, non médicales. Produits réservés aux adultes, THC &lt; 0,3 %. Ne pas conduire après usage. En cas de traitement médical, demandez l'avis d'un professionnel de santé.
           </p>
 

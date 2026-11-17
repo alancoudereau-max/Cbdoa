@@ -139,16 +139,17 @@ export const locations = {
 } as const;
 
 /**
- * Fonctionnement des distributeurs (confirmé par l'exploitant le 16/11/2026) : chaque vente est déverrouillée
- * à distance par un membre de l'équipe, qui voit le client par caméra, lui parle par l'interphone,
- * vérifie sa majorité puis lui communique le code d'achat — de jour comme de nuit.
+ * Fonctionnement des distributeurs (confirmé par l'exploitant le 16/11/2026, précisé le 17/11) : chaque vente est
+ * déverrouillée à distance par un membre de l'équipe, qui voit le client par une caméra connectée, lui parle par le
+ * haut-parleur intégré à cette caméra (ce n'est pas un interphone), vérifie sa majorité puis lui communique le code
+ * d'achat, de jour comme de nuit.
  */
 export const vendingSupervision = {
   title: "Chaque vente validée en direct",
-  short: "Caméra et interphone : un membre de l'équipe vérifie votre majorité et vous conseille avant de déverrouiller l'achat, de jour comme de nuit.",
+  short: "Caméra connectée avec haut-parleur intégré : un membre de l'équipe vous voit, vous répond, vérifie votre majorité et vous conseille avant de déverrouiller l'achat, de jour comme de nuit.",
   steps: [
     { title: "Présentez-vous devant la caméra", text: "Le distributeur nous prévient dès que vous êtes là, à toute heure." },
-    { title: "Nous vous répondons par l'interphone", text: "Un membre de l'équipe vérifie que vous êtes majeur (une pièce d'identité peut vous être demandée) et répond à vos questions." },
+    { title: "Nous vous répondons par le haut-parleur", text: "Un membre de l'équipe vérifie que vous êtes majeur (une pièce d'identité peut vous être demandée) et répond à vos questions." },
     { title: "Recevez votre code", text: "Nous vous communiquons le code qui déverrouille l'achat. Sans code, aucune vente n'est possible." },
     { title: "Payez par carte et récupérez votre sachet", text: "Paiement sans contact ou avec code, produit conservé à 20 °C en sachet hermétique." },
   ],

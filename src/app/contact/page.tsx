@@ -15,7 +15,11 @@ export default function ContactPage() {
     <div>
       <PageHero
         crumbs={[{ name: "Contact", path: "/contact" }]}
-        title="Contact et conseil"
+        title={
+          <>
+            Contact <em>et conseil</em>
+          </>
+        }
         lead="Une commande, un conseil sur une force, une livraison à organiser ? Écrivez-nous : nous répondons rapidement, 7 jours sur 7."
       />
 

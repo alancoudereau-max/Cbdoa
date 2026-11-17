@@ -19,7 +19,7 @@ export function WhatsAppFab() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Nous écrire sur WhatsApp"
-      className="wa-fab fixed bottom-4 right-4 z-40 inline-flex h-[3.25rem] w-[3.25rem] items-center justify-center rounded-full bg-[#1f8f55] text-white shadow-[0_14px_30px_-12px_rgba(3,14,10,0.9)] ring-1 ring-etiquette/25 transition-[transform,opacity,background-color] duration-300 hover:scale-105 hover:bg-[#18784a] sm:bottom-6 sm:right-6"
+      className="wa-fab fixed bottom-4 right-4 z-40 inline-flex h-[3.25rem] w-[3.25rem] items-center justify-center rounded-full text-white sm:bottom-6 sm:right-6"
     >
       <MessageCircle aria-hidden size={23} strokeWidth={1.6} />
     </a>

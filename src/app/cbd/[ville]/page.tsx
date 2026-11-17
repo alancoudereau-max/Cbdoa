@@ -52,7 +52,11 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
           { name: "CBD près de chez vous", path: "/cbd" },
           { name: c.name, path: `/cbd/${c.slug}` },
         ]}
-        title={`CBD ${inCity(c.name)}`}
+        title={
+          <>
+            CBD <em>{inCity(c.name)}</em>
+          </>
+        }
         lead={fr(c.intro)}
       >
         <p className="t-num text-[0.9688rem] text-foreground/75">
@@ -113,7 +117,7 @@ export default async function CityPage({ params }: { params: Promise<{ ville: st
                     </address>,
                   ],
                   ["Horaires", fr(`Ouvert ${machine.hours.replace(" — ", ", ")}`)],
-                  ["Vente", "Validée en direct par caméra et interphone"],
+                  ["Vente", "Validée en direct par caméra connectée"],
                   ["Paiement", machine.payment],
                 ].map(([term, value]) => (
                   <div key={String(term)} className="grid grid-cols-[7rem_1fr] gap-x-4 border-t border-foreground/15 py-3 last:border-b">

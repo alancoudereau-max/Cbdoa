@@ -21,7 +21,11 @@ export default async function NouveautesPage() {
           { name: "Boutique", path: "/boutique" },
           { name: "Nouveautés", path: "/nouveautes" },
         ]}
-        title="Les dernières arrivées"
+        title={
+          <>
+            Les dernières <em>arrivées</em>
+          </>
+        }
         lead="Nos références les plus récentes, sélectionnées et analysées comme toute la gamme."
       />
       <section className="wrap pb-24">

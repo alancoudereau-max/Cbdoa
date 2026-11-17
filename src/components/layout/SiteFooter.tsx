@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
+import { Poincon } from "@/components/brand/Poincon";
+import { Fleuron } from "@/components/ui/Fleuron";
 import { site, footerNav, company } from "@/data/site";
 
 const columns = [
@@ -11,15 +13,13 @@ const columns = [
 
 export function SiteFooter() {
   return (
-    <footer className="nuit relative overflow-hidden">
+    <footer className="nuit minuterie relative overflow-hidden">
       <div aria-hidden className="guilloche guilloche-rosace opacity-[0.1] w-[130vw] sm:w-[900px] -right-[60vw] sm:-right-72 -top-[30vw] sm:-top-64" />
 
-      <div className="relative wrap">
-        <div aria-hidden className="rule-double" />
-      </div>
       <div className="relative wrap pt-20 sm:pt-28">
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-5">
+            <Poincon className="mb-8 h-[5.75rem] w-[5.75rem] text-or sm:h-[6.5rem] sm:w-[6.5rem]" />
             <p className="t-h2">La douceur du Haut-Doubs.</p>
             <p className="mt-6 measure text-foreground/75">
               Du CBD choisi avec soin et analysé en laboratoire. Expédié partout en France en colis neutre, à retirer à Damprichard et au Russey, ou servi jour et nuit par nos distributeurs de Charquemont et du Russey.
@@ -37,11 +37,11 @@ export function SiteFooter() {
           <nav aria-label="Pied de page" className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4 lg:col-span-7 lg:pl-8">
             {columns.map((col) => (
               <div key={col.title}>
-                <h2 className="font-sans text-[0.9375rem] font-semibold tracking-normal text-or">{col.title}</h2>
+                <h2 className="foot-title">{col.title}</h2>
                 <ul className="mt-4 space-y-2.5 text-[0.9375rem]">
                   {col.links.map((l) => (
                     <li key={l.href}>
-                      <Link href={l.href} className="text-foreground/75 transition-colors hover:text-foreground">
+                      <Link href={l.href} className="foot-link">
                         {l.label}
                       </Link>
                     </li>
@@ -52,7 +52,8 @@ export function SiteFooter() {
           </nav>
         </div>
 
-        <div className="mt-16 border-t border-foreground/15 pt-8 grid gap-8 lg:grid-cols-12 lg:gap-10">
+        <Fleuron className="mt-16" />
+        <div className="mt-10 grid gap-8 lg:grid-cols-12 lg:gap-10">
           <p className="t-fine lg:col-span-7">
             <strong className="text-foreground/90">Avertissement.</strong> Produits réservés aux personnes majeures. Ils contiennent moins de 0,3 % de THC, conformément à la réglementation française. Ils ne sont pas des médicaments et ne sont destinés ni à diagnostiquer, ni à traiter, ni à prévenir une quelconque maladie. Déconseillés aux femmes enceintes ou allaitantes. Ne pas conduire après usage. Fleurs et résines destinées à la vaporisation, non à la combustion ni à un usage alimentaire. Huiles à usage cutané exclusivement.
           </p>

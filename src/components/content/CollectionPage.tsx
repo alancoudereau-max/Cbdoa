@@ -33,7 +33,12 @@ export function CollectionPage({ slug }: { slug: CollectionSlug }) {
           { name: "Boutique", path: "/boutique" },
           { name: c.name, path: `/${c.slug}` },
         ]}
-        title={`${c.h1}, ${c.h1Italic}`}
+        title={
+          <>
+            {`${c.h1}, `}
+            <em>{c.h1Italic}</em>
+          </>
+        }
         titleClassName="max-w-[20ch]"
         lead={fr(c.intro)}
       />

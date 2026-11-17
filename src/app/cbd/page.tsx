@@ -29,7 +29,11 @@ export default function CbdIndexPage() {
     <div>
       <PageHero
         crumbs={[{ name: "CBD près de chez vous", path: "/cbd" }]}
-        title="Du CBD premium, près de chez vous"
+        title={
+          <>
+            Du CBD premium, <em>près de chez vous</em>
+          </>
+        }
         lead="Distributeurs ouverts jour et nuit, retrait gratuit, livraison à domicile dans le Haut-Doubs et expédition partout en France en 24/48 h."
       />
       <section className="wrap grid gap-12 pb-24 lg:grid-cols-12 lg:gap-10">

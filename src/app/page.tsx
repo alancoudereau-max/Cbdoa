@@ -7,7 +7,10 @@ import { categories, categoryOrder, featuredProducts, visibleProducts, getProduc
 import { homeFaq } from "@/data/faq";
 import { guides } from "@/data/guides";
 import { ProductCard } from "@/components/product/ProductCard";
+import { GuideRows } from "@/components/content/GuideRows";
 import { Faq } from "@/components/ui/Faq";
+import { Fleuron } from "@/components/ui/Fleuron";
+import { CopyCode } from "@/components/ui/CopyCode";
 import { JsonLd } from "@/components/JsonLd";
 import { AutoVideo } from "@/components/motion/AutoVideo";
 import { LiveTime } from "@/components/motion/ParisTime";
@@ -108,25 +111,18 @@ export default function HomePage() {
         <div className="relative wrap grid gap-y-7 pb-14 pt-8 sm:pt-12 lg:min-h-[min(52rem,calc(100svh-7.25rem))] lg:grid-cols-12 lg:content-center lg:gap-x-10 lg:gap-y-0 lg:pb-20 lg:pt-12">
           <h1 className="t-hero relative z-10 lg:col-span-7 lg:row-start-1">
             <span className="seq-line">
-              <span style={i(0)}>Du bon CBD.</span>
+              <span style={i(0)}>Du CBD</span>
+            </span>{" "}
+            <span className="seq-line">
+              <span style={i(1)}>de qualité</span>
             </span>{" "}
             <em className="block">
               <span className="seq-line">
-                <span style={i(1)}>
-                  <span className="gold-text">
-                    À la bonne
-                    <span aria-hidden className="gold-sheen">
-                      <span data-text="À la bonne" />
-                    </span>
-                  </span>
-                </span>
-              </span>{" "}
-              <span className="seq-line">
                 <span style={i(2)}>
                   <span className="gold-text">
-                    heure.
+                    à toute heure.
                     <span aria-hidden className="gold-sheen">
-                      <span data-text="heure." />
+                      <span data-text="à toute heure." />
                     </span>
                   </span>
                 </span>
@@ -153,6 +149,7 @@ export default function HomePage() {
           <ul className="wrap grid grid-cols-2 lg:grid-cols-4">
             {stats.map((st, n) => (
               <li key={st.label} className={`py-7 pr-4 sm:py-9 ${n % 2 ? "border-l border-foreground/15 pl-4 sm:pl-7" : ""} ${n >= 2 ? "border-t border-foreground/15 lg:border-t-0" : ""} ${n === 2 ? "lg:border-l lg:pl-7" : ""}`}>
+                <span aria-hidden className="stat-index" />
                 <p className="stat-num">
                   {st.before}
                   {st.count !== null && <span data-count={st.count}>{st.count}</span>}
@@ -187,13 +184,13 @@ export default function HomePage() {
       </div>
 
       {/* ───────────── Les rayons ───────────── */}
-      <section className="nuit section">
+      <section className="nuit section minuterie">
         <div className="wrap">
           <div className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-10">
             <h2 className="t-h2 lg:col-span-7">
               Peu de références, <em>toutes choisies.</em>
             </h2>
-            <p className="t-lead lg:col-span-5">Chaque variété est sélectionnée, vérifiée et analysée avant d'entrer au catalogue. Quatre rayons, une seule exigence.</p>
+            <p className="t-lead lg:col-span-5">{fr("Fleurs, résines, huiles et vape. Avant d'entrer au catalogue, chaque variété est choisie par nos soins, puis analysée en laboratoire : son taux de THC reste sous 0,3 %.")}</p>
           </div>
 
           <ul className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:gap-5 lg:grid-cols-4">
@@ -202,7 +199,7 @@ export default function HomePage() {
               const count = getProductsByCategory(key).length;
               return (
                 <li key={key} data-reveal="scale" className={tileLayout[n]}>
-                  <Link href={`/${c.slug}`} className="tile group h-full w-full">
+                  <Link href={`/${c.slug}`} className="tile coins group h-full w-full">
                     <Image src={c.image} alt="" fill sizes={n === 0 || n === 3 ? "(max-width: 1024px) 100vw, 660px" : "(max-width: 1024px) 50vw, 330px"} />
                     <span className="tile-body">
                       <span className={`softens block font-serif font-light leading-[1] tracking-[-0.03em] ${n === 0 ? "text-[clamp(2.4rem,9vw,4.75rem)]" : "text-[clamp(1.5rem,5.4vw,2.6rem)]"}`}>{c.name}</span>
@@ -285,7 +282,8 @@ export default function HomePage() {
       </section>
 
       {/* ───────────── Les forces ───────────── */}
-      <section className="section border-t border-foreground/15">
+      <Fleuron className="wrap" />
+      <section className="section">
         <div className="wrap grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-10">
           <div className="lg:col-span-5">
             <h2 className="t-h2">
@@ -306,7 +304,7 @@ export default function HomePage() {
       </section>
 
       {/* ───────────── Jour et nuit : les distributeurs ───────────── */}
-      <section className="nuit section relative overflow-hidden">
+      <section className="nuit section minuterie relative overflow-hidden">
         <div aria-hidden className="guilloche guilloche-orge spin-slow opacity-[0.16] w-[150vw] sm:w-[1100px] -left-[80vw] sm:-left-[620px] -bottom-[70vw] sm:-bottom-[560px]" />
         <div className="relative wrap grid gap-14 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-6">
@@ -329,13 +327,15 @@ export default function HomePage() {
               <LiveTime template="Il est {heure} dans le Haut-Doubs : les deux sont ouverts." fallback="Ouverts 24 h/24, 7 jours sur 7." />
             </p>
 
-            <ol className="mt-10">
+            <ol className="steps mt-10">
               {vendingSupervision.steps.map((s, n) => (
-                <li key={s.title} className="grid grid-cols-[2.25rem_1fr] gap-x-3 border-t border-foreground/15 py-4 last:border-b sm:grid-cols-[3rem_1fr]">
-                  <span className="t-num font-serif text-[1.375rem] font-light leading-[1.15] text-or">{n + 1}</span>
+                <li key={s.title}>
+                  <span aria-hidden className="step-num">
+                    {n + 1}
+                  </span>
                   <span>
-                    <span className="block font-medium leading-snug">{s.title}</span>
-                    <span className="t-fine mt-1 block">{fr(s.text)}</span>
+                    <span className="step-title">{s.title}</span>
+                    <span className="step-text">{fr(s.text)}</span>
                   </span>
                 </li>
               ))}
@@ -390,7 +390,7 @@ export default function HomePage() {
             </svg>
             {journey.map((j) => (
               <li key={j.when} className="relative pl-8 sm:pl-0 sm:pt-9">
-                <span aria-hidden className="absolute left-0 top-[0.35rem] h-[0.85rem] w-[0.85rem] rounded-full border border-or bg-noir shadow-[0_0_0_4px_rgb(215_181_101/0.12)] sm:top-0" />
+                <span aria-hidden className="journey-node absolute left-[-0.1rem] top-[0.25rem] sm:left-0 sm:top-[-0.1rem]" />
                 <p className="t-h3">{j.when}</p>
                 <p className="mt-1.5 text-foreground/75">{j.what}</p>
               </li>
@@ -419,20 +419,23 @@ export default function HomePage() {
       </section>
 
       {/* ───────────── Commander par WhatsApp ───────────── */}
-      <section className="section border-t border-foreground/15">
+      <Fleuron className="wrap" />
+      <section className="section">
         <div className="wrap grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-10">
           <div className="lg:col-span-6">
             <h2 className="t-h2">
               Trois étapes, <em>un seul interlocuteur.</em>
             </h2>
             <p className="t-lead mt-6 measure">Pas de formulaire de paiement à rallonge : vous validez votre panier, nous nous occupons du reste avec vous, sur WhatsApp.</p>
-            <ol className="mt-10">
+            <ol className="steps mt-10">
               {orderSteps.map((s, n) => (
-                <li key={s.t} className="grid grid-cols-[2.25rem_1fr] gap-x-3 border-t border-foreground/15 py-5 last:border-b sm:grid-cols-[3rem_1fr]">
-                  <span className="t-num font-serif text-[1.375rem] font-light leading-[1.15] text-or">{n + 1}</span>
+                <li key={s.t}>
+                  <span aria-hidden className="step-num">
+                    {n + 1}
+                  </span>
                   <span>
-                    <span className="t-title block">{s.t}</span>
-                    <span className="mt-1.5 block text-[0.9688rem] text-foreground/75">{s.d}</span>
+                    <span className="step-title">{s.t}</span>
+                    <span className="step-text">{s.d}</span>
                   </span>
                 </li>
               ))}
@@ -471,20 +474,23 @@ export default function HomePage() {
       {/* ───────────── Le bon de bienvenue ───────────── */}
       <section className="section-tight pt-0">
         <div className="wrap">
-          <div data-reveal="scale" className="ticket grid gap-8 px-8 py-10 sm:px-14 sm:py-12 lg:grid-cols-12 lg:items-center lg:gap-10">
-            <div className="lg:col-span-4">
-              <p className="font-medium">Bon de bienvenue</p>
-              <p className="t-num mt-2 font-serif text-[clamp(5rem,13vw,9rem)] font-light leading-[0.85] tracking-[-0.045em]" style={{ fontVariationSettings: '"SOFT" 100' }}>
-                10&nbsp;€
-              </p>
+          <div data-reveal="scale" className="ticket">
+            <span aria-hidden className="ticket-gravure" />
+            <div className="ticket-main">
+              <div>
+                <p className="font-medium">Bon de bienvenue</p>
+                <p className="t-num mt-2 font-serif text-[clamp(5rem,13vw,9rem)] font-light leading-[0.85] tracking-[-0.045em]" style={{ fontVariationSettings: '"SOFT" 100' }}>
+                  10&nbsp;€
+                </p>
+              </div>
+              <div>
+                <p className="t-h3">Offerts sur votre première commande, dès 100&nbsp;€ d'achat.</p>
+                <p className="mt-4 text-foreground/80">À saisir dans le panier. Cumulable avec le port offert dès 60&nbsp;€.</p>
+              </div>
             </div>
-            <div className="lg:col-span-5">
-              <p className="t-h3">Offerts sur votre première commande, dès 100&nbsp;€ d'achat.</p>
-              <p className="mt-4 text-foreground/80">À saisir dans le panier. Cumulable avec le port offert dès 60&nbsp;€.</p>
-            </div>
-            <div className="lg:col-span-3 lg:border-l lg:border-dashed lg:border-foreground/35 lg:pl-10">
+            <div className="ticket-stub">
               <p className="t-fine">Votre code</p>
-              <p className="mt-1 text-[1.375rem] font-semibold tracking-[0.08em]">BIENVENUE10</p>
+              <CopyCode code="BIENVENUE10" className="mt-2" />
               <Link href="/boutique" className="btn btn-primary mt-5 w-full">
                 Choisir mes produits
               </Link>
@@ -494,29 +500,19 @@ export default function HomePage() {
       </section>
 
       {/* ───────────── À lire : guides et questions ───────────── */}
-      <section className="section border-t border-foreground/15">
+      <Fleuron className="wrap" />
+      <section className="section">
         <div className="wrap grid gap-10 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-4">
+          {/* la colonne du titre est assez large pour que « avant de choisir. » tienne sur une ligne ; sinon il passe à la ligne, jamais hors cadre */}
+          <div className="lg:col-span-5">
             <h2 className="t-h2">
-              Comprendre <em>avant de choisir.</em>
+              Comprendre <em>avant de choisir.</em>
             </h2>
             <Link href="/guides" className="link mt-6 inline-block">
               Tous les guides
             </Link>
           </div>
-          <ul className="lg:col-span-7 lg:col-start-6">
-            {latestGuides.map((g) => (
-              <li key={g.slug} data-reveal="up" className="border-t border-foreground/15 last:border-b">
-                <Link href={`/guides/${g.slug}`} className="group block py-6">
-                  <p className="t-fine">
-                    {g.category}, {g.readingMinutes} min de lecture
-                  </p>
-                  <h3 className="softens t-h3 mt-2">{fr(g.title)}</h3>
-                  <p className="mt-2.5 measure-wide text-[0.9688rem] text-foreground/80 line-clamp-2">{fr(g.description)}</p>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <GuideRows guides={latestGuides} className="lg:col-span-7 lg:col-start-6" />
         </div>
 
         <div className="wrap mt-24 grid gap-10 sm:mt-32 lg:grid-cols-12 lg:gap-10">
@@ -535,7 +531,7 @@ export default function HomePage() {
       </section>
 
       {/* ───────────── Nous écrire ───────────── */}
-      <section className="nuit section relative overflow-hidden">
+      <section className="nuit section minuterie relative overflow-hidden">
         <div aria-hidden className="glow glow-soft" />
         <div aria-hidden className="guilloche guilloche-rosace opacity-[0.14] w-[140vw] sm:w-[980px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
         <div className="relative wrap text-center">

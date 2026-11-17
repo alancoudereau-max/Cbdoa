@@ -17,6 +17,25 @@ function labelName(name: string): string {
   return /^résines?$/i.test(suffix) ? main : `${main} ${suffix}`;
 }
 
+/** Prix d'appel : « dès » et « /g » en petit, le montant en caractères de titre, comme sur une étiquette de prix. */
+function PriceLabel({ label }: { label: string }) {
+  const m = label.match(/^(dès\s+)?(.+?)(\s*\/\s*g)?$/);
+  const [, from, amount, perGram] = m ?? [null, "", label, ""];
+  return (
+    <p className="etiquette-prix t-num">
+      {from && <span className="etiquette-prix-mot">dès</span>}
+      <span className="etiquette-prix-montant">{amount}</span>
+      {/* l'unité en toutes lettres, ou abrégée quand l'étiquette est très étroite (voir globals.css) */}
+      {perGram && (
+        <>
+          <span className="etiquette-prix-mot etiquette-unite">le gramme</span>
+          <span className="etiquette-prix-mot etiquette-unite-courte">/g</span>
+        </>
+      )}
+    </p>
+  );
+}
+
 /**
  * Carte produit en forme d'étiquette : papier crème, photo fondue dans le papier,
  * double filet doré, nom, origine, force et prix d'appel — comme sur le flacon.
@@ -48,18 +67,19 @@ export function ProductCard({
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className={cn("object-cover", !available && "opacity-60 grayscale")}
         />
-        <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2.5 sm:p-3">
-          {!available ? <span className="pastille bg-sapin text-etiquette">Épuisé</span> : p.badge ? <span className="pastille">{p.badge}</span> : <span />}
-          {p.video && <span className="pastille bg-etiquette/90 text-sapin font-medium">Vidéo</span>}
+        <div className="absolute inset-x-0 top-0 z-[2] flex items-start justify-between gap-2 p-3 sm:p-3.5">
+          {!available ? <span className="pastille pastille-sapin">Épuisé</span> : p.badge ? <span className="pastille">{p.badge}</span> : <span />}
+          {p.video && <span className="pastille pastille-papier">Vidéo</span>}
         </div>
       </div>
       <div aria-hidden className="rule-double" />
       <div className="flex flex-1 flex-col px-3.5 pb-3.5 pt-3 sm:px-5 sm:pb-5 sm:pt-4">
         <Heading className="softens font-serif text-[1.1875rem] font-normal leading-[1.14] tracking-[-0.012em] sm:text-[1.4rem]">{labelName(p.name)}</Heading>
         <p className="mt-1.5 text-[0.8125rem] leading-snug text-foreground/70">{commas(p.origin ?? categories[p.category].name)}</p>
-        <div className="mt-auto flex flex-wrap items-end justify-between gap-x-3 gap-y-1.5 pt-4 sm:pt-5">
+        {/* Force et prix : l'un sous l'autre sur une étiquette étroite, face à face dès que l'étiquette elle-même est assez large */}
+        <div className="etiquette-pied mt-auto">
           <ForceBadge force={maxForce(p)} />
-          <p className="t-num whitespace-nowrap text-[0.9375rem] font-semibold">{startingPriceLabel(p)}</p>
+          <PriceLabel label={startingPriceLabel(p)} />
         </div>
       </div>
     </article>

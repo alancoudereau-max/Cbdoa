@@ -1,4 +1,5 @@
 import { Logo } from "@/components/brand/Logo";
+import { Fleuron } from "@/components/ui/Fleuron";
 
 const KEY = "cbdoux-age-ok";
 const TTL_DAYS = 30;
@@ -41,9 +42,10 @@ export function AgeGate() {
     <>
       <div id="gate" role="dialog" aria-modal="true" aria-labelledby="agegate-title" className="gate bg-noir" data-nosnippet="" suppressHydrationWarning>
         <div aria-hidden className="guilloche guilloche-rosace spin-slow opacity-[0.16] left-1/2 top-[46%] w-[170vmin] max-w-[1150px] -translate-x-1/2 -translate-y-1/2" />
+        <div aria-hidden className="gate-cadre coins" />
         <div className="relative mx-auto flex min-h-full max-w-xl flex-col items-center justify-center px-6 py-14 text-center">
           <Logo weight="fine" className="h-12 sm:h-14" />
-          <div aria-hidden className="rule-double mt-7 w-24" />
+          <Fleuron motif="losange" className="mt-7 w-full max-w-[15rem]" />
 
           <div className="gate-ask">
             <p id="agegate-title" className="gate-title t-h2 mt-9">
