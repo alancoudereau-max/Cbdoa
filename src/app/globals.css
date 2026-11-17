@@ -508,6 +508,7 @@
   .carte-legende { display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; margin-top: 0.95rem; padding-left: 3px; font-size: 0.8438rem; color: rgb(242 234 214 / 0.82); }
   .carte-legende > span { display: inline-flex; align-items: center; gap: 0.55rem; }
   .carte-legende .carte-point { flex: none; }
+  .carte-legende > .carte-note { display: block; flex-basis: 100%; font-size: 0.75rem; line-height: 1.45; color: rgb(242 234 214 / 0.62); }
   .carte-trait { display: block; flex: none; width: 1.5rem; height: 0; border-top: 1.5px dashed #ecd9a0; }
 
   /* À l'arrivée de la carte : la zone de livraison s'étend depuis son centre, les communes se posent une à une */

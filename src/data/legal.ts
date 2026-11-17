@@ -48,7 +48,7 @@ export const legalDocs: LegalDoc[] = [
     slug: "mentions-legales",
     title: "Mentions légales",
     description: `Mentions légales du site ${site.url} édité par ${company.legalName} : éditeur, hébergeur, propriété intellectuelle, produits CBD.`,
-    updatedAt: "2026-11-16",
+    updatedAt: "2026-11-17",
     intro: "Conformément à l'article 6-III de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN), vous trouverez ci-dessous les informations relatives à l'éditeur et à l'hébergeur du site.",
     sections: [
       {
@@ -80,6 +80,7 @@ export const legalDocs: LegalDoc[] = [
         heading: "Propriété intellectuelle",
         blocks: [
           p(`L'ensemble des éléments du Site (textes, photographies, vidéos, logos, nom commercial ${site.name}, charte graphique, code) est protégé par le droit de la propriété intellectuelle et demeure la propriété exclusive de ${company.legalName} ou de ses partenaires. Toute reproduction, représentation, modification ou exploitation, totale ou partielle, sans autorisation écrite préalable est interdite.`),
+          p("Crédits de la carte du Haut-Doubs : contour du département d'après les données de l'IGN (via le projet france-geojson), positions des mairies d'après l'API Découpage administratif (geo.api.gouv.fr). Données publiques sous Licence Ouverte, relevées le 17 novembre 2026."),
         ],
       },
       {

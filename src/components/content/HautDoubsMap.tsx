@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import carte from "@/data/carte-haut-doubs.json";
-import { cn } from "@/lib/utils";
+import { cn, fr } from "@/lib/utils";
 
 type Ville = { nom: string; slug: string; x: number; y: number; role: string; cote: string };
 
@@ -97,6 +97,7 @@ export function HautDoubsMap({ className, focus }: { className?: string; /** Com
           <i aria-hidden className="carte-trait" />
           Livraison à domicile
         </span>
+        <span className="carte-note">{fr("Zone indicative : à la commande, votre code postal confirme la livraison à domicile. Contours : IGN.")}</span>
       </figcaption>
     </figure>
   );
