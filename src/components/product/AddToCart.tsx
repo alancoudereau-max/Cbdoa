@@ -4,10 +4,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Minus, Plus, AlertTriangle } from "lucide-react";
-import { type Product, type Variant, forceLabels, thcLabel, type TierKey } from "@/data/products";
+import { type Product, type Variant, forceLabels, startingPriceLabel, thcLabel, type TierKey } from "@/data/products";
 import { site } from "@/data/site";
 import { useCart } from "@/lib/cart-store";
-import { bulkPercent, bulkPriceCents, bulkRuleText, quoteMessage, QUOTE_FROM_GRAMS } from "@/lib/pricing";
+import { bulkPercent, bulkPriceCents, bulkRuleText, bulkTiersFor, quoteMessage, QUOTE_FROM_GRAMS } from "@/lib/pricing";
 import { formatEUR, cn, fr } from "@/lib/utils";
 import { ForceBadge } from "@/components/ui/ForceBadge";
 
@@ -72,10 +72,11 @@ export function AddToCart({ product, availability }: { product: Product; availab
   const available = availability[variant.sku] !== false;
   const strong = variant.force === 3 || variant.force === "maxi";
   const needsAck = strong && !ack;
-  // Tarif dégressif (force Maxi) : la remise dépend du poids choisi, format × quantité.
+  // Tarif dégressif (force Maxi) : la remise dépend du poids choisi, format × quantité, et des paliers de la référence.
   const bulk = formats.some((f) => f.perGramCents !== undefined);
+  const bulkTiers = bulkTiersFor(product.slug);
   const quote = bulk && sku === QUOTE;
-  const percent = variant.perGramCents ? bulkPercent(variant.grams * qty) : 0;
+  const percent = variant.perGramCents ? bulkPercent(variant.grams * qty, bulkTiers) : 0;
   const unitCents = variant.perGramCents ? Math.min(variant.priceCents, bulkPriceCents(variant.perGramCents, variant.grams, percent)) : variant.priceCents;
   const totalCents = unitCents * qty;
   const perGram = /g$/.test(variant.format) && (variant.grams > 1 || percent > 0) ? unitCents / variant.grams : null;
@@ -115,7 +116,8 @@ export function AddToCart({ product, availability }: { product: Product; availab
     }
   };
 
-  const fromCents = Math.min(...product.variants.map((v) => v.priceCents));
+  // Prix d'appel de la barre d'achat : le même que sur la carte du produit (« Dès 5,60 €/g », le prix au gramme le plus bas).
+  const fromLabel = startingPriceLabel(product).replace(/^d/, "D");
   const several = product.variants.length > 1;
   // Ce que fait le bouton de la barre : conduire au choix tant qu'il reste à faire, sinon ajouter au panier.
   const barGoes = quote || !available || needsAck || (bar === "before" && several);
@@ -206,7 +208,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
               </button>
             )}
           </div>
-          {bulk && <p className="t-fine mt-3">{fr(`Prix dégressif : ${bulkRuleText()} de cette référence dans votre panier, tous formats additionnés.`)}</p>}
+          {bulk && <p className="t-fine mt-3">{fr(`Prix dégressif : ${bulkRuleText(bulkTiers)} de cette référence dans votre panier, tous formats additionnés.`)}</p>}
         </div>
 
         {/* Ce que contient la variante choisie */}
@@ -298,7 +300,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
                 <p className="truncate text-[0.9375rem] font-medium leading-tight">{fr(product.name)}</p>
                 <p className="buybar-price t-num truncate text-[0.8125rem] leading-tight text-foreground/75">
                   {bar === "before" && several
-                    ? `Dès ${formatEUR(fromCents)}`
+                    ? fromLabel
                     : quote
                       ? fr(`${QUOTE_FROM_GRAMS} g et plus · à négocier`)
                       : fr(`${variant.tierLabel}, ${variant.format} · ${formatEUR(totalCents)}`)}

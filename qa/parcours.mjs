@@ -178,6 +178,7 @@ const minus = async (page, n) => { for (let i = 0; i < n; i++) await panel(page)
     { sku: "CALSB-MAXI-1G", slug: "californienne-indoor-small-buds", name: "Californienne Indoor — Small Buds", variantLabel: "Force Maxi · 1 g", format: "1 g", grams: 1, unitPriceCents: 1000, image: "/images/products/californienne-indoor-small-buds.jpg", quantity: 2, force: "maxi" },
     { sku: "CALSB-MAXI-5G", slug: "californienne-indoor-small-buds", name: "Californienne Indoor — Small Buds", variantLabel: "Force Maxi · 5 g", format: "5 g", grams: 5, unitPriceCents: 4000, image: "/images/products/californienne-indoor-small-buds.jpg", quantity: 1, force: "maxi" },
     { sku: "BELD-MAXI-10G", slug: "beldia", name: "Beldia — Résine", variantLabel: "Force Maxi · 10 g", format: "10 g", grams: 10, unitPriceCents: 8000, image: "/images/products/beldia.jpg", quantity: 1, force: "maxi" },
+    { sku: "PIAT-MAXI-10G", slug: "piatella", name: "Piatella — Résine", variantLabel: "Force Maxi · 10 g", format: "10 g", grams: 10, unitPriceCents: 9000, perGramCents: 1000, image: "/images/products/piatella-2.jpg", quantity: 1, force: "maxi" },
     { sku: "PIAT-MAXI-100G", slug: "piatella", name: "Piatella — Résine", variantLabel: "Force Maxi · 100 g", format: "100 g", grams: 100, unitPriceCents: 50000, image: "/images/products/piatella-2.jpg", quantity: 1, force: "maxi" },
     { sku: "SLH-F1-1G", slug: "super-lemon-haze-hydro-usa", name: "Super Lemon Haze Hydro USA", variantLabel: "Classique · 1 g", format: "1 g", grams: 1, unitPriceCents: 600, image: "/images/products/super-lemon-haze-hydro-usa-2.jpg", quantity: 1, force: 1 },
   ], promoCode: null }, version: 0 };
@@ -186,11 +187,98 @@ const minus = async (page, n) => { for (let i = 0; i < n; i++) await panel(page)
   await page.waitForTimeout(400);
   const stored = JSON.parse(await page.evaluate(() => localStorage.getItem("cbdoux-cart-v2"))).state.lines.map((l) => [l.sku, l.unitPriceCents, l.perGramCents ?? null, l.quantity]);
   console.log("ancien panier remis à jour :", JSON.stringify(stored));
-  assert.deepEqual(stored, [["CALSB-MAXI-1G", 700, 700, 2], ["BELD-MAXI-10G", 7200, 800, 1], ["SLH-F1-1G", 600, null, 1]]);
+  assert.deepEqual(stored, [["CALSB-MAXI-1G", 700, 700, 2], ["BELD-MAXI-10G", 7200, 800, 1], ["PIAT-MAXI-10G", 8000, 800, 1], ["SLH-F1-1G", 600, null, 1]]);
   const cartText = clean(await page.locator("main").innerText());
   assert.match(cartText, /Californienne Indoor — Small Buds 14 € Force Maxi, 1 g, 7 € l'unité/);
   assert.match(cartText, /Beldia — Résine 72 € Force Maxi, 10 g, 72 € l'unité Prix dégressif : −10 %/);
-  assert.match(cartText, /Total estimé 92 €/);
+  // la Piatella est passée à 8 € le gramme, sans remise avant 25 g : 10 g = 80 €
+  assert.match(cartText, /Piatella — Résine 80 € Force Maxi, 10 g, 80 € l'unité (?!Prix dégressif)/);
+  assert.match(cartText, /Total estimé 172 €/);
+  await ctx.close();
+}
+
+// ───────────── 4. Piatella : le prix de la Beldia, mais une seule remise, −10 % à partir de 25 g
+{
+  const { ctx, page } = await open({ "cbdoux-prudence-ack": "1" });
+  await page.goto(BASE + "/produit/piatella", { waitUntil: "networkidle" });
+  const t = await tiles(page);
+  console.log("Piatella, cases :", t);
+  assert.deepEqual(t, ["1 g 8 €", "10 g 80 € 8 € le gramme", "25 g 180 € 7,20 € le gramme −10 % , 10 % de moins au gramme", "100 g et plus Prix à négocier sur WhatsApp"]);
+  assert.match(clean(await panel(page).innerText()), /Prix dégressif : −10 % dès 25 g de cette référence dans votre panier, tous formats additionnés\./);
+  assert.match(clean(await page.locator("main").innerText()), /Prix dégressif : −10 % dès 25 g d'une même référence, tous formats additionnés dans le panier\. À partir de 100 g, le prix se négocie sur WhatsApp\./);
+  await plus(page, 9);
+  assert.equal(await total(page), "80 €"); // 10 × 1 g : pas de remise
+  await plus(page, 10);
+  assert.equal(await total(page), "160 €"); // 20 × 1 g : toujours pas
+  // deux sachets de 10 g : 20 g, plein tarif
+  await page.getByRole("radio", { name: /^10 g/ }).click();
+  await minus(page, 18);
+  assert.equal(await total(page), "160 €");
+  assert.match(clean(await panel(page).innerText()), /soit 8 € le gramme(?!,)/);
+  await add(page);
+  let lines = await drawerLines(page);
+  console.log("Piatella, panier 1 :", lines, await subtotal(page));
+  assert.match(lines[0], /Piatella — Résine 160 € Force Maxi, 10 g(?! Prix dégressif)/);
+  assert.equal(await subtotal(page), "160 €");
+  await closeDrawer(page);
+  // + 5 × 1 g : 25 g au total, −10 % sur toutes les lignes = 180 €, le prix du sachet de 25 g
+  await page.getByRole("radio", { name: /^1 g/ }).click();
+  await plus(page, 3);
+  assert.equal(await total(page), "40 €");
+  await add(page);
+  lines = await drawerLines(page);
+  console.log("Piatella, panier 2 :", lines, await subtotal(page));
+  assert.match(lines.join(" | "), /Piatella — Résine 144 € Force Maxi, 10 g Prix dégressif : −10 %/);
+  assert.match(lines.join(" | "), /Piatella — Résine 36 € Force Maxi, 1 g Prix dégressif : −10 %/);
+  assert.equal(await subtotal(page), "180 €");
+  await closeDrawer(page);
+  await page.getByRole("radio", { name: /^25 g/ }).click();
+  await minus(page, 20);
+  assert.equal(await total(page), "180 €");
+  assert.match(clean(await panel(page).innerText()), /soit 7,20 € le gramme, 10 % de moins qu'au détail/);
+  await panel(page).screenshot({ path: `${SHOTS}/p7-piatella-${W}.png` });
+  await ctx.close();
+}
+
+// ───────────── 5. Prix d'appel (« dès ») : le prix au gramme le plus bas, sur les cartes et l'accueil
+{
+  const { ctx, page } = await open();
+  const cards = async (path) => {
+    await page.goto(BASE + path, { waitUntil: "networkidle" });
+    // l'unité existe en deux écritures (« le gramme » et « /g »), une seule est affichée : on lit le texte visible
+    return Object.fromEntries(await page.locator("article.etiquette").evaluateAll((cards) => cards.map((a) => [a.querySelector("a").getAttribute("href").split("/").pop(), a.querySelector(".etiquette-prix").innerText.replace(/[\u00a0\u202f]/g, " ").replace(/\s+/g, " ").trim().replace(/ ?\/g$| le gramme$/, "")])));
+  };
+  const resines = await cards("/resines-cbd");
+  console.log("prix d'appel, résines :", resines);
+  assert.deepEqual([resines["jaune-mousseux"], resines.beldia, resines.piatella, resines["3x-filtre"]], ["dès 3,60 €", "dès 6,40 €", "dès 7,20 €", "dès 4,50 €"]);
+  const fleurs = await cards("/fleurs-cbd");
+  console.log("prix d'appel, fleurs :", fleurs);
+  assert.deepEqual([fleurs["artic-blue"], fleurs["mango-pops"], fleurs["royal-dwarf-small-buds"], fleurs["californienne-indoor-small-buds"], fleurs["super-lemon-haze-hydro-usa"], fleurs["trim-premium-indoor"]], ["dès 6,40 €", "dès 5,60 €", "dès 4,80 €", "dès 5,60 €", "dès 5,50 €", "dès 7 €"]);
+  assert.match(clean(await page.title()), /dès 4,50 €\/g/);
+
+  // Accueil : les sept vidéos, les quatre arrivages d'abord, leur pastille et leur prix d'appel
+  await page.goto(BASE + "/", { waitUntil: "networkidle" });
+  const reels = await page.locator("li:has(> a .loop)").evaluateAll((lis) => lis.map((li) => li.innerText.replace(/[\u00a0\u202f]/g, " ").replace(/\s+/g, " ").trim()));
+  console.log("vidéos de l'accueil :", reels);
+  assert.deepEqual(reels, [
+    "En vidéo Artic Blue Grosses têtes aux reflets violets dès 6,40 €/g",
+    "En vidéo Mango Pops Petites têtes rondes et serrées dès 5,60 €/g",
+    "En vidéo Jaune Mousseux Résine blonde à la texture aérée dès 3,60 €/g",
+    "En vidéo Royal Dwarf Small Buds Petites têtes calibrées dès 4,80 €/g",
+    "Filmé chez nous Californienne Small Buds Petites têtes denses et givrées dès 5,60 €/g",
+    "Filmé chez nous Piatella Un cœur finement granuleux dès 7,20 €/g",
+    "Filmé chez nous Beldia La résine de caractère dès 6,40 €/g",
+  ]);
+  // chaque vidéo et son image d'attente existent
+  for (const src of await page.locator(".loop img").evaluateAll((imgs) => imgs.map((i) => i.currentSrc || i.src))) assert.equal((await page.request.get(src)).status(), 200, src);
+  for (const name of ["artic-blue", "mango-pops", "jaune-mousseux", "royal-dwarf", "small-buds", "piatella", "beldia"]) {
+    const r = await page.request.get(`${BASE}/videos/loops/${name}.mp4`);
+    assert.equal(r.status(), 200, name);
+    assert.match(r.headers()["content-type"], /video\/mp4/);
+  }
+  const rayons = clean(await page.locator("section", { has: page.locator('h2:has-text("Peu de références")') }).innerText());
+  assert.match(rayons, /dès 4,50 € le gramme/);
+  assert.match(rayons, /dès 3,60 € le gramme/);
   await ctx.close();
 }
 

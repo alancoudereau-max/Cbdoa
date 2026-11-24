@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { promises as fs } from "fs";
 import path from "path";
-import { getProduct, visibleProducts, categories, formatPrice, thcLabel } from "@/data/products";
+import { getProduct, visibleProducts, categories, formatPrice, lowestPerGram, thcLabel } from "@/data/products";
 
 export const alt = "CBDoux — fiche produit";
 export const size = { width: 1200, height: 630 };
@@ -53,8 +53,10 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
     readFile("src/fonts/og/hanken-400.ttf"),
     readFile("src/fonts/og/hanken-600.ttf"),
   ]);
-  const min = formatPrice(Math.min(...p.variants.map((v) => v.priceCents)));
-  const perGram = p.variants.some((v) => v.format === "1 g");
+  // Prix d'appel : le prix au gramme le plus bas pour un produit vendu au gramme, sinon le premier prix.
+  const best = lowestPerGram(p);
+  const min = formatPrice(best ? best.cents : Math.min(...p.variants.map((v) => v.priceCents)));
+  const perGram = best !== undefined;
   const name = ogSafe(p.name);
   const fonts = [
     ...(fraunces ? [{ name: "Fraunces", data: fraunces, weight: 300 as const, style: "normal" as const }] : []),

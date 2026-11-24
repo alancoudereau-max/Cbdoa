@@ -2,6 +2,17 @@
  * Guides & conseils — contenu SEO éditorial.
  * Règles : aucune allégation thérapeutique, vouvoiement, informations réglementaires sourcées.
  */
+import { getProductsByCategory, formatPrice, lowestPerGramCents, type Category } from "@/data/products";
+
+/**
+ * Fourchette des prix au gramme d'un rayon, reprise du catalogue : du prix le plus bas (celui des grands
+ * formats) au prix du gramme seul le plus élevé. « 3,60 à 8 € ».
+ */
+function perGramRange(c: Category): string {
+  const list = getProductsByCategory(c);
+  const high = Math.max(...list.flatMap((x) => x.variants.filter((v) => v.format === "1 g").map((v) => v.priceCents)));
+  return `${formatPrice(lowestPerGramCents(list) ?? high).replace(/\s*€$/, "")} à ${formatPrice(high)}`;
+}
 
 export type GuideBlock =
   | { type: "p"; text: string }
@@ -224,7 +235,7 @@ export const guides: Guide[] = [
               ["Arômes", "Fidèles à la variété, très lisibles", "Plus profonds, terreux, épicés"],
               ["Texture", "Têtes à effriter", "Bloc à chauffer légèrement et émietter"],
               ["Usage", "Vaporisation", "Vaporisation (chambre pour concentrés)"],
-              ["Prix au gramme", "5 à 10 €", "5 à 10 €"],
+              ["Prix au gramme", perGramRange("fleurs"), perGramRange("resines")],
               ["Conservation", "Plusieurs mois en sachet hermétique", "Très bonne, peu sensible au séchage"],
             ],
           ),

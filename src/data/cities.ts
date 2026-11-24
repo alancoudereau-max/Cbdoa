@@ -1,9 +1,9 @@
 /** Pages locales (SEO) — une page par ville, contenu unique. */
-import { visibleProducts, getProductsByCategory, formatPrice, type Category } from "@/data/products";
+import { visibleProducts, getProductsByCategory, formatPrice, lowestPerGramCents, type Category } from "@/data/products";
 
-/** Nombre de références et prix d'appel au gramme, repris du catalogue : ces phrases restent justes quand il change. */
+/** Nombre de références et prix au gramme le plus bas de chaque rayon, repris du catalogue : ces phrases restent justes quand il change. */
 const REFERENCES = visibleProducts.length;
-const perGramFrom = (c: Category) => formatPrice(Math.min(...getProductsByCategory(c).flatMap((p) => p.variants.filter((v) => v.format === "1 g").map((v) => v.priceCents))));
+const perGramFrom = (c: Category) => formatPrice(lowestPerGramCents(getProductsByCategory(c)) ?? 0);
 
 export type CityMode = "distributeur" | "retrait" | "livraison-locale" | "expedition";
 
@@ -192,7 +192,7 @@ export const cities: City[] = [
     ],
     faq: [
       { q: "Proposez-vous un point de retrait à Besançon ?", a: "Pas pour le moment : nos points de retrait sont à Damprichard et au Russey. À Besançon, Colissimo et Chronopost sont les solutions les plus rapides." },
-      { q: "Vos prix sont-ils compétitifs par rapport aux boutiques bisontines ?", a: `Nos fleurs démarrent à ${perGramFrom("fleurs")}/g et nos résines à ${perGramFrom("resines")}/g, avec un prix dégressif sur les formats 10 g et le port offert dès 60 €.` },
+      { q: "Vos prix sont-ils compétitifs par rapport aux boutiques bisontines ?", a: `Nos fleurs sont à partir de ${perGramFrom("fleurs")}/g et nos résines à partir de ${perGramFrom("resines")}/g (prix au gramme des plus grands formats), avec le port offert dès 60 €.` },
     ],
     nearby: ["pontarlier", "montbeliard", "morteau"],
   },

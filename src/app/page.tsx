@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import { site, locations, vendingSupervision } from "@/data/site";
-import { categories, categoryOrder, featuredProducts, visibleProducts, getProductsByCategory, getProduct, forceLabels, startingPriceLabel, minPriceCents, formatPrice, type Category, type Force } from "@/data/products";
+import { categories, categoryOrder, featuredProducts, visibleProducts, getProductsByCategory, getProduct, forceLabels, startingPriceLabel, lowestPerGramCents, minPriceCents, formatPrice, type Category, type Force } from "@/data/products";
 import { homeFaq } from "@/data/faq";
 import { guides } from "@/data/guides";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -34,20 +34,32 @@ export const metadata: Metadata = buildMetadata({
 /** Rang d'apparition (variable CSS --i) dans la séquence d'ouverture. */
 const i = (n: number) => ({ "--i": n }) as CSSProperties;
 
-/** Prix d'appel d'un rayon : au gramme quand il existe, sinon le premier prix. */
+/** Prix d'appel d'un rayon : le prix au gramme le plus bas quand il existe, sinon le premier prix. */
 function categoryFrom(key: Category): string {
   const list = getProductsByCategory(key);
-  const perGram = list.flatMap((p) => p.variants.filter((v) => v.format === "1 g").map((v) => v.priceCents));
-  if (perGram.length) return `dès ${formatPrice(Math.min(...perGram))} le gramme`;
+  const perGram = lowestPerGramCents(list);
+  if (perGram !== undefined) return `dès ${formatPrice(perGram)} le gramme`;
   return `dès ${formatPrice(Math.min(...list.map(minPriceCents)))}`;
 }
 
-/** Vidéos tournées par CBDoux (boucles allégées dans /public/videos/loops) */
-const reels = [
-  { slug: "californienne-indoor-small-buds", loop: "small-buds", title: "Californienne Small Buds", note: "Petites têtes denses et givrées" },
-  { slug: "piatella", loop: "piatella", title: "Piatella", note: "Un cœur finement granuleux" },
-  { slug: "beldia", loop: "beldia", title: "Beldia", note: "La résine de caractère" },
+/**
+ * Boucles vidéo de l'accueil, les arrivages les plus récents d'abord. Fichiers allégés dans /public/videos/loops,
+ * image d'attente du même nom dans /public/images/reels. `own` : vidéo tournée par CBDoux, qui porte la pastille
+ * « Filmé chez nous » ; sans lui, la pastille dit seulement « En vidéo ».
+ */
+const reels: Array<{ slug: string; loop: string; title: string; note: string; own?: boolean }> = [
+  { slug: "artic-blue", loop: "artic-blue", title: "Artic Blue", note: "Grosses têtes aux reflets violets" },
+  { slug: "mango-pops", loop: "mango-pops", title: "Mango Pops", note: "Petites têtes rondes et serrées" },
+  { slug: "jaune-mousseux", loop: "jaune-mousseux", title: "Jaune Mousseux", note: "Résine blonde à la texture aérée" },
+  { slug: "royal-dwarf-small-buds", loop: "royal-dwarf", title: "Royal Dwarf Small Buds", note: "Petites têtes calibrées" },
+  { slug: "californienne-indoor-small-buds", loop: "small-buds", title: "Californienne Small Buds", note: "Petites têtes denses et givrées", own: true },
+  { slug: "piatella", loop: "piatella", title: "Piatella", note: "Un cœur finement granuleux", own: true },
+  { slug: "beldia", loop: "beldia", title: "Beldia", note: "La résine de caractère", own: true },
 ];
+/** Sur grand écran : rangées de quatre ; une dernière rangée incomplète est centrée sous la précédente. */
+const REELS_PER_ROW = 4;
+const lastRowFirst = reels.length - (reels.length % REELS_PER_ROW || REELS_PER_ROW);
+const lastRowOffset = ["", "lg:col-start-4", "lg:col-start-3", "lg:col-start-2"][reels.length % REELS_PER_ROW];
 
 const forceLinks: Record<string, { href: string; cta: string }> = {
   "1": { href: "/boutique?force=doux", cta: "Voir les références Classique" },
@@ -253,26 +265,25 @@ export default function HomePage() {
             <h2 className="t-h2 lg:col-span-6">
               Regardez <em>avant de choisir.</em>
             </h2>
-            <p className="t-lead lg:col-span-5 lg:col-start-8 lg:self-end">Texture, densité, couleur : nous filmons nos produits tels qu'ils sont, sans retouche. Ce que vous voyez est ce que vous recevez.</p>
+            <p className="t-lead lg:col-span-5 lg:col-start-8 lg:self-end">Texture, densité, couleur : nos produits filmés de près, sans retouche, pour savoir ce que vous commandez.</p>
           </div>
-          <ul className="-mx-[var(--gutter)] mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[var(--gutter)] pb-2 [scrollbar-width:none] sm:mt-14 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden">
+          <ul className="-mx-[var(--gutter)] mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[var(--gutter)] pb-2 [scrollbar-width:none] sm:mt-14 lg:mx-0 lg:grid lg:grid-cols-8 lg:gap-x-6 lg:gap-y-14 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden">
             {reels.map((r, n) => {
               const p = getProduct(r.slug);
               return (
-                <li key={r.slug} data-reveal="up" className={`w-[70vw] max-w-[20rem] shrink-0 snap-center lg:w-auto lg:max-w-none ${n === 1 ? "lg:mt-16" : n === 2 ? "lg:mt-32" : ""}`}>
+                <li key={r.slug} data-reveal="up" className={`w-[70vw] max-w-[20rem] shrink-0 snap-center lg:col-span-2 lg:w-auto lg:max-w-none ${n === lastRowFirst ? lastRowOffset : ""}`}>
                   <Link href={`/produit/${r.slug}`} className="group block">
                     <div className="loop aspect-[9/14] rounded-[4px] ring-1 ring-or/25">
-                      <Image src={`/images/reels/${r.loop}.jpg`} alt={`${r.title}, filmé de près`} fill sizes="(max-width: 1024px) 70vw, 400px" />
+                      <Image src={`/images/reels/${r.loop}.jpg`} alt={`${r.title}, filmé de près`} fill sizes="(max-width: 1024px) 70vw, 300px" />
                       <AutoVideo src={`/videos/loops/${r.loop}.mp4`} label={`${r.title} en vidéo`} />
                       <span className="chip absolute left-3 top-3 z-10">
-                        <span aria-hidden className="live-dot" /> Filmé chez nous
+                        <span aria-hidden className="live-dot" /> {r.own ? "Filmé chez nous" : "En vidéo"}
                       </span>
                     </div>
-                    <div className="mt-4 flex items-baseline justify-between gap-4">
-                      <h3 className="softens t-title">{r.title}</h3>
-                      <p className="t-num whitespace-nowrap text-[0.9375rem] text-foreground/75">{p ? startingPriceLabel(p) : ""}</p>
-                    </div>
+                    {/* Titre, note, prix l'un sous l'autre : la vignette est étroite (quatre par rangée, 70 % de l'écran sur mobile). */}
+                    <h3 className="softens t-title mt-4">{r.title}</h3>
                     <p className="t-fine mt-1">{r.note}</p>
+                    <p className="t-num mt-1.5 whitespace-nowrap text-[0.9375rem] text-foreground/75">{p ? startingPriceLabel(p) : ""}</p>
                   </Link>
                 </li>
               );

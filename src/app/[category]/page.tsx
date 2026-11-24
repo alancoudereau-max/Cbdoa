@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { categories, categoryOrder, getCategoryBySlug, getProductsByCategory, forceLabels, formatPrice } from "@/data/products";
+import { categories, categoryOrder, getCategoryBySlug, getProductsByCategory, forceLabels, formatPrice, lowestPerGramCents } from "@/data/products";
 import { guides } from "@/data/guides";
 import { ProductCard } from "@/components/product/ProductCard";
 import { PageHero } from "@/components/ui/PageHero";
@@ -26,8 +26,8 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   const cat = getCategoryBySlug(category);
   if (!cat) return {};
   // Prix au gramme le plus bas de la catégorie, repris dans le titre (toujours à jour avec le catalogue).
-  const perGram = getProductsByCategory(cat.key).flatMap((p) => p.variants.filter((v) => v.format === "1 g").map((v) => v.priceCents));
-  const title = perGram.length ? `${cat.title} dès ${formatPrice(Math.min(...perGram))}/g` : cat.title;
+  const perGram = lowestPerGramCents(getProductsByCategory(cat.key));
+  const title = perGram !== undefined ? `${cat.title} dès ${formatPrice(perGram)}/g` : cat.title;
   return buildMetadata({ title, description: cat.description, path: `/${cat.slug}`, image: cat.image, keywords: cat.keywords });
 }
 

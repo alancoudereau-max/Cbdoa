@@ -10,11 +10,13 @@
  *
  * Les prix sont en centimes d'euro (prix payé par le client). Pour changer un prix, modifiez `priceCents`.
  * Force Maxi : un seul prix à donner, celui du gramme (`maxiTiers("PREFIXE", 700)` = 7 € le gramme). Les formats
- * 10 g et 25 g et leurs remises se calculent tout seuls d'après la règle de src/lib/pricing.ts.
+ * 10 g et 25 g et leurs remises se calculent tout seuls d'après la règle de src/lib/pricing.ts ; une référence
+ * qui a sa propre remise (la Piatella) est inscrite dans la table BULK_TIERS_BY_SLUG de ce même fichier.
+ * Les prix « dès » des cartes et des titres reprennent le prix au gramme le plus bas (`lowestPerGram`).
  * Rupture de stock : `soldOut: true` sur un produit ou une variante. Retirer un produit : `hidden: true`.
  * Taux de THC particulier (« 0,1 % max ») : champ `thcMax` du produit ; sans lui, la fiche affiche « THC < 0,3 % ».
  */
-import { BULK_TIERS, bulkPriceCents } from "@/lib/pricing";
+import { BULK_PACKS, BULK_TIERS, bulkPercent, bulkPriceCents, bulkTiersFor, type BulkTiers } from "@/lib/pricing";
 
 export type Category = "fleurs" | "resines" | "huiles" | "vape";
 export type Force = 1 | 2 | 3 | "maxi";
@@ -212,19 +214,19 @@ function tiers(
 }
 
 /**
- * Variantes « Force Maxi » à partir du seul prix au gramme : 1 g, puis un format par palier du tarif dégressif
- * (10 g à −10 %, 25 g à −20 %). Au-delà, le prix se négocie : la fiche renvoie vers WhatsApp.
+ * Variantes « Force Maxi » à partir du seul prix au gramme : 1 g, 10 g et 25 g, chacun au prix du palier de
+ * remise qu'il atteint (règle générale : 10 g à −10 %, 25 g à −20 %). Au-delà, le prix se négocie : la fiche
+ * renvoie vers WhatsApp. `tiers` : la règle de la référence quand elle a la sienne, `bulkTiersFor("son-slug")`.
  */
-function maxiTiers(prefix: string, perGramCents: number, cbdInfo = "Concentration maximale"): Variant[] {
-  const packs = [1, ...BULK_TIERS.map((t) => t.fromGrams)].sort((a, b) => a - b);
-  return packs.map((grams) => ({
+function maxiTiers(prefix: string, perGramCents: number, tiers: BulkTiers = BULK_TIERS, cbdInfo = "Concentration maximale"): Variant[] {
+  return BULK_PACKS.map((grams) => ({
     sku: `${prefix}-MAXI-${grams}G`,
     tier: "maxi",
     tierLabel: forceLabels.maxi.label,
     force: "maxi",
     format: `${grams} g`,
     grams,
-    priceCents: bulkPriceCents(perGramCents, grams),
+    priceCents: bulkPriceCents(perGramCents, grams, bulkPercent(grams, tiers)),
     perGramCents,
     cbdInfo,
     warning: MAXI_WARNING,
@@ -422,10 +424,10 @@ export const products: Product[] = [
     short: "Grosses têtes vert olive aux reflets violets, givrées de trichomes, avec un taux de THC de 0,1 % au maximum. Exclusivement en force Maxi.",
     description: [
       "L'Artic Blue est une fleur à grosses têtes : longues, compactes, vert olive, traversées de reflets violets et mauves, avec des pistils cuivrés et un givre de trichomes bien visible. La vidéo de cette fiche la montre telle qu'elle est, en vrac puis tête par tête.",
-      "Sa particularité : un taux de THC de 0,1 % au maximum, trois fois moins que le plafond légal de 0,3 %. C'est ce que l'on appelle couramment une fleur « sans THC » ; nous préférons donner le chiffre exact. Les arômes précis peuvent varier d'un lot à l'autre : demandez-nous conseil.",
+      "Sa particularité : un taux de THC de 0,1 % au maximum, trois fois moins que le plafond légal de 0,3 %. C'est ce que l'on appelle couramment une fleur « sans THC » ; nous préférons donner le chiffre exact. Côté arômes, son nom renvoie à la lignée des Blueberry, connue pour ses notes de myrtille et de fruits rouges sur un fond sucré.",
       "Disponible exclusivement en force Maxi, l'enrichissement en cannabinoïdes le plus élevé de notre gamme : réservée aux adultes habitués, déconseillée aux débutants. Un taux de THC très bas ne garantit pas un dépistage négatif : ne conduisez pas après usage. Vendue au gramme, à prix dégressif dès 10 g.",
     ],
-    aromas: "Variables selon le lot : demandez-nous le profil du moment sur WhatsApp.",
+    aromas: "Myrtille et fruits rouges, fond sucré : le registre des Blueberry, la lignée dont elle porte le nom.",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
     usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/artic-blue.jpg",
@@ -443,11 +445,11 @@ export const products: Product[] = [
     addedAt: ARRIVAGE_NOVEMBRE,
     short: "Petites têtes rondes et serrées, vert clair tirant sur le jaune, piquées de pistils orangés. Exclusivement en force Maxi.",
     description: [
-      "La Mango Pops se présente en petites têtes rondes et serrées, d'un vert clair qui tire sur le jaune, parsemées de pistils orangés. Faciles à doser, elles se prennent une à une, sans avoir à les casser.",
-      "Son nom annonce un registre fruité, côté mangue. Les notes précises peuvent varier d'un lot à l'autre : demandez-nous conseil, et regardez la vidéo de cette fiche pour voir la fleur telle qu'elle est.",
+      "La Mango Pops se présente en petites têtes rondes et serrées, d'un vert clair qui tire sur le jaune, parsemées de pistils orangés : « pops » est le surnom de ces petites têtes. Faciles à doser, elles se prennent une à une, sans avoir à les casser.",
+      "Au nez, c'est une fleur fruitée : mangue mûre et fruits exotiques, avec une finale douce et sucrée. Regardez la vidéo de cette fiche pour la voir telle qu'elle est.",
       "Disponible exclusivement en force Maxi, l'enrichissement en cannabinoïdes le plus élevé de notre gamme : réservée aux adultes habitués, déconseillée aux débutants. Commencez par une très petite quantité. Vendue au gramme, à prix dégressif dès 10 g.",
     ],
-    aromas: "Registre fruité annoncé par son nom, côté mangue (notes précises variables selon le lot).",
+    aromas: "Mangue mûre et fruits exotiques, finale douce et sucrée.",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
     usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/mango-pops.jpg",
@@ -467,10 +469,10 @@ export const products: Product[] = [
     short: "Petites têtes rondes et compactes, d'un vert tendre et d'un calibre régulier : le prix doux des small buds, en force Maxi.",
     description: [
       "Les small buds sont les petites têtes de la plante : la même fleur, dans un format réduit et à un prix plus doux. Celles de la Royal Dwarf sont rondes, compactes et d'un calibre régulier, d'un vert tendre.",
-      "Faciles à doser tête par tête, elles se prêtent bien à la vaporisation. Les arômes précis peuvent varier d'un lot à l'autre : demandez-nous conseil. La vidéo de cette fiche les montre à pleines mains, telles qu'elles arrivent.",
+      "Faciles à doser tête par tête, elles se prêtent bien à la vaporisation. La Royal Dwarf descend de la Skunk : un parfum franc, terreux et musqué, relevé d'une pointe de miel et d'une finale légèrement épicée. La vidéo de cette fiche les montre à pleines mains, telles qu'elles arrivent.",
       "Disponible exclusivement en force Maxi, l'enrichissement en cannabinoïdes le plus élevé de notre gamme : réservée aux adultes habitués, déconseillée aux débutants. Commencez par une très petite quantité. Vendue au gramme, à prix dégressif dès 10 g.",
     ],
-    aromas: "Variables selon le lot : demandez-nous le profil du moment sur WhatsApp.",
+    aromas: "Skunk à l'ancienne : terreux et musqué, pointe de miel, finale légèrement épicée.",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
     usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/royal-dwarf-small-buds.jpg",
@@ -587,10 +589,10 @@ export const products: Product[] = [
     short: "Résine blonde à la pâte claire, fine et aérée, qui s'effrite sans effort entre les doigts. Exclusivement en force Maxi.",
     description: [
       "Le Jaune Mousseux porte bien son nom. Le bloc est blond, couleur sable ; la coupe est nette et découvre un cœur plus clair, au grain fin, régulier et aéré.",
-      "C'est cette texture qui le distingue : légère, presque mousseuse, elle s'ouvre et s'effrite entre les doigts. Une résine facile à émietter et à doser, à voir de près dans la vidéo de cette fiche.",
-      "Il est proposé exclusivement en force Maxi, l'enrichissement en cannabinoïdes le plus élevé de notre gamme : une force réservée aux adultes habitués, déconseillée aux débutants. Le profil aromatique précis varie selon le lot : demandez-nous conseil. Vendu au gramme, à prix dégressif dès 10 g.",
+      "C'est cette texture qui le distingue : légère, presque mousseuse, elle s'ouvre et s'effrite entre les doigts. Le parfum lui ressemble, doux et léger : des notes florales et herbacées, une pointe de citron et un fond discrètement épicé. Une résine facile à émietter et à doser, à voir de près dans la vidéo de cette fiche.",
+      "Il est proposé exclusivement en force Maxi, l'enrichissement en cannabinoïdes le plus élevé de notre gamme : une force réservée aux adultes habitués, déconseillée aux débutants. Vendu au gramme, à prix dégressif dès 10 g.",
     ],
-    aromas: "Résineux, dans l'esprit des résines blondes ; profil précis variable selon le lot.",
+    aromas: "Doux et léger : notes florales et herbacées, pointe de citron, fond discrètement épicé.",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
     usage: "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/jaune-mousseux.jpg",
@@ -632,14 +634,14 @@ export const products: Product[] = [
     description: [
       "La Piatella est une résine à la robe brun doré. À la coupe, elle révèle un cœur finement granuleux et une texture généreuse, presque fondante, que nous vous montrons en vidéo.",
       "Son caractère est résineux, dans l'esprit des grandes résines de chanvre. Le profil aromatique précis varie selon le lot : demandez-nous conseil.",
-      "Proposée exclusivement en force Maxi : réservée aux adultes habitués, déconseillée aux débutants. Vendue au gramme, à prix dégressif dès 10 g.",
+      "Proposée exclusivement en force Maxi : réservée aux adultes habitués, déconseillée aux débutants. Vendue au gramme, avec 10 % de remise dès 25 g.",
     ],
     aromas: "Résineux et rond ; profil précis variable selon le lot.",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
     usage: "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/piatella-2.jpg",
     video: "/videos/piatella.mp4",
-    variants: maxiTiers("PIAT", 1000),
+    variants: maxiTiers("PIAT", 800, bulkTiersFor("piatella")),
     keywords: ["piatella cbd", "résine cbd premium", "résine cbd maxi"],
   },
 
@@ -756,13 +758,30 @@ export function maxPriceCents(p: Product): number {
   return Math.max(...p.variants.map((v) => v.priceCents));
 }
 
-/** Prix d'appel affiché sur les cartes : « dès 5 €/g » ou « 15 € » */
+/**
+ * Prix au gramme le plus bas d'un produit vendu au gramme, et le format qui le donne : c'est celui du plus
+ * grand format, remise comprise (25 g en force Maxi, sachet de 10 g ailleurs). `undefined` si le produit ne se
+ * vend pas au gramme. Arrondi au centime supérieur : le prix annoncé n'est jamais plus bas que le prix payé.
+ */
+export function lowestPerGram(p: Product): { cents: number; grams: number } | undefined {
+  if (!p.variants.some((v) => v.format === "1 g")) return undefined;
+  const byWeight = p.variants.filter((v) => /^\d+ g$/.test(v.format) && v.grams > 0);
+  const inStock = byWeight.filter((v) => !v.soldOut);
+  return (inStock.length ? inStock : byWeight)
+    .map((v) => ({ cents: Math.ceil(v.priceCents / v.grams), grams: v.grams }))
+    .sort((a, b) => a.cents - b.cents || a.grams - b.grams)[0];
+}
+
+/** Prix au gramme le plus bas d'une liste de produits (centimes) ; `undefined` si aucun ne se vend au gramme. */
+export function lowestPerGramCents(list: Product[]): number | undefined {
+  const all = list.flatMap((p) => lowestPerGram(p)?.cents ?? []);
+  return all.length ? Math.min(...all) : undefined;
+}
+
+/** Prix d'appel affiché sur les cartes : « dès 5,60 €/g » (le prix au gramme le plus bas du produit) ou « 15 € » */
 export function startingPriceLabel(p: Product): string {
-  const perGram = p.variants.filter((v) => v.grams === 1 && /^1 g$/.test(v.format));
-  if (perGram.length) {
-    const min = Math.min(...perGram.map((v) => v.priceCents));
-    return `dès ${formatPrice(min)}/g`;
-  }
+  const best = lowestPerGram(p);
+  if (best) return `dès ${formatPrice(best.cents)}/g`;
   const min = minPriceCents(p);
   const hasMultiple = p.variants.length > 1;
   return hasMultiple ? `dès ${formatPrice(min)}` : formatPrice(min);

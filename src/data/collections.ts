@@ -4,7 +4,7 @@
  * changer un prix ou une force dans le catalogue met ces pages à jour automatiquement.
  * Règles de rédaction : identiques au catalogue (aucune allégation thérapeutique, aucun usage alimentaire).
  */
-import { visibleProducts, formatPrice, type Product } from "@/data/products";
+import { visibleProducts, formatPrice, lowestPerGram, lowestPerGramCents, type Product } from "@/data/products";
 import type { GuideBlock } from "@/data/guides";
 import { promos } from "@/data/promos";
 import { FREE_SHIPPING_FROM_CENTS, LOCAL_FREE_FROM_CENTS } from "@/lib/shipping";
@@ -122,19 +122,25 @@ function cheapCollection(): Collection {
     .filter((x) => (perGramPrice(x) ?? Infinity) <= threshold)
     .sort((a, b) => (perGramPrice(a) ?? 0) - (perGramPrice(b) ?? 0) || a.name.localeCompare(b.name, "fr"));
   const products = [...lots, ...byGram];
-  const minLabel = formatPrice(min);
-  /** Les références au prix au gramme le plus bas : nommées dans la FAQ quand elles sont une ou deux. */
-  const cheapest = sold.filter((x) => perGramPrice(x) === min).map((x) => x.name.replace(/\s+[—–-]\s+/g, " "));
-  const cheapestText = cheapest.length <= 2 ? `le prix au gramme le plus bas est de ${minLabel} (${cheapest.join(", ")})` : `plusieurs références démarrent à ${minLabel} le gramme`;
+  /** Prix d'appel de la page : le prix au gramme le plus bas, tous formats confondus (celui d'un grand format). */
+  const lowest = lowestPerGramCents(sold) ?? min;
+  const minLabel = formatPrice(lowest);
+  /** Les références qui atteignent ce prix : nommées dans la FAQ, avec leur format, quand elles sont une ou deux. */
+  const cheapest = sold.filter((x) => lowestPerGram(x)?.cents === lowest);
+  const cheapestText =
+    cheapest.length <= 2
+      ? `le prix au gramme descend à ${minLabel} (${cheapest.map((x) => `${x.name.replace(/\s+[—–-]\s+/g, " ")}, par ${lowestPerGram(x)?.grams} g`).join(" ; ")})`
+      : `plusieurs références descendent à ${minLabel} le gramme`;
 
   const rows = products.map((x) => {
     const one = perGramPrice(x);
     const ten = tenGramVariant(x);
+    const best = lowestPerGram(x);
     return [
       x.name.replace(/\s+[—–-]\s+/g, " "),
       one !== undefined ? formatPrice(one) : "—",
       ten ? formatPrice(ten.priceCents) : "—",
-      ten ? `${formatPrice(Math.round(ten.priceCents / 10))}/g` : "—",
+      best ? `${formatPrice(best.cents)} (par ${best.grams} g)` : ten ? `${formatPrice(Math.round(ten.priceCents / 10))} (par 10 g)` : "—",
     ];
   });
 
@@ -151,16 +157,16 @@ function cheapCollection(): Collection {
     slug: "cbd-pas-cher",
     name: "CBD pas cher",
     title: `CBD pas cher : fleurs et résines dès ${minLabel}/g`,
-    description: `CBD pas cher et analysé : fleurs et résines dès ${minLabel}/g, trim en lot, prix dégressifs par 10 g, port offert dès ${freeShipping}. THC < 0,3 %, livraison 24/48 h.`,
+    description: `CBD pas cher et analysé : fleurs et résines dès ${minLabel}/g, trim en lot, prix dégressifs dès 10 g, port offert dès ${freeShipping}. THC < 0,3 %, livraison 24/48 h.`,
     kicker: `Dès ${minLabel}/g · analyses labo`,
     h1: "CBD pas cher",
     h1Italic: "sans rogner sur la qualité.",
-    intro: `Nos prix les plus doux, sans compromis sur les analyses : fleurs et résines à partir de ${minLabel} le gramme, trim en lot, tarifs dégressifs par 10 g et port offert dès ${freeShipping}.`,
+    intro: `Nos prix les plus doux, sans compromis sur les analyses : fleurs et résines à partir de ${minLabel} le gramme sur les plus grands formats, trim en lot, tarifs dégressifs dès 10 g et port offert dès ${freeShipping}.`,
     products,
     sections: [
       {
         heading: "Nos petits prix, au gramme et par 10 g",
-        blocks: [table(["Produit", "1 g", "10 g", "Prix au gramme par 10 g"], rows), p("Prix de la force Classique (ou de la première force disponible). Le détail de chaque force figure sur la fiche du produit.")],
+        blocks: [table(["Produit", "1 g", "10 g", "Meilleur prix au gramme"], rows), p("Prix de la force Classique (ou de la première force disponible). Le meilleur prix au gramme est celui du plus grand format : 10 g, ou 25 g en force Maxi. Le détail de chaque force figure sur la fiche du produit.")],
       },
       {
         heading: "Cinq façons de payer son CBD moins cher",

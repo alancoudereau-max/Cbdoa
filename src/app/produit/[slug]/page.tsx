@@ -16,7 +16,7 @@ import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, productJsonLd, productSeoTitle } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
-import { bulkRuleText, quoteMessage, QUOTE_FROM_GRAMS } from "@/lib/pricing";
+import { bulkRuleText, bulkTiersFor, quoteMessage, QUOTE_FROM_GRAMS } from "@/lib/pricing";
 import { commas, fr } from "@/lib/utils";
 import { categoryFaq } from "@/data/category-faq";
 
@@ -199,7 +199,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </table>
             {bulk && (
               <p className="mt-5 text-[0.9375rem] leading-relaxed text-foreground/85">
-                {fr(`Prix dégressif : ${bulkRuleText()} d'une même référence, tous formats additionnés dans le panier. À partir de ${QUOTE_FROM_GRAMS} g, le prix se négocie sur WhatsApp.`)}
+                {fr(`Prix dégressif : ${bulkRuleText(bulkTiersFor(p.slug))} d'une même référence, tous formats additionnés dans le panier. À partir de ${QUOTE_FROM_GRAMS} g, le prix se négocie sur WhatsApp.`)}
               </p>
             )}
             <ul className="mt-6 space-y-2 text-[0.9375rem] text-foreground/85">

@@ -1,22 +1,28 @@
 // Contrôle de la règle de prix dégressif (src/lib/pricing.ts), sans navigateur.
 //   node --experimental-strip-types --no-warnings qa/pricing.test.mjs
 import assert from "node:assert/strict";
-import { bulkPercent, bulkPriceCents, bulkRuleText, priceCart, quoteMessage, QUOTE_FROM_GRAMS } from "../src/lib/pricing.ts";
+import { bulkPercent, bulkPriceCents, bulkRuleText, bulkTiersFor, priceCart, quoteMessage, BULK_PACKS, QUOTE_FROM_GRAMS } from "../src/lib/pricing.ts";
 
-// Paliers
+// Paliers de la règle générale
 for (const [g, pct] of [[0, 0], [1, 0], [9, 0], [10, 10], [11, 10], [24, 10], [25, 20], [26, 20], [99, 20], [100, 20], [500, 20]]) assert.equal(bulkPercent(g), pct, `palier ${g} g`);
 assert.equal(bulkRuleText(), "−10 % dès 10 g, −20 % dès 25 g");
 assert.equal(QUOTE_FROM_GRAMS, 100);
+assert.deepEqual([...BULK_PACKS], [1, 10, 25]);
+
+// Paliers d'une référence qui a sa propre règle : la Piatella, −10 % à partir de 25 g seulement
+const PIATELLA = bulkTiersFor("piatella");
+for (const [g, pct] of [[0, 0], [1, 0], [10, 0], [24, 0], [25, 10], [26, 10], [99, 10], [100, 10]]) assert.equal(bulkPercent(g, PIATELLA), pct, `Piatella, palier ${g} g`);
+assert.equal(bulkRuleText(PIATELLA), "−10 % dès 25 g");
+assert.deepEqual([1, 10, 25].map((g) => bulkPriceCents(800, g, bulkPercent(g, PIATELLA))), [800, 8000, 18000]);
+// Une référence inconnue suit la règle générale
+assert.equal(bulkRuleText(bulkTiersFor("une-autre")), "−10 % dès 10 g, −20 % dès 25 g");
 
 // Prix des formats pour chaque prix au gramme du catalogue (centimes)
-const grid = { 450: [450, 4050, 9000], 600: [600, 5400, 12000], 700: [700, 6300, 14000], 800: [800, 7200, 16000], 1000: [1000, 9000, 20000] };
-for (const [p, [g1, g10, g25]] of Object.entries(grid)) {
-  assert.equal(bulkPriceCents(+p, 1), g1);
-  assert.equal(bulkPriceCents(+p, 10), g10);
-  assert.equal(bulkPriceCents(+p, 25), g25);
-}
+const grid = { 450: [450, 4050, 9000], 600: [600, 5400, 12000], 700: [700, 6300, 14000], 800: [800, 7200, 16000] };
+for (const [p, prices] of Object.entries(grid)) assert.deepEqual([1, 10, 25].map((g) => bulkPriceCents(+p, g, bulkPercent(g))), prices);
 
-const line = (slug, grams, quantity, perGramCents, unitPriceCents) => ({ slug, grams, quantity, perGramCents, unitPriceCents: unitPriceCents ?? bulkPriceCents(perGramCents, grams) });
+// Une ligne de panier : son prix catalogue est celui du format, d'après la règle de la référence.
+const line = (slug, grams, quantity, perGramCents, unitPriceCents) => ({ slug, grams, quantity, perGramCents, unitPriceCents: unitPriceCents ?? bulkPriceCents(perGramCents, grams, bulkPercent(grams, bulkTiersFor(slug))) });
 
 // 9 × 1 g : pas de remise ; 10 × 1 g : −10 % ; 12 × 1 g : −10 % sur les 12
 let c = priceCart([line("mango", 1, 9, 700)]);
@@ -59,6 +65,24 @@ c = priceCart([line("beldia", 25, 4, 800)]);
 assert.deepEqual([c.subtotalCents, c.quotes], [64000, [{ slug: "beldia", grams: 100 }]]);
 c = priceCart([line("beldia", 25, 3, 800), line("beldia", 10, 2, 800)]);
 assert.deepEqual(c.quotes, []);
+
+// Piatella : rien avant 25 g, −10 % ensuite, sur tous les formats de la référence
+c = priceCart([line("piatella", 1, 10, 800)]);
+assert.deepEqual([c.subtotalCents, c.lines[0].bulkPercent], [8000, 0]);
+c = priceCart([line("piatella", 10, 2, 800), line("piatella", 1, 4, 800)]);
+assert.deepEqual([c.subtotalCents, c.lines.map((l) => l.bulkPercent)], [19200, [0, 0]]);
+c = priceCart([line("piatella", 10, 2, 800), line("piatella", 1, 5, 800)]);
+assert.deepEqual([c.subtotalCents, c.lines.map((l) => [l.unitCents, l.bulkPercent])], [18000, [[7200, 10], [720, 10]]]);
+c = priceCart([line("piatella", 25, 1, 800)]);
+assert.deepEqual([c.subtotalCents, c.lines[0].bulkPercent], [18000, 10]);
+c = priceCart([line("piatella", 25, 1, 800), line("piatella", 1, 1, 800)]);
+assert.equal(c.subtotalCents, 18720);
+// 10 g de Piatella et 10 g de Beldia au même panier : chacune suit sa règle
+c = priceCart([line("piatella", 10, 1, 800), line("beldia", 10, 1, 800)]);
+assert.deepEqual(c.lines.map((l) => [l.totalCents, l.bulkPercent]), [[8000, 0], [7200, 10]]);
+// 100 g de Piatella : signalé pour négociation, prix affiché à −10 %
+c = priceCart([line("piatella", 25, 4, 800)]);
+assert.deepEqual([c.subtotalCents, c.quotes], [72000, [{ slug: "piatella", grams: 100 }]]);
 
 // Jamais plus cher que le prix catalogue du format (ancien panier dont le prix au gramme serait faux)
 c = priceCart([{ slug: "x", grams: 10, quantity: 1, perGramCents: 900, unitPriceCents: 7200 }]);
