@@ -4,6 +4,7 @@
 //   node qa/audit.mjs 390 /resines-cbd /produit/beldia           quelques pages
 //   node qa/audit.mjs 390,1440 mouvement / /boutique             animations actives : signale aussi les blocs restés masqués
 // À lancer seul (pas en parallèle d'un autre contrôle) : une machine saturée fausse les mesures.
+// Site en ligne : BASE_URL=https://www.smart-vend.fr node qa/audit.mjs 390,1440 /fleurs-cbd /resines-cbd
 import { createRequire } from "node:module";
 // Playwright est installé hors du projet : PLAYWRIGHT_MODULES donne son dossier node_modules (avec la barre finale).
 const require = createRequire(process.env.PLAYWRIGHT_MODULES ?? "/home/claude/.npm-global/lib/node_modules/");
@@ -19,7 +20,7 @@ if (!paths.length) {
   paths = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
   paths.push("/panier", "/commande", "/page-introuvable");
 }
-const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? "/usr/bin/google-chrome", args: ["--no-sandbox"] });
+const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? "/usr/bin/google-chrome", args: ["--no-sandbox"], proxy: process.env.HTTPS_PROXY && !BASE.includes("localhost") ? { server: process.env.HTTPS_PROXY } : undefined });
 let problems = 0;
 for (const w of widths) {
   const ctx = await browser.newContext({ viewport: { width: w, height: w < 700 ? 780 : 900 }, hasTouch: w < 700, locale: "fr-FR", timezoneId: "Europe/Paris", reducedMotion: MOTION ? "no-preference" : "reduce" });

@@ -2,6 +2,7 @@
 // panier, récapitulatif WhatsApp, demande de prix dès 100 g, panier enregistré avant un changement de prix.
 //   node qa/parcours.mjs 390        (largeur de l'écran ; 320, 390 et 1440 couvrent téléphone et ordinateur)
 // Les montants attendus sont ceux du catalogue du 24 novembre 2026 : à mettre à jour si un prix change.
+// Site en ligne : BASE_URL=https://www.smart-vend.fr node qa/parcours.mjs 390 (rien n'est envoyé : le lien WhatsApp est lu, pas ouvert)
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 // Playwright est installé hors du projet : PLAYWRIGHT_MODULES donne son dossier node_modules (avec la barre finale).
@@ -11,7 +12,7 @@ const { chromium } = require("playwright");
 const BASE = process.env.BASE_URL ?? "http://localhost:3100";
 const SHOTS = process.env.SHOTS_DIR ?? "/tmp";
 const W = +(process.argv[2] ?? 390);
-const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? "/usr/bin/google-chrome", args: ["--no-sandbox"] });
+const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? "/usr/bin/google-chrome", args: ["--no-sandbox"], proxy: process.env.HTTPS_PROXY && !BASE.includes("localhost") ? { server: process.env.HTTPS_PROXY } : undefined });
 const clean = (s) => s.replace(/[  ]/g, " ").replace(/\s+/g, " ").trim();
 const errors = [];
 
