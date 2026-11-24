@@ -4,11 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { labelImage } from "@/lib/etiquettes";
 import { useEffect, useMemo, useState } from "react";
-import { useCart, cartSubtotalCents } from "@/lib/cart-store";
+import { useCart } from "@/lib/cart-store";
+import { priceCart, QUOTE_FROM_GRAMS } from "@/lib/pricing";
 import { availableShippingMethods, type ShippingMethodId } from "@/lib/shipping";
 import { evaluatePromo } from "@/data/promos";
 import { locations, site } from "@/data/site";
-import { formatEUR, cn, generateOrderNumber, commas } from "@/lib/utils";
+import { formatEUR, cn, generateOrderNumber, commas, fr } from "@/lib/utils";
 
 type FormState = {
   firstName: string;
@@ -53,7 +54,9 @@ export function CheckoutForm() {
   const [copied, setCopied] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const subtotal = cartSubtotalCents(lines);
+  // Tarif dégressif compris : les lignes d'une même référence en force Maxi s'additionnent.
+  const cart = useMemo(() => priceCart(lines), [lines]);
+  const subtotal = cart.subtotalCents;
   const methods = useMemo(
     () =>
       availableShippingMethods({
@@ -133,7 +136,8 @@ export function CheckoutForm() {
     L.push(`📞 ${form.phone.trim()}${form.email.trim() ? ` · ✉️ ${form.email.trim()}` : ""}`);
     L.push("");
     L.push("*Produits*");
-    lines.forEach((l) => L.push(`• ${l.name} — ${l.variantLabel} × ${l.quantity} = ${formatEUR(l.unitPriceCents * l.quantity)}`));
+    cart.lines.forEach((l) => L.push(`• ${l.name} — ${l.variantLabel} × ${l.quantity} = ${formatEUR(l.totalCents)}${l.bulkPercent > 0 ? ` (prix dégressif −${l.bulkPercent} %)` : ""}`));
+    cart.quotes.forEach((q) => L.push(`ℹ️ ${q.grams} g de ${lines.find((l) => l.slug === q.slug)?.name ?? q.slug} : à partir de ${QUOTE_FROM_GRAMS} g, prix à négocier.`));
     L.push("");
     L.push(`Sous-total : ${formatEUR(subtotal)}`);
     if (discountCents > 0) L.push(`Code promo ${promoCode} : − ${formatEUR(discountCents)}`);
@@ -156,7 +160,7 @@ export function CheckoutForm() {
     L.push("✅ Je certifie être majeur(e), avoir lu les conseils de prudence et accepté les CGV.");
     L.push("Merci de me confirmer la disponibilité et de m'envoyer la facture et le lien de paiement.");
     return L.join("\n");
-  }, [orderNumber, form, lines, subtotal, discountCents, promoCode, selected, shippingCents, total, shippingMethod, pickup]);
+  }, [orderNumber, form, lines, cart, subtotal, discountCents, promoCode, selected, shippingCents, total, shippingMethod, pickup]);
 
   const waUrl = `${site.whatsapp}?text=${encodeURIComponent(recap)}`;
   const mailUrl = `mailto:${site.email}?subject=${encodeURIComponent(`Commande CBDoux ${orderNumber}`)}&body=${encodeURIComponent(recap.replace(/\*/g, ""))}`;
@@ -329,7 +333,7 @@ export function CheckoutForm() {
                 <p className="t-fine t-num mt-1">Référence {orderNumber}</p>
               </div>
               <ul className="max-h-[40vh] overflow-y-auto">
-                {lines.map((l) => (
+                {cart.lines.map((l) => (
                   <li key={l.sku} className="flex gap-3.5 border-t border-foreground/20 py-3 text-[0.9375rem] last:border-b">
                     <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-[3px] bg-[#e9dfc6]">
                       <Image src={labelImage(l.image)} alt="" fill sizes="56px" className="object-cover" />
@@ -339,8 +343,9 @@ export function CheckoutForm() {
                       <span className="t-fine block">
                         {commas(l.variantLabel)}, quantité {l.quantity}
                       </span>
+                      {l.bulkPercent > 0 && <span className="t-fine t-num block text-or">{fr(`Prix dégressif : −${l.bulkPercent} %`)}</span>}
                     </span>
-                    <span className="t-num whitespace-nowrap">{formatEUR(l.unitPriceCents * l.quantity)}</span>
+                    <span className="t-num whitespace-nowrap">{formatEUR(l.totalCents)}</span>
                   </li>
                 ))}
               </ul>
@@ -358,6 +363,12 @@ export function CheckoutForm() {
                 {promoError && <p className="mt-1.5 text-[0.875rem] text-danger">{promoError}</p>}
                 {promoCode && !promoError && discountCents > 0 && <p className="mt-1.5 text-[0.875rem] font-medium text-success">Code {promoCode} appliqué.</p>}
               </div>
+
+              {cart.quotes.map((q) => (
+                <p key={q.slug} className="rounded-[3px] border border-or/50 px-3.5 py-3 text-[0.875rem] leading-snug">
+                  {fr(`${q.grams} g de ${lines.find((l) => l.slug === q.slug)?.name ?? ""} : à partir de ${QUOTE_FROM_GRAMS} g, le prix se négocie. Nous vous proposerons un prix en confirmant votre commande.`)}
+                </p>
+              ))}
 
               <dl className="space-y-2 text-[0.9688rem]">
                 <div className="flex justify-between gap-4">

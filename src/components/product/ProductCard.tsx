@@ -17,12 +17,15 @@ function labelName(name: string): string {
   return /^résines?$/i.test(suffix) ? main : `${main} ${suffix}`;
 }
 
-/** Prix d'appel : « dès » et « /g » en petit, le montant en caractères de titre, comme sur une étiquette de prix. */
+/**
+ * Prix d'appel : « dès » et « /g » en petit, le montant en caractères de titre, comme sur une étiquette de prix.
+ * Un prix avec centimes (« 4,50 € ») est marqué `data-long` : plus large, son unité s'abrège plus tôt (globals.css).
+ */
 function PriceLabel({ label }: { label: string }) {
   const m = label.match(/^(dès\s+)?(.+?)(\s*\/\s*g)?$/);
   const [, from, amount, perGram] = m ?? [null, "", label, ""];
   return (
-    <p className="etiquette-prix t-num">
+    <p className="etiquette-prix t-num" data-long={amount.length > 4 ? "" : undefined}>
       {from && <span className="etiquette-prix-mot">dès</span>}
       <span className="etiquette-prix-montant">{amount}</span>
       {/* l'unité en toutes lettres, ou abrégée quand l'étiquette est très étroite (voir globals.css) */}
@@ -67,8 +70,9 @@ export function ProductCard({
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className={cn("object-cover", !available && "opacity-60 grayscale")}
         />
-        <div className="absolute inset-x-0 top-0 z-[2] flex items-start justify-between gap-2 p-3 sm:p-3.5">
-          {!available ? <span className="pastille pastille-sapin">Épuisé</span> : p.badge ? <span className="pastille">{p.badge}</span> : <span />}
+        {/* Sur une étiquette étroite, les deux pastilles ne tiennent pas côte à côte : « Vidéo » passe alors sous la première. */}
+        <div className="absolute inset-x-0 top-0 z-[2] flex flex-wrap items-start justify-between gap-x-2 gap-y-1.5 p-3 sm:p-3.5">
+          {!available ? <span className="pastille pastille-sapin">Épuisé</span> : p.badge ? <span className="pastille">{fr(p.badge)}</span> : <span />}
           {p.video && <span className="pastille pastille-papier">Vidéo</span>}
         </div>
       </div>

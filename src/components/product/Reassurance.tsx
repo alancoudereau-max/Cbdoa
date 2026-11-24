@@ -34,11 +34,15 @@ const items: { text: string; icon: ReactNode }[] = [
   },
 ];
 
-/** Les quatre engagements rappelés sur chaque fiche produit : sous la photo sur ordinateur, sous le bloc d'achat sur téléphone. */
-export function Reassurance({ className }: { className?: string }) {
+/**
+ * Les quatre engagements rappelés sur chaque fiche produit : sous la photo sur ordinateur, sous le bloc d'achat sur téléphone.
+ * `thc` remplace le premier quand le produit a un taux de THC particulier (« THC 0,1 % max »).
+ */
+export function Reassurance({ className, thc }: { className?: string; thc?: string }) {
+  const list = thc ? [{ ...items[0], text: thc }, ...items.slice(1)] : items;
   return (
     <ul className={cn("grid grid-cols-2 text-[0.875rem] text-foreground/80", className)}>
-      {items.map((item, n) => (
+      {list.map((item, n) => (
         <li key={item.text} className={cn("flex items-center gap-2.5 border-t border-foreground/15 py-3", n % 2 ? "border-l pl-4" : "pr-3", n >= 2 && "border-b")}>
           <svg aria-hidden width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-or">
             {item.icon}

@@ -348,6 +348,21 @@
     .etiquette-unite { display: none; }
     .etiquette-unite-courte { display: inline; }
   }
+  /* Un prix avec centimes (« 4,50 € ») est plus large : son unité s'abrège plus tôt, et son montant se resserre
+     sur les étiquettes les plus étroites, pour ne jamais toucher le cadre. */
+  @container (max-width: 12.99rem) {
+    .etiquette-prix[data-long] .etiquette-unite { display: none; }
+    .etiquette-prix[data-long] .etiquette-unite-courte { display: inline; }
+  }
+  @container (max-width: 9.49rem) {
+    .etiquette-prix[data-long] .etiquette-prix-montant { font-size: 1.125rem; }
+  }
+  /* … et sur une étiquette juste assez large pour mettre la force et le prix face à face, l'unité abrégée
+     garde ce prix sur la même ligne que la force, comme sur les étiquettes voisines. */
+  @container (min-width: 18.5rem) and (max-width: 21.99rem) {
+    .etiquette-prix[data-long] .etiquette-unite { display: none; }
+    .etiquette-prix[data-long] .etiquette-unite-courte { display: inline; }
+  }
   @container (min-width: 18.5rem) {
     .etiquette-pied { flex-direction: row; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0.5rem 0.75rem; padding-top: 1.25rem; }
     .etiquette-prix { width: auto; padding-top: 0; border-top: 0; }

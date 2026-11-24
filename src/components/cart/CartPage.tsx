@@ -4,14 +4,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { labelImage } from "@/lib/etiquettes";
 import { Minus, Plus } from "lucide-react";
-import { useCart, cartSubtotalCents } from "@/lib/cart-store";
+import { useCart } from "@/lib/cart-store";
+import { priceCart, QUOTE_FROM_GRAMS } from "@/lib/pricing";
 import { FREE_SHIPPING_FROM_CENTS } from "@/lib/shipping";
-import { formatEUR, commas } from "@/lib/utils";
+import { site } from "@/data/site";
+import { formatEUR, commas, fr } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export function CartPage() {
   const { lines, hydrated, setQuantity, remove } = useCart();
-  const subtotal = cartSubtotalCents(lines);
+  const cart = priceCart(lines);
+  const subtotal = cart.subtotalCents;
   const remaining = Math.max(0, FREE_SHIPPING_FROM_CENTS - subtotal);
 
   return (
@@ -32,7 +35,7 @@ export function CartPage() {
       ) : (
         <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:gap-10">
           <ul className="lg:col-span-7">
-            {lines.map((l) => (
+            {cart.lines.map((l) => (
               <li key={l.sku} className="flex gap-4 border-t border-foreground/15 py-5 last:border-b sm:gap-6">
                 <Link href={`/produit/${l.slug}`} className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[3px] bg-[#e9dfc6] sm:h-28 sm:w-28">
                   <Image src={labelImage(l.image)} alt={l.name} fill sizes="112px" className="object-cover" />
@@ -42,10 +45,11 @@ export function CartPage() {
                     <Link href={`/produit/${l.slug}`} className="softens t-title">
                       {l.name}
                     </Link>
-                    <p className="t-num whitespace-nowrap text-[1.0625rem] font-medium">{formatEUR(l.unitPriceCents * l.quantity)}</p>
+                    <p className="t-num whitespace-nowrap text-[1.0625rem] font-medium">{formatEUR(l.totalCents)}</p>
                   </div>
                   <p className="t-fine mt-1">
-                    {commas(l.variantLabel)}, {formatEUR(l.unitPriceCents)} l'unité
+                    {commas(l.variantLabel)}, {formatEUR(l.unitCents)} l'unité
+                    {l.bulkPercent > 0 && <span className="t-num block text-or">{fr(`Prix dégressif : −${l.bulkPercent} %`)}</span>}
                   </p>
                   <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
                     <div className="inline-flex items-center rounded-full border border-foreground/30">
@@ -80,6 +84,17 @@ export function CartPage() {
                     <dd className="text-right">{remaining === 0 ? "Colissimo offert" : "calculée à l'étape suivante"}</dd>
                   </div>
                 </dl>
+                {cart.quotes.map((q) => {
+                  const name = lines.find((l) => l.slug === q.slug)?.name ?? "";
+                  return (
+                    <p key={q.slug} className="mt-4 rounded-[3px] border border-or/50 px-3.5 py-3 text-[0.875rem] leading-snug">
+                      {fr(`${q.grams} g de ${name} : à partir de ${QUOTE_FROM_GRAMS} g, le prix se négocie.`)}{" "}
+                      <a href={`${site.whatsapp}?text=${encodeURIComponent(`Bonjour CBDoux, je souhaite un prix pour ${q.grams} g de ${name.replace(/\s+[—–-]\s+/g, " ")}.`)}`} target="_blank" rel="noopener noreferrer" className="link">
+                        Nous écrire sur WhatsApp
+                      </a>
+                    </p>
+                  );
+                })}
                 {remaining > 0 && (
                   <p className="mt-4 text-[0.875rem] text-foreground/80">
                     Plus que <strong className="t-num">{formatEUR(remaining)}</strong> pour le port Colissimo offert.

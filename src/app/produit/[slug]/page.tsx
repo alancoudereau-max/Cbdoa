@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProduct, visibleProducts, categories, forceLabels, formatPrice, maxForce } from "@/data/products";
+import { getProduct, visibleProducts, categories, forceLabels, formatPrice, maxForce, thcLabel } from "@/data/products";
+import { site } from "@/data/site";
 import { guides } from "@/data/guides";
 import { coas } from "@/data/coa";
 import { AddToCart } from "@/components/product/AddToCart";
@@ -15,6 +16,7 @@ import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, productJsonLd, productSeoTitle } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
+import { bulkRuleText, quoteMessage, QUOTE_FROM_GRAMS } from "@/lib/pricing";
 import { commas, fr } from "@/lib/utils";
 import { categoryFaq } from "@/data/category-faq";
 
@@ -30,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!p) return {};
   return buildMetadata({
     title: productSeoTitle(p),
-    description: `${p.short} THC < 0,3 %, analyse labo. Livraison 24/48 h, port offert dès 60 €.`,
+    description: `${p.short} ${p.thcMax ? "Analyse labo." : `${thcLabel(p)}, analyse labo.`} Livraison 24/48 h, port offert dès 60 €.`,
     path: `/produit/${p.slug}`,
     image: `/produit/${p.slug}/opengraph-image`,
     type: "product",
@@ -49,6 +51,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const relatedGuides = guides.filter((g) => g.relatedProducts.includes(p.slug)).slice(0, 3);
   const coa = coas.find((c) => c.productSlugs.includes(p.slug));
   const strongest = maxForce(p);
+  // Références au tarif dégressif (force Maxi) : le tableau des tarifs ajoute la ligne « 100 g et plus, à négocier ».
+  const bulk = p.variants.find((v) => v.perGramCents !== undefined);
 
   return (
     <div>
@@ -68,7 +72,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <div className="lg:col-span-6">
             <div className="lg:sticky lg:top-28">
               <ProductMedia product={p} src={labelImage(p.image)} natural={photoSize(p.image)} />
-              <Reassurance className="mt-5 hidden lg:grid" />
+              <Reassurance className="mt-5 hidden lg:grid" thc={p.thcMax ? thcLabel(p) : undefined} />
             </div>
           </div>
 
@@ -79,7 +83,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 {cat.name}
               </Link>
               {p.origin && <span>{commas(p.origin)}</span>}
-              {p.badge && <span className="pastille ml-auto">{p.badge}</span>}
+              {p.badge && <span className="pastille ml-auto whitespace-nowrap">{fr(p.badge)}</span>}
             </p>
             <h1 className="mt-4 font-serif text-[clamp(2.3rem,5.6vw,4rem)] font-light leading-[1] tracking-[-0.03em]">{fr(p.name)}</h1>
             <p className="t-lead mt-5">{fr(p.short)}</p>
@@ -88,7 +92,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               <AddToCart product={p} availability={availability} />
             </div>
             {/* Sur téléphone, les engagements viennent après le choix, pas entre la photo et le titre */}
-            <Reassurance className="mt-6 lg:hidden" />
+            <Reassurance className="mt-6 lg:hidden" thc={p.thcMax ? thcLabel(p) : undefined} />
 
             <dl className="mt-9">
               {[
@@ -177,8 +181,27 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     </td>
                   </tr>
                 ))}
+                {bulk && (
+                  <tr className="border-b border-foreground/20 align-top">
+                    <td className="py-3 pr-2 sm:pr-3">
+                      <span className="block">{fr(bulk.tierLabel)}</span>
+                      <span className="block text-[0.8125rem] text-foreground/65">{fr(bulk.cbdInfo)}</span>
+                    </td>
+                    <td className="py-3 pr-2 sm:pr-3">{fr(`${QUOTE_FROM_GRAMS} g et plus`)}</td>
+                    <td className="py-3 text-right font-medium">
+                      <a href={`${site.whatsapp}?text=${encodeURIComponent(quoteMessage(p.name, bulk.tierLabel))}`} target="_blank" rel="noopener noreferrer" className="link">
+                        à négocier
+                      </a>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
+            {bulk && (
+              <p className="mt-5 text-[0.9375rem] leading-relaxed text-foreground/85">
+                {fr(`Prix dégressif : ${bulkRuleText()} d'une même référence, tous formats additionnés dans le panier. À partir de ${QUOTE_FROM_GRAMS} g, le prix se négocie sur WhatsApp.`)}
+              </p>
+            )}
             <ul className="mt-6 space-y-2 text-[0.9375rem] text-foreground/85">
               <li>Port Colissimo offert dès 60 €, Chronopost 24 h disponible.</li>
               <li>Retrait gratuit à Damprichard et au Russey.</li>

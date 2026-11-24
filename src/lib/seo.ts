@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { site, company, locations, vendingSupervision, SITE_URL } from "@/data/site";
-import { categories, type Product, minPriceCents, maxPriceCents, startingPriceLabel } from "@/data/products";
+import { categories, type Product, minPriceCents, maxPriceCents, startingPriceLabel, thcLabel } from "@/data/products";
 import { absoluteUrl } from "@/lib/utils";
 
 const BRAND_SUFFIX = ` | ${site.name}`;
@@ -209,7 +209,7 @@ export function breadcrumbJsonLd(items: Array<{ name: string; path: string }>) {
   };
 }
 
-/** Date de mise en ligne des vidéos produit (ouverture du site). */
+/** Date de mise en ligne des vidéos produit : l'ouverture du site, ou l'arrivée du produit au catalogue (`addedAt`). */
 const VIDEO_UPLOAD_DATE = "2026-11-16T03:00:00+01:00";
 
 /** Droit de rétractation de 14 jours, retour par envoi postal aux frais du client (voir /retours). */
@@ -241,7 +241,7 @@ export function productJsonLd(p: Product, opts: { available: boolean }) {
     brand: { "@type": "Brand", name: site.name },
     category: cat.name,
     additionalProperty: [
-      { "@type": "PropertyValue", name: "THC", value: "< 0,3 %" },
+      { "@type": "PropertyValue", name: "THC", value: thcLabel(p).replace(/^THC\s+/, "") },
       ...(p.origin ? [{ "@type": "PropertyValue", name: "Origine / culture", value: p.origin }] : []),
       { "@type": "PropertyValue", name: "Arômes", value: p.aromas },
     ],
@@ -254,7 +254,7 @@ export function productJsonLd(p: Product, opts: { available: boolean }) {
             description: `Présentation en vidéo : ${p.short}`,
             thumbnailUrl: [absoluteUrl(p.image)],
             contentUrl: absoluteUrl(p.video),
-            uploadDate: VIDEO_UPLOAD_DATE,
+            uploadDate: p.addedAt ? `${p.addedAt}T08:00:00+01:00` : VIDEO_UPLOAD_DATE,
           },
         }
       : {}),

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { promises as fs } from "fs";
 import path from "path";
-import { getProduct, visibleProducts, categories, formatPrice } from "@/data/products";
+import { getProduct, visibleProducts, categories, formatPrice, thcLabel } from "@/data/products";
 
 export const alt = "CBDoux — fiche produit";
 export const size = { width: 1200, height: 630 };
@@ -82,7 +82,7 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
           </div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 16 }}>
             <div style={{ display: "flex", background: PAPIER, color: SAPIN, padding: "12px 28px", borderRadius: 999, fontSize: 30, fontWeight: 600, whiteSpace: "nowrap" }}>{`dès ${min}${perGram ? " le gramme" : ""}`}</div>
-            <div style={{ fontSize: 22, color: "rgba(242,234,214,0.78)", display: "flex", whiteSpace: "nowrap" }}>THC &lt; 0,3 %, livré en 24/48 h</div>
+            <div style={{ fontSize: 22, color: "rgba(242,234,214,0.78)", display: "flex", whiteSpace: "nowrap" }}>{`${thcLabel(p).replace(/(\d) %/g, "$1 %")}, livré en 24/48 h`}</div>
           </div>
         </div>
         <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", paddingRight: 30 }}>

@@ -8,7 +8,8 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { AgeGate, AgeGateFlag } from "@/components/AgeGate";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { cartSuggestions } from "@/lib/suggestions";
-import { visibleProducts, categories } from "@/data/products";
+import { products, visibleProducts, categories } from "@/data/products";
+import type { CartCatalog } from "@/lib/cart-store";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { JsonLd } from "@/components/JsonLd";
 import { MotionRoot } from "@/components/motion/MotionRoot";
@@ -104,6 +105,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // Le menu indique, à côté de chaque rayon, combien de références il compte.
   const menuCounts: Record<string, number> = { "/boutique": visibleProducts.length, "/distributeurs": locations.vendingMachines.length };
   for (const [key, cat] of Object.entries(categories)) menuCounts[`/${cat.slug}`] = visibleProducts.filter((p) => p.category === key).length;
+  // Prix du jour de chaque format : un panier resté dans le navigateur s'y recale (prix modifié, format retiré de la vente).
+  const cartCatalog: CartCatalog = Object.fromEntries(products.flatMap((p) => p.variants.map((v) => [v.sku, [v.priceCents, v.perGramCents ?? 0]])));
   return (
     <html lang="fr" suppressHydrationWarning className={`${fraunces.variable} ${frauncesItalic.variable} ${hanken.variable} ${hankenItalic.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
@@ -121,7 +124,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <SiteFooter />
-        <CartDrawer suggestions={cartSuggestions()} />
+        <CartDrawer suggestions={cartSuggestions()} catalog={cartCatalog} />
         <AgeGate />
         <WhatsAppFab />
       </body>

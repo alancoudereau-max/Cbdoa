@@ -30,12 +30,20 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 | `python3 -I scripts/build-carte.py` | régénère la carte du Haut-Doubs (`src/data/carte-haut-doubs.json`) : communes, zones de livraison, contour du Doubs |
 | `python3 -I scripts/normalize-product-photos.py <photo.jpg>` | ramène au blanc le fond grisâtre d'une photo produit, avant de lancer la commande précédente |
 | `python3 -I scripts/patch-fonts.py` | à relancer si un fichier de police est remplacé : l'apostrophe du clavier s'affiche en apostrophe typographique |
+| `node --experimental-strip-types --no-warnings qa/pricing.test.mjs` | contrôle la règle des prix dégressifs (paliers, formats, panier), sans navigateur |
+| `python3 -I qa/seo_extract.py` | après un build : longueur des titres et descriptions de chaque page |
+| `node qa/audit.mjs 320,360,390,768,1024,1280,1440` | site construit et lancé sur le port 3100 : débordements, images cassées et erreurs sur toutes les pages |
+| `node qa/parcours.mjs 390` | site lancé sur le port 3100 : achat complet (tarif dégressif, panier, récapitulatif WhatsApp, demande de prix, ancien panier) |
 
 ## Où modifier quoi
 
 | Besoin | Fichier |
 |---|---|
 | Produits, prix, forces, textes, photos, ruptures (`soldOut`) | `src/data/products.ts` (+ images dans `public/images/products/`) |
+| Prix dégressifs de la force Maxi (−10 % dès 10 g, −20 % dès 25 g, prix à négocier dès 100 g) | `src/lib/pricing.ts` : seuils et taux en tête de fichier ; formats, fiches, panier et récapitulatif suivent |
+| Prix d'un produit en force Maxi | `src/data/products.ts` : un seul nombre, le prix du gramme en centimes (`maxiTiers("BELD", 800)` = 8 € le gramme) |
+| Taux de THC propre à un produit (« THC 0,1 % max ») | `src/data/products.ts`, champ `thcMax` du produit |
+| Vidéo d'un produit | `public/videos/<produit>.mp4` (480 px de large, sans son ni métadonnées) + champ `video` du produit |
 | Codes promo | `src/data/promos.ts` |
 | Tarifs et modes de livraison, seuil port offert, codes postaux zone locale | `src/lib/shipping.ts` |
 | Coordonnées, société, mentions légales (SIRET…), points de retrait, navigation | `src/data/site.ts` |
@@ -62,6 +70,7 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 - **La carte du Haut-Doubs** (`src/components/content/HautDoubsMap.tsx`) : distributeurs, points de retrait et zone de livraison à domicile, dessinés à partir des coordonnées officielles des mairies. Elle figure sur l'accueil, la page livraison, la page distributeurs, « CBD près de chez vous » et chaque page de ville (la commune y est cerclée).
 - **Le défilement** : là où le navigateur le permet, les photos des rayons glissent dans leur cadre et les cartes postales se décalent pendant qu'on fait défiler la page (CSS seul, `animation-timeline`). Ailleurs, rien ne bouge et rien ne manque.
 - **Le panier** : l'article ajouté s'éclaire un instant ; quand il manque 12 € ou moins pour le port offert, le panier propose un gramme à ajouter d'un geste.
+- **Les prix dégressifs** (force Maxi) : la remise se calcule sur le poids total d'une même référence au panier, tous formats additionnés (10 × 1 g ou un sachet de 10 g : même prix). La fiche produit l'annonce sous les formats, le panier et le récapitulatif WhatsApp l'indiquent ligne par ligne. Le choix « 100 g et plus » remplace l'ajout au panier par une demande de prix sur WhatsApp. Un panier resté dans le navigateur reprend les prix du jour à l'ouverture du site ; un format retiré de la vente en sort.
 - **Les finitions** (17 novembre 2026, vocabulaire d'horlogerie, tout est dans `globals.css`) : grain léger sur les fonds sombres (`--grain-dark`), graduation de cadran en haut des sections noires (`.minuterie`, posée d'office sur `main section.nuit`), fleuron entre deux sections de même fond (`<Fleuron />`, variante `motif="losange"` à côté du logo), coins gravés (`.coins`), panneaux à double filet (`.panel`), boutons d'or biseautés, médaillons numérotés pour les vraies étapes (`.steps`, `.step-num`), cadre imprimé et prix en caractères de titre sur les étiquettes produit, bon de bienvenue avec talon détachable et code à copier (`.ticket`, `<CopyCode />`), poinçon de la maison en pied de page (`<Poincon />`), jauge graduée du port offert (`.jauge`), lettrine dorée en tête des guides (`.prose-lettrine`), nombre de références en exposant dans le menu.
 - **Les titres de page** suivent la règle des titres de section : la fin de la phrase en italique doré (`<em>` dans le `title` de `<PageHero />`). Ne jamais mettre d'espace insécable dans cet `<em>` : le doré est un dégradé découpé sur le texte, tout ce qui dépasse de la boîte devient invisible.
 - **Un décor ne doit jamais faire défiler** : dans un panneau qui défile (vérification d'âge, menu), une gravure en position absolue qui dépasse crée un défilement « dans le vide ». Elle est donc fixée à l'écran (classe `fixed`).

@@ -34,7 +34,7 @@ export const categoryFaq: Record<Category, FaqItem[]> = {
       a: "En vaporisation, avec un vaporisateur compatible concentrés ou une chambre dédiée (souvent avec un tampon de dégommage). La résine n'est destinée ni à la combustion ni à un usage alimentaire.",
     },
     {
-      q: "Que sont les résines « Force Maxi » (Beldia, Piatella) ?",
+      q: "Que sont les résines « Force Maxi » (Jaune Mousseux, Beldia, Piatella) ?",
       a: "Ce sont les références les plus concentrées de notre gamme, réservées aux adultes habitués et déconseillées aux débutants. Utilisez une très petite quantité, attendez les effets avant toute nouvelle prise et ne conduisez pas après usage. THC toujours inférieur à 0,3 %.",
     },
   ],

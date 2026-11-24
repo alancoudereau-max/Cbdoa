@@ -1,4 +1,10 @@
 /** Pages locales (SEO) — une page par ville, contenu unique. */
+import { visibleProducts, getProductsByCategory, formatPrice, type Category } from "@/data/products";
+
+/** Nombre de références et prix d'appel au gramme, repris du catalogue : ces phrases restent justes quand il change. */
+const REFERENCES = visibleProducts.length;
+const perGramFrom = (c: Category) => formatPrice(Math.min(...getProductsByCategory(c).flatMap((p) => p.variants.filter((v) => v.format === "1 g").map((v) => v.priceCents))));
+
 export type CityMode = "distributeur" | "retrait" | "livraison-locale" | "expedition";
 
 export type City = {
@@ -31,7 +37,7 @@ export const cities: City[] = [
     intro: "Charquemont est le berceau de CBDoux : c'est ici, dans une ancienne cabine téléphonique rénovée installée à la Station Lavage Central, rue de la Vierge, qu'a ouvert notre premier distributeur automatique de CBD, accessible jour et nuit.",
     body: [
       "Le distributeur de Charquemont propose nos références phares (fleurs, résines, huiles cutanées) conservées à 20 °C dans des sachets hermétiques biphase, avec paiement par carte bancaire. Chaque vente y est validée en direct, par caméra connectée avec haut-parleur intégré : un membre de l'équipe vérifie votre majorité et vous communique le code d'achat. Il fonctionne 24 h/24, 7 j/7, même les jours fériés — pratique après une journée de travail en Suisse voisine ou un week-end de randonnée sur le plateau.",
-      "Vous préférez choisir tranquillement parmi les 18 références du catalogue ? Commandez en ligne et faites-vous livrer à domicile à Charquemont par nos soins (10 €, offert dès 100 €), ou retirez gratuitement votre commande à Damprichard ou au Russey, à quelques minutes.",
+      `Vous préférez choisir tranquillement parmi les ${REFERENCES} références du catalogue ? Commandez en ligne et faites-vous livrer à domicile à Charquemont par nos soins (10 €, offert dès 100 €), ou retirez gratuitement votre commande à Damprichard ou au Russey, à quelques minutes.`,
     ],
     faq: [
       { q: "Où se trouve exactement le distributeur de Charquemont ?", a: "À la Station Lavage Central, rue de la Vierge, dans l'ancienne cabine téléphonique rénovée aux couleurs de CBDoux. Un lien d'itinéraire est disponible sur notre page Distributeurs." },
@@ -106,7 +112,7 @@ export const cities: City[] = [
     description: "CBD à Morteau (25500) : livraison à domicile par nos soins (offerte dès 100 €) ou Colissimo 48 h. Fleurs, résines et huiles cutanées analysées, THC < 0,3 %.",
     intro: "Morteau, Les Fins, Montlebon, Grand'Combe-Châteleu : le val de Morteau fait partie de notre zone de livraison à domicile. Vos produits CBDoux vous sont remis en main propre, sans passer par la poste.",
     body: [
-      "Commandez en ligne parmi nos 18 références — Super Lemon Haze hydro, Amnesia, Orangello, résines 3X Filtré et Olivette Gold, huiles Full Spectrum cutanées — et choisissez la livraison locale : 10 €, offerte dès 100 €, sous 24 à 48 h sur un créneau convenu par WhatsApp.",
+      `Commandez en ligne parmi nos ${REFERENCES} références — Super Lemon Haze hydro, Amnesia, Orangello, résines 3X Filtré et Olivette Gold, huiles Full Spectrum cutanées — et choisissez la livraison locale : 10 €, offerte dès 100 €, sous 24 à 48 h sur un créneau convenu par WhatsApp.`,
       "Vous préférez la boîte aux lettres ? Colissimo 48 h (offert dès 60 €) ou Lettre suivie pour les petites quantités, dans un colis neutre. Et nos distributeurs 24/7 du Russey (20 minutes) et de Charquemont restent accessibles à toute heure.",
     ],
     faq: [
@@ -186,7 +192,7 @@ export const cities: City[] = [
     ],
     faq: [
       { q: "Proposez-vous un point de retrait à Besançon ?", a: "Pas pour le moment : nos points de retrait sont à Damprichard et au Russey. À Besançon, Colissimo et Chronopost sont les solutions les plus rapides." },
-      { q: "Vos prix sont-ils compétitifs par rapport aux boutiques bisontines ?", a: "Nos fleurs démarrent à 5 €/g et nos résines à 5 €/g, avec un prix dégressif sur les formats 10 g et le port offert dès 60 €." },
+      { q: "Vos prix sont-ils compétitifs par rapport aux boutiques bisontines ?", a: `Nos fleurs démarrent à ${perGramFrom("fleurs")}/g et nos résines à ${perGramFrom("resines")}/g, avec un prix dégressif sur les formats 10 g et le port offert dès 60 €.` },
     ],
     nearby: ["pontarlier", "montbeliard", "morteau"],
   },

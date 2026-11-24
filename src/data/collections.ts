@@ -123,6 +123,9 @@ function cheapCollection(): Collection {
     .sort((a, b) => (perGramPrice(a) ?? 0) - (perGramPrice(b) ?? 0) || a.name.localeCompare(b.name, "fr"));
   const products = [...lots, ...byGram];
   const minLabel = formatPrice(min);
+  /** Les références au prix au gramme le plus bas : nommées dans la FAQ quand elles sont une ou deux. */
+  const cheapest = sold.filter((x) => perGramPrice(x) === min).map((x) => x.name.replace(/\s+[—–-]\s+/g, " "));
+  const cheapestText = cheapest.length <= 2 ? `le prix au gramme le plus bas est de ${minLabel} (${cheapest.join(", ")})` : `plusieurs références démarrent à ${minLabel} le gramme`;
 
   const rows = products.map((x) => {
     const one = perGramPrice(x);
@@ -135,7 +138,8 @@ function cheapCollection(): Collection {
     ];
   });
 
-  const example = byGram.find((x) => tenGramVariant(x));
+  // L'exemple chiffré est une référence qui existe en Classique, la force conseillée pour commencer.
+  const example = byGram.find((x) => tenGramVariant(x) && x.variants.some((v) => v.force === 1)) ?? byGram.find((x) => tenGramVariant(x));
   const exampleTen = example ? tenGramVariant(example) : undefined;
   const lot = lots[0];
   const lotTen = lot ? tenGramVariant(lot) : undefined;
@@ -165,7 +169,7 @@ function cheapCollection(): Collection {
             exampleTen && example
               ? `Achetez par 10 g : le prix au gramme baisse (${example.name.replace(/\s+[—–-]\s+/g, " ")} : ${formatPrice(perGramPrice(example) ?? 0)} le gramme, ${formatPrice(exampleTen.priceCents)} les 10 g).`
               : "Achetez par 10 g : le prix au gramme baisse.",
-            "Choisissez la force Classique : c'est la moins chère, et la plus adaptée pour découvrir une variété.",
+            "Sur une même variété, choisissez la force Classique : c'est la moins chère, et la plus adaptée pour la découvrir.",
             `Regroupez vos achats : le port Colissimo est offert dès ${freeShipping}.`,
             `Dans le Haut-Doubs, retirez gratuitement votre commande à Damprichard ou au Russey (livraison à domicile offerte dès ${localFree}).`,
             ...(promo ? [`Première commande : le code ${promo.code} offre ${formatPrice(promo.value)} dès ${formatPrice(promo.minSubtotalCents)} d'achat.`] : []),
@@ -184,10 +188,10 @@ function cheapCollection(): Collection {
         q: "Quel est le CBD le moins cher chez CBDoux ?",
         a:
           lot && lotTen
-            ? `Le ${lot.name}, vendu en lot de 10 g à ${formatPrice(lotTen.priceCents)}. Côté fleurs et résines, plusieurs références démarrent à ${minLabel} le gramme.`
-            : `Plusieurs fleurs et résines démarrent à ${minLabel} le gramme.`,
+            ? `Le ${lot.name}, vendu en lot de 10 g à ${formatPrice(lotTen.priceCents)}. Côté fleurs et résines, ${cheapestText}.`
+            : `Côté fleurs et résines, ${cheapestText}.`,
       },
-      { q: "Pourquoi le prix baisse-t-il par 10 g ?", a: "Un seul sachet, une seule préparation : nous répercutons cette économie sur le prix au gramme." },
+      { q: "Pourquoi le prix baisse-t-il par 10 g ?", a: "Un seul sachet, une seule préparation : nous répercutons cette économie sur le prix au gramme. En force Maxi, le prix est dégressif : il baisse encore à partir de 25 g d'une même référence." },
       { q: "Un CBD pas cher est-il de moins bonne qualité ?", a: "Pas chez nous : les références d'entrée de gamme sont des fleurs et des résines analysées, simplement moins rares ou vendues en plus grande quantité. Les analyses sont consultables avant l'achat." },
       { q: "À partir de quel montant la livraison est-elle gratuite ?", a: `Dès ${freeShipping} d'achat en Colissimo. La livraison locale à domicile est offerte dès ${localFree}, et le retrait à Damprichard ou au Russey est toujours gratuit.` },
     ],

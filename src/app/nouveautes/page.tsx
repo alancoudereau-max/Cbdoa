@@ -8,7 +8,7 @@ import { getAvailabilityMap } from "@/lib/stock";
 
 export const metadata: Metadata = buildMetadata({
   title: "Nouveautés CBD : les dernières références CBDoux",
-  description: "Découvrez les dernières arrivées CBDoux : Olivette Gold, Beldia, Piatella, Californienne Small Buds. Fleurs et résines CBD analysées, livraison France 24/48 h.",
+  description: "Les dernières arrivées CBDoux : Artic Blue, Mango Pops, Royal Dwarf Small Buds, résine Jaune Mousseux. Fleurs et résines CBD, livraison France 24/48 h.",
   path: "/nouveautes",
 });
 

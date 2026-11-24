@@ -9,8 +9,12 @@
  *    contenant du CBD ne peuvent plus être vendues en France ; fleurs et résines sont présentées pour la vaporisation
  *
  * Les prix sont en centimes d'euro (prix payé par le client). Pour changer un prix, modifiez `priceCents`.
+ * Force Maxi : un seul prix à donner, celui du gramme (`maxiTiers("PREFIXE", 700)` = 7 € le gramme). Les formats
+ * 10 g et 25 g et leurs remises se calculent tout seuls d'après la règle de src/lib/pricing.ts.
  * Rupture de stock : `soldOut: true` sur un produit ou une variante. Retirer un produit : `hidden: true`.
+ * Taux de THC particulier (« 0,1 % max ») : champ `thcMax` du produit ; sans lui, la fiche affiche « THC < 0,3 % ».
  */
+import { BULK_TIERS, bulkPriceCents } from "@/lib/pricing";
 
 export type Category = "fleurs" | "resines" | "huiles" | "vape";
 export type Force = 1 | 2 | 3 | "maxi";
@@ -27,6 +31,11 @@ export type Variant = {
   /** Poids de produit en grammes (calcul du port). Pour les objets : poids approximatif emballé. */
   grams: number;
   priceCents: number;
+  /**
+   * Prix de base au gramme, présent sur les variantes au tarif dégressif (force Maxi) : le panier additionne
+   * les grammes d'une même référence et applique la remise du palier atteint (voir src/lib/pricing.ts).
+   */
+  perGramCents?: number;
   /** Information cannabinoïdes affichée (« Indoor 24 % CBD ») */
   cbdInfo: string;
   warning?: string;
@@ -42,9 +51,13 @@ export type Product = {
   badge?: string;
   featured?: boolean;
   isNew?: boolean;
+  /** Date d'arrivée au catalogue (AAAA-MM-JJ) : les plus récentes passent en tête de la page Nouveautés. */
+  addedAt?: string;
   hidden?: boolean;
   /** Rupture de stock sur tout le produit */
   soldOut?: boolean;
+  /** Taux de THC maximal du produit quand il est plus bas que le plafond légal, en % (« 0,1 »). Sans ce champ : « < 0,3 % ». */
+  thcMax?: string;
   /** Accroche courte (cartes produit, meta description) — 1 à 2 phrases */
   short: string;
   /** Description longue (fiche produit, SEO) */
@@ -83,7 +96,7 @@ export const categories: Record<
       "Fleurs de CBD indoor, hydroponie et greenhouse : Super Lemon Haze, Amnesia, Orangello, Snow White… THC < 0,3 %, analyses labo, livraison France 24/48 h.",
     intro: [
       "Nos fleurs de chanvre CBD sont choisies pour la densité de leurs têtes, leur taux de trichomes et la netteté de leurs arômes. Culture indoor, hydroponie ou greenhouse : chaque variété est goûtée et validée avant d'être proposée, et chaque lot est accompagné d'une analyse de laboratoire (THC < 0,3 %).",
-      "Choisissez votre force : Classique (la fleur au naturel), Force 2 et Force 3 (enrichies en cannabinoïdes) ou Maxi (l'enrichissement le plus élevé de la gamme, réservée aux adultes habitués). Vendues au gramme et par 10 g, nos fleurs sont expédiées sous 24 h ouvrées en emballage neutre et hermétique.",
+      "Choisissez votre force : Classique (la fleur au naturel), Force 2 et Force 3 (enrichies en cannabinoïdes) ou Maxi (l'enrichissement le plus élevé de la gamme, réservée aux adultes habitués). Vendues au gramme et par 10 g (jusqu'à 25 g en force Maxi, à prix dégressif), nos fleurs sont expédiées sous 24 h ouvrées en emballage neutre et hermétique.",
     ],
     image: "/images/products/fleurs-cbd.jpg",
     keywords: ["fleur cbd", "fleurs cbd pas cher", "fleur cbd indoor", "fleur cbd hydroponie", "acheter fleur cbd en ligne", "fleur cbd puissante", "fleur cbd livraison"],
@@ -94,10 +107,10 @@ export const categories: Record<
     title: "Résine CBD : hash, Piatella, Beldia",
     h1: "Résines CBD",
     description:
-      "Résines de CBD : hash triple filtré, pollen pressé Olivette Gold, Beldia et Piatella en force Maxi. THC < 0,3 %, analyses labo, livraison discrète 24/48 h.",
+      "Résines de CBD : hash triple filtré, Olivette Gold, Jaune Mousseux, Beldia et Piatella en force Maxi. THC < 0,3 %, analyses labo, livraison discrète 24/48 h.",
     intro: [
-      "Une résine de CBD, c'est la concentration des trichomes de la plante. Notre sélection va du hash triple filtré (99 % de trichomes, sans déchet végétal) aux résines traditionnelles pressées, en passant par des textures plus grasses et friables comme l'Olivette Gold.",
-      "Toutes nos résines affichent un THC inférieur à 0,3 % et sont proposées en plusieurs forces. Les références Beldia et Piatella sont exclusivement en force Maxi et réservées aux adultes habitués : commencez toujours par une très petite quantité.",
+      "Une résine de CBD, c'est la concentration des trichomes de la plante. Notre sélection va du hash triple filtré (99 % de trichomes, sans déchet végétal) aux résines traditionnelles pressées, en passant par des textures plus grasses et friables comme l'Olivette Gold, ou blondes et aérées comme le Jaune Mousseux.",
+      "Toutes nos résines affichent un THC inférieur à 0,3 % et sont proposées en plusieurs forces. Les références Jaune Mousseux, Beldia et Piatella sont exclusivement en force Maxi et réservées aux adultes habitués : commencez toujours par une très petite quantité.",
     ],
     image: "/images/products/resines-cbd.jpg",
     keywords: ["résine cbd", "hash cbd", "pollen cbd", "résine cbd pas cher", "acheter résine cbd", "hash cbd filtré", "résine cbd puissante"],
@@ -198,26 +211,28 @@ function tiers(
   ]);
 }
 
-/** Variantes « Force Maxi » : 1 g, 5 g, 10 g, 100 g */
-function maxiTiers(prefix: string, cbdInfo: string): Variant[] {
-  const packs: Array<[string, number, number]> = [
-    ["1 g", 1, 1000],
-    ["5 g", 5, 4000],
-    ["10 g", 10, 8000],
-    ["100 g", 100, 50000],
-  ];
-  return packs.map(([format, grams, priceCents]) => ({
+/**
+ * Variantes « Force Maxi » à partir du seul prix au gramme : 1 g, puis un format par palier du tarif dégressif
+ * (10 g à −10 %, 25 g à −20 %). Au-delà, le prix se négocie : la fiche renvoie vers WhatsApp.
+ */
+function maxiTiers(prefix: string, perGramCents: number, cbdInfo = "Concentration maximale"): Variant[] {
+  const packs = [1, ...BULK_TIERS.map((t) => t.fromGrams)].sort((a, b) => a - b);
+  return packs.map((grams) => ({
     sku: `${prefix}-MAXI-${grams}G`,
     tier: "maxi",
     tierLabel: forceLabels.maxi.label,
     force: "maxi",
-    format,
+    format: `${grams} g`,
     grams,
-    priceCents,
+    priceCents: bulkPriceCents(perGramCents, grams),
+    perGramCents,
     cbdInfo,
     warning: MAXI_WARNING,
   }));
 }
+
+/** Date d'arrivée des quatre nouveautés de novembre 2026 */
+const ARRIVAGE_NOVEMBRE = "2026-11-24";
 
 export const products: Product[] = [
   // ───────────────────────────── FLEURS ─────────────────────────────
@@ -395,6 +410,75 @@ export const products: Product[] = [
     keywords: ["bubble gum cbd", "fleur cbd sucrée", "fleur cbd indica"],
   },
   {
+    slug: "artic-blue",
+    seoName: "Artic Blue : fleur CBD, THC 0,1 % max",
+    name: "Artic Blue",
+    category: "fleurs",
+    origin: "Grosses têtes · reflets violets",
+    badge: "THC 0,1 % max",
+    isNew: true,
+    addedAt: ARRIVAGE_NOVEMBRE,
+    thcMax: "0,1",
+    short: "Grosses têtes vert olive aux reflets violets, givrées de trichomes, avec un taux de THC de 0,1 % au maximum. Exclusivement en force Maxi.",
+    description: [
+      "L'Artic Blue est une fleur à grosses têtes : longues, compactes, vert olive, traversées de reflets violets et mauves, avec des pistils cuivrés et un givre de trichomes bien visible. La vidéo de cette fiche la montre telle qu'elle est, en vrac puis tête par tête.",
+      "Sa particularité : un taux de THC de 0,1 % au maximum, trois fois moins que le plafond légal de 0,3 %. C'est ce que l'on appelle couramment une fleur « sans THC » ; nous préférons donner le chiffre exact. Les arômes précis peuvent varier d'un lot à l'autre : demandez-nous conseil.",
+      "Disponible exclusivement en force Maxi, l'enrichissement en cannabinoïdes le plus élevé de notre gamme : réservée aux adultes habitués, déconseillée aux débutants. Un taux de THC très bas ne garantit pas un dépistage négatif : ne conduisez pas après usage. Vendue au gramme, à prix dégressif dès 10 g.",
+    ],
+    aromas: "Variables selon le lot : demandez-nous le profil du moment sur WhatsApp.",
+    profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
+    image: "/images/products/artic-blue.jpg",
+    video: "/videos/artic-blue.mp4",
+    variants: maxiTiers("ARTB", 800),
+    keywords: ["artic blue cbd", "arctic blue cbd", "fleur cbd faible thc", "fleur cbd sans thc", "fleur cbd thc 0,1", "fleur cbd maxi"],
+  },
+  {
+    slug: "mango-pops",
+    name: "Mango Pops",
+    category: "fleurs",
+    origin: "Petites têtes denses",
+    badge: "Nouveauté",
+    isNew: true,
+    addedAt: ARRIVAGE_NOVEMBRE,
+    short: "Petites têtes rondes et serrées, vert clair tirant sur le jaune, piquées de pistils orangés. Exclusivement en force Maxi.",
+    description: [
+      "La Mango Pops se présente en petites têtes rondes et serrées, d'un vert clair qui tire sur le jaune, parsemées de pistils orangés. Faciles à doser, elles se prennent une à une, sans avoir à les casser.",
+      "Son nom annonce un registre fruité, côté mangue. Les notes précises peuvent varier d'un lot à l'autre : demandez-nous conseil, et regardez la vidéo de cette fiche pour voir la fleur telle qu'elle est.",
+      "Disponible exclusivement en force Maxi, l'enrichissement en cannabinoïdes le plus élevé de notre gamme : réservée aux adultes habitués, déconseillée aux débutants. Commencez par une très petite quantité. Vendue au gramme, à prix dégressif dès 10 g.",
+    ],
+    aromas: "Registre fruité annoncé par son nom, côté mangue (notes précises variables selon le lot).",
+    profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
+    image: "/images/products/mango-pops.jpg",
+    video: "/videos/mango-pops.mp4",
+    variants: maxiTiers("MANGO", 700),
+    keywords: ["mango pops cbd", "fleur cbd mangue", "fleur cbd fruitée", "petites têtes cbd", "fleur cbd maxi"],
+  },
+  {
+    slug: "royal-dwarf-small-buds",
+    seoName: "Small Buds CBD Royal Dwarf",
+    name: "Royal Dwarf — Small Buds",
+    category: "fleurs",
+    origin: "Petites têtes calibrées",
+    badge: "Nouveauté",
+    isNew: true,
+    addedAt: ARRIVAGE_NOVEMBRE,
+    short: "Petites têtes rondes et compactes, d'un vert tendre et d'un calibre régulier : le prix doux des small buds, en force Maxi.",
+    description: [
+      "Les small buds sont les petites têtes de la plante : la même fleur, dans un format réduit et à un prix plus doux. Celles de la Royal Dwarf sont rondes, compactes et d'un calibre régulier, d'un vert tendre.",
+      "Faciles à doser tête par tête, elles se prêtent bien à la vaporisation. Les arômes précis peuvent varier d'un lot à l'autre : demandez-nous conseil. La vidéo de cette fiche les montre à pleines mains, telles qu'elles arrivent.",
+      "Disponible exclusivement en force Maxi, l'enrichissement en cannabinoïdes le plus élevé de notre gamme : réservée aux adultes habitués, déconseillée aux débutants. Commencez par une très petite quantité. Vendue au gramme, à prix dégressif dès 10 g.",
+    ],
+    aromas: "Variables selon le lot : demandez-nous le profil du moment sur WhatsApp.",
+    profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
+    usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
+    image: "/images/products/royal-dwarf-small-buds.jpg",
+    video: "/videos/royal-dwarf-small-buds.mp4",
+    variants: maxiTiers("RDSB", 600),
+    keywords: ["royal dwarf cbd", "small buds cbd", "petites têtes cbd", "fleur cbd pas cher", "fleur cbd maxi"],
+  },
+  {
     slug: "californienne-indoor-small-buds",
     seoName: "Small Buds CBD Californienne Indoor",
     name: "Californienne Indoor — Small Buds",
@@ -406,14 +490,14 @@ export const products: Product[] = [
     description: [
       "Les small buds sont les petites têtes récoltées sur les mêmes plants que les grosses têtes : même génétique californienne, même culture indoor, même givre de trichomes — à un prix plus doux.",
       "Le profil est fruité et sucré, typique des génétiques californiennes. Les notes précises peuvent varier selon le lot ; n'hésitez pas à nous demander conseil.",
-      "Disponible exclusivement en force Maxi : réservée aux adultes habitués, déconseillée aux débutants. Commencez par une très petite quantité.",
+      "Disponible exclusivement en force Maxi : réservée aux adultes habitués, déconseillée aux débutants. Commencez par une très petite quantité. Vendue au gramme, à prix dégressif dès 10 g.",
     ],
     aromas: "Fruité et sucré, typique des génétiques californiennes (variable selon le lot).",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
     usage: "Vaporisation. Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/californienne-indoor-small-buds.jpg",
     video: "/videos/californienne-indoor-small-buds.mp4",
-    variants: maxiTiers("CALSB", "Concentration maximale"),
+    variants: maxiTiers("CALSB", 700),
     keywords: ["small buds cbd", "fleur cbd pas cher", "fleur cbd maxi", "petites têtes cbd"],
   },
   {
@@ -492,6 +576,29 @@ export const products: Product[] = [
     keywords: ["olivette cbd", "pollen cbd", "résine pressée cbd", "pollen pressé cbd"],
   },
   {
+    slug: "jaune-mousseux",
+    seoName: "Jaune Mousseux : résine CBD blonde",
+    name: "Jaune Mousseux — Résine",
+    category: "resines",
+    origin: "Résine blonde · texture aérée",
+    badge: "Nouveauté",
+    isNew: true,
+    addedAt: ARRIVAGE_NOVEMBRE,
+    short: "Résine blonde à la pâte claire, fine et aérée, qui s'effrite sans effort entre les doigts. Exclusivement en force Maxi.",
+    description: [
+      "Le Jaune Mousseux porte bien son nom. Le bloc est blond, couleur sable ; la coupe est nette et découvre un cœur plus clair, au grain fin, régulier et aéré.",
+      "C'est cette texture qui le distingue : légère, presque mousseuse, elle s'ouvre et s'effrite entre les doigts. Une résine facile à émietter et à doser, à voir de près dans la vidéo de cette fiche.",
+      "Il est proposé exclusivement en force Maxi, l'enrichissement en cannabinoïdes le plus élevé de notre gamme : une force réservée aux adultes habitués, déconseillée aux débutants. Le profil aromatique précis varie selon le lot : demandez-nous conseil. Vendu au gramme, à prix dégressif dès 10 g.",
+    ],
+    aromas: "Résineux, dans l'esprit des résines blondes ; profil précis variable selon le lot.",
+    profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
+    usage: "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.",
+    image: "/images/products/jaune-mousseux.jpg",
+    video: "/videos/jaune-mousseux.mp4",
+    variants: maxiTiers("JMOU", 450),
+    keywords: ["jaune mousseux cbd", "résine cbd blonde", "résine cbd mousseuse", "hash cbd jaune", "résine cbd maxi"],
+  },
+  {
     slug: "beldia",
     seoName: "Beldia CBD : résine traditionnelle",
     name: "Beldia — Résine",
@@ -503,14 +610,14 @@ export const products: Product[] = [
     description: [
       "La Beldia est une résine de caractère, dans la plus pure tradition : robe brune, texture compacte, profil résineux aux notes terreuses et épicées.",
       "Elle est proposée exclusivement en force Maxi, l'enrichissement en cannabinoïdes le plus élevé de notre gamme. Réservée aux adultes habitués, déconseillée aux débutants.",
-      "Découvrez sa texture en vidéo. Vendue en 1 g, 5 g, 10 g et 100 g.",
+      "Découvrez sa texture en vidéo. Vendue au gramme, à prix dégressif dès 10 g.",
     ],
     aromas: "Résineux, notes terreuses et épicées, dans l'esprit des résines traditionnelles.",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
     usage: "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/beldia.jpg",
     video: "/videos/beldia.mp4",
-    variants: maxiTiers("BELD", "Concentration maximale"),
+    variants: maxiTiers("BELD", 800),
     keywords: ["beldia cbd", "résine cbd traditionnelle", "résine cbd maxi", "hash cbd puissant"],
   },
   {
@@ -525,14 +632,14 @@ export const products: Product[] = [
     description: [
       "La Piatella est une résine à la robe brun doré. À la coupe, elle révèle un cœur finement granuleux et une texture généreuse, presque fondante, que nous vous montrons en vidéo.",
       "Son caractère est résineux, dans l'esprit des grandes résines de chanvre. Le profil aromatique précis varie selon le lot : demandez-nous conseil.",
-      "Proposée exclusivement en force Maxi : réservée aux adultes habitués, déconseillée aux débutants.",
+      "Proposée exclusivement en force Maxi : réservée aux adultes habitués, déconseillée aux débutants. Vendue au gramme, à prix dégressif dès 10 g.",
     ],
     aromas: "Résineux et rond ; profil précis variable selon le lot.",
     profile: "Force Maxi : ressenti marqué, à aborder avec une très petite quantité.",
     usage: "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.",
     image: "/images/products/piatella-2.jpg",
     video: "/videos/piatella.mp4",
-    variants: maxiTiers("PIAT", "Concentration maximale"),
+    variants: maxiTiers("PIAT", 1000),
     keywords: ["piatella cbd", "résine cbd premium", "résine cbd maxi"],
   },
 
@@ -675,5 +782,16 @@ export function formatPrice(cents: number): string {
   }).format(cents / 100);
 }
 
+/** Taux de THC à afficher pour un produit : « THC 0,1 % max » s'il a un taux particulier, sinon « THC < 0,3 % ». */
+export function thcLabel(p: Product): string {
+  return p.thcMax ? `THC ${p.thcMax} % max` : "THC < 0,3 %";
+}
+
+/** Vrai si le produit a des variantes au tarif dégressif (force Maxi) : sa fiche explique la règle et le prix négocié. */
+export function hasBulkPricing(p: Product): boolean {
+  return p.variants.some((v) => v.perGramCents !== undefined);
+}
+
 export const featuredProducts = visibleProducts.filter((p) => p.featured);
-export const newProducts = visibleProducts.filter((p) => p.isNew);
+/** Nouveautés : les arrivées les plus récentes d'abord, puis l'ordre du catalogue. */
+export const newProducts = visibleProducts.filter((p) => p.isNew).sort((a, b) => (b.addedAt ?? "").localeCompare(a.addedAt ?? ""));

@@ -160,7 +160,7 @@ export const guides: Guide[] = [
         heading: "Small buds et trim : les bons plans",
         blocks: [
           p("Les small buds sont les petites têtes récoltées sur les mêmes plants que les grosses : même génétique, même culture, prix plus doux. Le trim rassemble les petites feuilles résineuses et mini-buds issus de la manucure : il se vaporise comme une fleur, avec un rendu plus léger, à prix très accessible."),
-          p("Notre Californienne Indoor Small Buds est proposée en force Maxi, réservée aux adultes habitués. Le Trim Premium Indoor est vendu par lots de 10, 50 et 100 g."),
+          p("Nos small buds (Californienne Indoor, Royal Dwarf) sont proposées en force Maxi, réservée aux adultes habitués. Le Trim Premium Indoor est vendu par lots de 10, 50 et 100 g."),
         ],
       },
       {
@@ -347,7 +347,7 @@ export const guides: Guide[] = [
       {
         heading: "Force Maxi : l'enrichissement maximal",
         blocks: [
-          p("La force Maxi est réservée à quelques références (Californienne Small Buds, Beldia, Piatella). C'est l'enrichissement en cannabinoïdes le plus élevé de notre gamme. Elle est réservée aux adultes habitués et déconseillée aux débutants."),
+          p("La force Maxi est réservée à quelques références : des fleurs (Artic Blue, Mango Pops, small buds Californienne et Royal Dwarf) et des résines (Jaune Mousseux, Beldia, Piatella). C'est l'enrichissement en cannabinoïdes le plus élevé de notre gamme. Elle est réservée aux adultes habitués et déconseillée aux débutants."),
           ul([
             "Commencez par une très petite quantité.",
             "Attendez de ressentir les effets avant toute nouvelle prise (15 à 30 minutes en vaporisation).",
