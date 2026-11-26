@@ -89,7 +89,7 @@ export function SiteHeader({ counts = {} }: { counts?: Record<string, number> })
             <Logo className="h-[1.9rem] sm:h-9" />
           </Link>
 
-          <nav aria-label="Navigation principale" className="hidden xl:flex items-center gap-6 2xl:gap-8">
+          <nav aria-label="Navigation principale" className="hidden xl:flex items-center gap-5 2xl:gap-8">
             {mainNav.map((l) => (
               <Link key={l.href} href={l.href} className="nav-link" aria-current={isActive(l.href) ? "page" : undefined}>
                 {l.label}

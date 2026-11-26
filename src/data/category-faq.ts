@@ -71,3 +71,35 @@ export const categoryFaq: Record<Category, FaqItem[]> = {
     },
   ],
 };
+
+/** Vente sur commande : questions reprises sur la section /sur-commande et sur chaque fiche concernée. */
+export const onOrderFaq: FaqItem[] = [
+  {
+    q: "Que veut dire « sur commande » ?",
+    a: "Ces références ne sont pas dans notre stock : nous les commandons pour vous une fois votre commande confirmée et réglée. Vous les recevez sous 1 semaine environ, dans le même emballage neutre et hermétique que le reste de la boutique.",
+  },
+  {
+    q: "Comment passer une commande ?",
+    a: "Comme pour le reste du site : vous ajoutez les références au panier, puis votre récapitulatif nous est envoyé sur WhatsApp. Nous confirmons la disponibilité et le délai, puis nous vous adressons votre facture avec un lien de paiement sécurisé. La commande est lancée à réception du paiement.",
+  },
+  {
+    q: "Quel est le délai de livraison ?",
+    a: "Comptez 1 semaine environ entre votre paiement et la réception du colis. Si une référence venait à manquer ou à prendre du retard, nous vous prévenons aussitôt : vous choisissez alors d'attendre, de la remplacer ou d'être remboursé.",
+  },
+  {
+    q: "Comment fonctionnent les prix de gros ?",
+    a: "Chaque référence a trois prix au gramme : le prix au détail, un prix plus bas à partir de 100 g et un prix encore plus bas à partir de 500 g. Le palier se calcule sur le poids total d'une même référence dans votre panier, tous formats additionnés. À partir de 1 kg, écrivez-nous sur WhatsApp : le prix se fixe sur demande.",
+  },
+  {
+    q: "Puis-je commander en même temps des produits en stock ?",
+    a: "Oui. Votre commande part alors en une seule fois, quand tout est réuni, soit sous 1 semaine environ. Si vous souhaitez recevoir tout de suite les produits en stock, dites-le-nous sur WhatsApp au moment de la confirmation.",
+  },
+  {
+    q: "Ces produits sont-ils analysés ?",
+    a: "Ce sont des fleurs et des résines en CBD classique : aucune n'est enrichie en cannabinoïdes, et leur taux de THC reste sous le plafond légal de 0,3 %. Le certificat d'analyse du lot vous est transmis sur simple demande, avant de commander.",
+  },
+  {
+    q: "Puis-je changer d'avis après avoir commandé ?",
+    a: "Oui. Comme pour toute commande passée à distance, vous disposez de 14 jours après la réception pour vous rétracter, dans les conditions décrites sur notre page Retours.",
+  },
+];

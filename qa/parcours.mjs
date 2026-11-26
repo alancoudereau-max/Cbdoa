@@ -1,7 +1,8 @@
 // Parcours d'achat complet sur le site construit (npx next start -p 3100) : tarif dégressif de la force Maxi,
-// panier, récapitulatif WhatsApp, demande de prix dès 100 g, panier enregistré avant un changement de prix.
+// panier, récapitulatif WhatsApp, demande de prix dès 100 g, panier enregistré avant un changement de prix,
+// références sur commande (prix de gros, délai, section).
 //   node qa/parcours.mjs 390        (largeur de l'écran ; 320, 390 et 1440 couvrent téléphone et ordinateur)
-// Les montants attendus sont ceux du catalogue du 24 novembre 2026 : à mettre à jour si un prix change.
+// Les montants attendus sont ceux du catalogue du 26 novembre 2026 : à mettre à jour si un prix change.
 // Site en ligne : BASE_URL=https://www.smart-vend.fr node qa/parcours.mjs 390 (rien n'est envoyé : le lien WhatsApp est lu, pas ouvert)
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
@@ -279,6 +280,100 @@ const minus = async (page, n) => { for (let i = 0; i < n; i++) await panel(page)
   const rayons = clean(await page.locator("section", { has: page.locator('h2:has-text("Peu de références")') }).innerText());
   assert.match(rayons, /dès 4,50 € le gramme/);
   assert.match(rayons, /dès 3,60 € le gramme/);
+  await ctx.close();
+}
+
+// ───────────── 6. Sur commande : prix de gros dès 100 g et 500 g, délai rappelé jusqu'au message WhatsApp
+{
+  const { ctx, page } = await open();
+  await page.goto(BASE + "/produit/ketama", { waitUntil: "networkidle" });
+  const t = await tiles(page);
+  console.log("sur commande, cases :", t);
+  assert.deepEqual(t, [
+    "1 g 2,75 €",
+    "10 g 27,50 € 2,75 € le gramme",
+    "25 g 68,75 € 2,75 € le gramme",
+    "100 g 200 € 2 € le gramme −27 % , 27 % de moins au gramme",
+    "500 g 750 € 1,50 € le gramme −45 % , 45 % de moins au gramme",
+    "1 kg et plus Sur demande sur WhatsApp",
+  ]);
+  const fiche = clean(await panel(page).innerText());
+  assert.match(fiche, /Prix de gros : 2 € le gramme dès 100 g, 1,50 € dès 500 g de cette référence dans votre panier, tous formats additionnés\./);
+  assert.match(fiche, /Sur commande\. Nous commandons cette référence pour vous dès votre paiement : livraison sous 1 semaine environ\./);
+  // CBD classique : pas de case de prudence à cocher
+  assert.equal(await panel(page).locator('input[type="checkbox"]').count(), 0);
+  assert.equal(await total(page), "2,75 €");
+  const top = clean(await page.locator("main").innerText());
+  assert.match(top, /Boutique Sur commande Ketama/);
+  assert.match(top, /Photo non contractuelle : l'aspect varie d'un lot à l'autre\./);
+  assert.match(top, /Livré sous 1 semaine/);
+  assert.match(top, /CBD classique : fleur ou résine au naturel, non enrichie\./);
+  assert.match(top, /À partir de 1 kg, le prix se fixe sur demande, sur WhatsApp\./);
+  assert.ok(!/24\/48 h|sous 24 h/.test(top), "la fiche d'une référence sur commande annonce encore un délai de 24 h");
+  // 4 × 25 g = 100 g : le prix des 100 g
+  await page.getByRole("radio", { name: /^25 g/ }).click();
+  await plus(page, 2);
+  assert.equal(await total(page), "206,25 €"); // 75 g au détail
+  await plus(page, 1);
+  assert.equal(await total(page), "200 €"); // 100 g
+  assert.match(clean(await panel(page).innerText()), /soit 2 € le gramme, 27 % de moins qu'au détail/);
+  await page.screenshot({ path: `${SHOTS}/p7-sur-commande-${W}.png` });
+  await add(page);
+  let lines = await drawerLines(page);
+  console.log("panier sur commande :", lines, await subtotal(page));
+  assert.match(lines[0], /Ketama 200 € CBD classique, 25 g Prix dégressif : −27 % Sur commande, sous 1 semaine/);
+  assert.match(clean(await drawer(page).innerText()), /Votre panier contient un article sur commande : l'ensemble est expédié en une fois, sous 1 semaine environ\./);
+  await page.screenshot({ path: `${SHOTS}/p8-panier-sur-commande-${W}.png` });
+  await closeDrawer(page);
+  // « 1 kg et plus » : demande de prix, comme dans le tableau des tarifs
+  await page.getByRole("radio", { name: /^1 kg et plus/ }).click();
+  assert.equal(await total(page), "Prix sur demande");
+  const ask = decodeURIComponent((await panel(page).getByRole("link", { name: "Demander un prix sur WhatsApp" }).getAttribute("href")).split("?text=")[1]);
+  assert.equal(ask, "Bonjour CBDoux, je souhaite un prix pour 1 kg ou plus de Ketama (CBD classique).");
+  assert.equal(decodeURIComponent((await page.getByRole("link", { name: "sur demande", exact: true }).getAttribute("href")).split("?text=")[1]), ask);
+  // un produit en stock à côté, puis la page se recharge : le panier enregistré garde la référence sur commande et son prix
+  await page.goto(BASE + "/produit/super-lemon-haze-hydro-usa", { waitUntil: "networkidle" });
+  await add(page);
+  assert.equal(await subtotal(page), "206 €");
+  await closeDrawer(page);
+  await page.goto(BASE + "/panier", { waitUntil: "networkidle" });
+  const cartText = clean(await page.locator("main").innerText());
+  assert.match(cartText, /Ketama 200 € CBD classique, 25 g, 50 € l'unité Prix dégressif : −27 % Sur commande, sous 1 semaine/);
+  assert.match(cartText, /Super Lemon Haze Hydro USA 6 € Classique, 1 g, 6 € l'unité/);
+  assert.match(cartText, /Votre panier contient un article sur commande/);
+  assert.match(cartText, /Colis neutre, expédié en une fois sous 1 semaine environ\./);
+  assert.match(cartText, /Total estimé 206 €/);
+  // commande : le délai est dit avant l'envoi et dans le message
+  await page.goto(BASE + "/commande", { waitUntil: "networkidle" });
+  await page.getByLabel("Prénom").fill("Camille");
+  await page.getByLabel("Nom", { exact: true }).fill("Test");
+  await page.getByLabel("Téléphone (WhatsApp)").fill("06 00 00 00 00");
+  await page.getByLabel("Code postal").fill("75011");
+  await page.getByLabel("Ville").fill("Paris");
+  await page.getByLabel("Adresse", { exact: true }).fill("1 rue de l'Essai");
+  const message = decodeURIComponent((await page.getByRole("link", { name: "Envoyer ma commande sur WhatsApp" }).getAttribute("href")).split("?text=")[1]).replace(/[\u00a0\u202f]/g, " ");
+  console.log("----- message WhatsApp, sur commande -----\n" + message + "\n----------------------------");
+  assert.match(message, /• Ketama — CBD classique · 25 g × 4 = 200 € \(prix dégressif −27 %\) — SUR COMMANDE\n/u);
+  assert.match(message, /• Super Lemon Haze Hydro USA — Classique · 1 g × 1 = 6 €\n/u);
+  assert.match(message, /⏳ Articles sur commande : livraison sous 1 semaine environ, envoi en une fois\./u);
+  const order = clean(await page.locator("main").innerText());
+  assert.match(order, /Votre panier contient un article sur commande : nous le commandons dès votre paiement et l'ensemble est expédié en une fois, sous 1 semaine environ\./);
+  assert.match(order, /Ketama CBD classique, 25 g, quantité 4 Prix dégressif : −27 % Sur commande, sous 1 semaine 200 €/);
+  assert.match(order, /Expédition en une fois, sous 1 semaine environ après paiement\./);
+  await page.locator("main aside").screenshot({ path: `${SHOTS}/p9-commande-sur-commande-${W}.png` });
+
+  // la section : toutes les références, leur prix d'appel, aucune dans les rayons
+  await page.goto(BASE + "/sur-commande", { waitUntil: "networkidle" });
+  const section = Object.fromEntries(await page.locator("article.etiquette").evaluateAll((cards) => cards.map((a) => [a.querySelector("a").getAttribute("href").split("/").pop(), a.querySelector(".etiquette-prix").innerText.replace(/[\u00a0\u202f]/g, " ").replace(/\s+/g, " ").trim().replace(/ ?\/g$| le gramme$/, "")])));
+  assert.equal(Object.keys(section).length, 67);
+  assert.deepEqual([section["mandarine-sherbet"], section["white-rhino"], section["trim-standard"], section.ketama, section["moon-rock"]], ["dès 7,56 €", "dès 2,76 €", "dès 0,33 €", "dès 1,50 €", "dès 2,94 €"]);
+  assert.match(clean(await page.locator("h1").innerText()), /Sur commande, livré sous 1 semaine\./);
+  for (const path of ["/fleurs-cbd", "/resines-cbd", "/boutique"]) {
+    await page.goto(BASE + path, { waitUntil: "networkidle" });
+    const slugs = await page.locator("article.etiquette a").evaluateAll((links) => links.map((a) => a.getAttribute("href").split("/").pop()));
+    assert.ok(!slugs.some((slug) => slug in section), `${path} : une référence sur commande est dans un rayon`);
+  }
+  assert.match(clean(await page.locator("main").innerText()), /Sur commande, 67 références de plus\./);
   await ctx.close();
 }
 

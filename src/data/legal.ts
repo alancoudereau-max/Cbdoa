@@ -114,7 +114,7 @@ export const legalDocs: LegalDoc[] = [
     slug: "cgv",
     title: "Conditions générales de vente",
     description: `Conditions générales de vente ${site.name} : commande par WhatsApp, prix, paiement par lien sécurisé, livraison en France, rétractation, garanties, médiation.`,
-    updatedAt: "2026-11-17",
+    updatedAt: "2026-11-26",
     intro: `Les présentes conditions générales de vente (ci-après « CGV ») régissent les ventes de produits conclues à distance entre ${vendeur} (ci-après « le Vendeur » ou « ${site.name} ») et toute personne physique majeure agissant à des fins non professionnelles (ci-après « le Client ») sur le site ${site.url}.`,
     sections: [
       {
@@ -176,6 +176,7 @@ export const legalDocs: LegalDoc[] = [
         blocks: [
           p("Les produits sont livrés en France métropolitaine uniquement, à l'adresse indiquée par le Client, dans un emballage neutre. Les commandes dont le paiement est reçu avant 13 h un jour ouvré sont expédiées le jour même ; au-delà, le jour ouvré suivant. Les délais ci-dessous sont indicatifs et courent à compter de l'expédition."),
           shippingTable,
+          p("Produits « sur commande » : les références présentées dans la section « Sur commande » du site ne sont pas tenues en stock. Le Vendeur les commande à réception du paiement ; elles sont livrées dans un délai d'une semaine environ à compter du paiement, ce délai étant rappelé sur la fiche du produit, dans le panier et dans le récapitulatif de commande. Une commande qui réunit des produits en stock et des produits sur commande est expédiée en une seule fois, sauf demande contraire du Client. Si un produit sur commande se révèle indisponible ou retardé, le Vendeur en informe le Client sans délai ; celui-ci peut alors attendre, choisir un autre produit ou annuler l'achat de ce produit et en être remboursé sous quatorze jours."),
           p("Conformément à l'article L216-1 du Code de la consommation, en cas de non-livraison dans le délai indiqué ou, à défaut, dans les trente jours suivant la commande, le Client peut, après avoir enjoint le Vendeur d'effectuer la livraison dans un délai supplémentaire raisonnable resté infructueux, résoudre le contrat par lettre recommandée ou écrit sur support durable ; les sommes versées lui sont alors remboursées."),
           p("Les risques de perte ou d'endommagement des produits sont transférés au Client au moment où il en prend physiquement possession. Il appartient au Client de vérifier l'état du colis à réception et de formuler toute réserve auprès du transporteur et du Vendeur sous 48 h. Un colis retourné pour adresse erronée ou non réclamé pourra être réexpédié aux frais du Client."),
         ],

@@ -8,7 +8,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { AgeGate, AgeGateFlag } from "@/components/AgeGate";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { cartSuggestions } from "@/lib/suggestions";
-import { products, visibleProducts, categories } from "@/data/products";
+import { products, visibleProducts, visibleOnOrderProducts, categories } from "@/data/products";
 import type { CartCatalog } from "@/lib/cart-store";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { JsonLd } from "@/components/JsonLd";
@@ -103,7 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // La gravure de la vérification d'âge est le plus grand élément du premier écran d'un nouveau visiteur : on la charge tôt.
   preload("/images/brand/guilloche-rosace.svg", { as: "image", fetchPriority: "high" });
   // Le menu indique, à côté de chaque rayon, combien de références il compte.
-  const menuCounts: Record<string, number> = { "/boutique": visibleProducts.length, "/distributeurs": locations.vendingMachines.length };
+  const menuCounts: Record<string, number> = { "/boutique": visibleProducts.length, "/sur-commande": visibleOnOrderProducts.length, "/distributeurs": locations.vendingMachines.length };
   for (const [key, cat] of Object.entries(categories)) menuCounts[`/${cat.slug}`] = visibleProducts.filter((p) => p.category === key).length;
   // Prix du jour de chaque format : un panier resté dans le navigateur s'y recale (prix modifié, format retiré de la vente).
   const cartCatalog: CartCatalog = Object.fromEntries(products.flatMap((p) => p.variants.map((v) => [v.sku, [v.priceCents, v.perGramCents ?? 0]])));

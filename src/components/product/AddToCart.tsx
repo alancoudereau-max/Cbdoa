@@ -7,7 +7,7 @@ import { Minus, Plus, AlertTriangle } from "lucide-react";
 import { type Product, type Variant, forceLabels, startingPriceLabel, thcLabel, type TierKey } from "@/data/products";
 import { site } from "@/data/site";
 import { useCart } from "@/lib/cart-store";
-import { bulkPercent, bulkPriceCents, bulkRuleText, bulkTiersFor, quoteMessage, QUOTE_FROM_GRAMS } from "@/lib/pricing";
+import { bulkRuleText, bulkTiersFor, gramsLabel, onOrderRates, quoteFromGrams, quoteMessage, tierPrice, ON_ORDER_DELAY, ON_ORDER_STEPS } from "@/lib/pricing";
 import { formatEUR, cn, fr } from "@/lib/utils";
 import { ForceBadge } from "@/components/ui/ForceBadge";
 
@@ -72,12 +72,17 @@ export function AddToCart({ product, availability }: { product: Product; availab
   const available = availability[variant.sku] !== false;
   const strong = variant.force === 3 || variant.force === "maxi";
   const needsAck = strong && !ack;
-  // Tarif dégressif (force Maxi) : la remise dépend du poids choisi, format × quantité, et des paliers de la référence.
+  // Tarif dégressif (force Maxi, références sur commande) : le prix dépend du poids choisi, format × quantité.
   const bulk = formats.some((f) => f.perGramCents !== undefined);
   const bulkTiers = bulkTiersFor(product.slug);
+  // Sur commande : trois prix au gramme (détail, dès 100 g, dès 500 g) ; au-delà d'un kilo, le prix se fixe sur demande.
+  const orderRates = onOrderRates(product.slug);
+  const quoteFrom = quoteFromGrams(product.slug);
+  const quoteFromLabel = gramsLabel(quoteFrom);
   const quote = bulk && sku === QUOTE;
-  const percent = variant.perGramCents ? bulkPercent(variant.grams * qty, bulkTiers) : 0;
-  const unitCents = variant.perGramCents ? Math.min(variant.priceCents, bulkPriceCents(variant.perGramCents, variant.grams, percent)) : variant.priceCents;
+  const paid = variant.perGramCents ? tierPrice(product.slug, variant.perGramCents, variant.grams, variant.grams * qty) : { unitCents: variant.priceCents, percent: 0 };
+  const percent = paid.percent;
+  const unitCents = Math.min(variant.priceCents, paid.unitCents);
   const totalCents = unitCents * qty;
   const perGram = /g$/.test(variant.format) && (variant.grams > 1 || percent > 0) ? unitCents / variant.grams : null;
   // Économie au gramme d'un grand format, par rapport au plus petit format de la même force (affichée dès 5 %).
@@ -88,7 +93,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
     return pct >= 5 ? pct : 0;
   };
   const variantSaving = variant.perGramCents ? percent : saving(variant);
-  const quoteUrl = `${site.whatsapp}?text=${encodeURIComponent(quoteMessage(product.name, variant.tierLabel))}`;
+  const quoteUrl = `${site.whatsapp}?text=${encodeURIComponent(quoteMessage(product.name, variant.tierLabel, quoteFrom))}`;
 
   const onAdd = () => {
     if (quote || !available || needsAck) return;
@@ -178,7 +183,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
         {/* Choix du format */}
         <div>
           <p className="field-label">Format</p>
-          <div className={cn("grid grid-cols-2 gap-2", !bulk && "sm:grid-cols-3")} role="radiogroup" aria-label="Format">
+          <div className={cn("grid grid-cols-2 gap-2", (!bulk || orderRates) && "sm:grid-cols-3")} role="radiogroup" aria-label="Format">
             {formats.map((v) => {
               const active = v.sku === sku;
               const ok = availability[v.sku] !== false;
@@ -202,18 +207,36 @@ export function AddToCart({ product, availability }: { product: Product; availab
             {/* À partir de 100 g d'une même référence, le prix se négocie : ce choix remplace l'ajout au panier par une demande WhatsApp. */}
             {bulk && (
               <button type="button" role="radio" aria-checked={quote} onClick={() => setSku(QUOTE)} className="choice t-num relative px-3.5 py-3">
-                <span className="block font-medium">{fr(`${QUOTE_FROM_GRAMS} g et plus`)}</span>
-                <span className="block">Prix à négocier</span>
+                <span className="block font-medium">{fr(`${quoteFromLabel} et plus`)}</span>
+                <span className="block">{orderRates ? "Sur demande" : "Prix à négocier"}</span>
                 <span className="block text-[0.75rem] opacity-70">sur WhatsApp</span>
               </button>
             )}
           </div>
-          {bulk && <p className="t-fine mt-3">{fr(`Prix dégressif : ${bulkRuleText(bulkTiers)} de cette référence dans votre panier, tous formats additionnés.`)}</p>}
+          {bulk && !orderRates && <p className="t-fine mt-3">{fr(`Prix dégressif : ${bulkRuleText(bulkTiers)} de cette référence dans votre panier, tous formats additionnés.`)}</p>}
+          {orderRates && (
+            <p className="t-fine t-num mt-3">
+              {fr(`Prix de gros : ${formatEUR(orderRates[1])} le gramme dès ${ON_ORDER_STEPS[0]} g, ${formatEUR(orderRates[2])} dès ${ON_ORDER_STEPS[1]} g de cette référence dans votre panier, tous formats additionnés.`)}
+            </p>
+          )}
         </div>
+
+        {/* Sur commande : le délai, dit avant le prix */}
+        {product.onOrder && (
+          <p className="flex items-start gap-2.5 rounded-[3px] border border-or/50 px-3.5 py-3 text-[0.875rem] leading-snug">
+            <svg aria-hidden width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0 text-or">
+              <circle cx="9" cy="9" r="6.6" />
+              <path d="M9 5.3V9l2.5 1.7" />
+            </svg>
+            <span>
+              <strong className="font-medium">Sur commande.</strong> {fr(`Nous commandons cette référence pour vous dès votre paiement : livraison sous ${ON_ORDER_DELAY} environ.`)}
+            </span>
+          </p>
+        )}
 
         {/* Ce que contient la variante choisie */}
         <p className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[0.875rem] text-foreground/80">
-          <ForceBadge force={variant.force} />
+          <ForceBadge force={variant.force} label={product.forceLabel} />
           <span>{fr(variant.cbdInfo)}</span>
           <span>{fr(thcLabel(product))}</span>
         </p>
@@ -243,9 +266,9 @@ export function AddToCart({ product, availability }: { product: Product; availab
       <div aria-hidden className="rule-double" />
       {quote ? (
         <div className="p-5 sm:p-7">
-          <p className="t-fine">{fr(`${QUOTE_FROM_GRAMS} g et plus`)}</p>
-          <p className="price-tick mt-1 font-serif text-[1.875rem] font-light leading-none tracking-[-0.02em]">Prix à négocier</p>
-          <p className="t-fine mt-2">{fr(`À partir de ${QUOTE_FROM_GRAMS} g d'une même référence, écrivez-nous : nous vous répondons avec un prix.`)}</p>
+          <p className="t-fine">{fr(`${quoteFromLabel} et plus`)}</p>
+          <p className="price-tick mt-1 font-serif text-[1.875rem] font-light leading-none tracking-[-0.02em]">{orderRates ? "Prix sur demande" : "Prix à négocier"}</p>
+          <p className="t-fine mt-2">{fr(`À partir de ${quoteFromLabel} d'une même référence, écrivez-nous : nous vous répondons avec un prix.`)}</p>
           <a href={quoteUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary mt-5 w-full">
             Demander un prix sur WhatsApp
           </a>
@@ -277,9 +300,9 @@ export function AddToCart({ product, availability }: { product: Product; availab
           </div>
         </div>
         {/* Format × quantité atteint le seuil où le prix se négocie : on le dit, sans empêcher l'ajout au panier. */}
-        {variant.perGramCents !== undefined && variant.grams * qty >= QUOTE_FROM_GRAMS && (
+        {variant.perGramCents !== undefined && variant.grams * qty >= quoteFrom && (
           <p className="t-fine mt-4">
-            {fr(`${variant.grams * qty} g : à partir de ${QUOTE_FROM_GRAMS} g, le prix se négocie.`)}{" "}
+            {fr(`${gramsLabel(variant.grams * qty)} : à partir de ${quoteFromLabel}, le prix se négocie.`)}{" "}
             <a href={quoteUrl} target="_blank" rel="noopener noreferrer" className="link">
               Demander un prix sur WhatsApp
             </a>
@@ -302,7 +325,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
                   {bar === "before" && several
                     ? fromLabel
                     : quote
-                      ? fr(`${QUOTE_FROM_GRAMS} g et plus · à négocier`)
+                      ? fr(`${quoteFromLabel} et plus · ${orderRates ? "sur demande" : "à négocier"}`)
                       : fr(`${variant.tierLabel}, ${variant.format} · ${formatEUR(totalCents)}`)}
                 </p>
               </div>

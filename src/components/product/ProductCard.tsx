@@ -49,6 +49,7 @@ export function ProductCard({
   className,
   available = true,
   headingLevel = 3,
+  hideBadge = false,
 }: {
   product: Product;
   priority?: boolean;
@@ -56,6 +57,8 @@ export function ProductCard({
   available?: boolean;
   /** Niveau du titre : 2 quand la grille suit directement le H1 de la page (hiérarchie des titres). */
   headingLevel?: 2 | 3;
+  /** Sans la pastille du produit : dans la section « Sur commande », toutes les étiquettes porteraient la même. */
+  hideBadge?: boolean;
 }) {
   const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
@@ -72,7 +75,7 @@ export function ProductCard({
         />
         {/* Sur une étiquette étroite, les deux pastilles ne tiennent pas côte à côte : « Vidéo » passe alors sous la première. */}
         <div className="absolute inset-x-0 top-0 z-[2] flex flex-wrap items-start justify-between gap-x-2 gap-y-1.5 p-3 sm:p-3.5">
-          {!available ? <span className="pastille pastille-sapin">Épuisé</span> : p.badge ? <span className="pastille">{fr(p.badge)}</span> : <span />}
+          {!available ? <span className="pastille pastille-sapin">Épuisé</span> : p.badge && !hideBadge ? <span className="pastille">{fr(p.badge)}</span> : <span />}
           {p.video && <span className="pastille pastille-papier">Vidéo</span>}
         </div>
       </div>
@@ -82,7 +85,7 @@ export function ProductCard({
         <p className="mt-1.5 text-[0.8125rem] leading-snug text-foreground/70">{commas(p.origin ?? categories[p.category].name)}</p>
         {/* Force et prix : l'un sous l'autre sur une étiquette étroite, face à face dès que l'étiquette elle-même est assez large */}
         <div className="etiquette-pied mt-auto">
-          <ForceBadge force={maxForce(p)} />
+          <ForceBadge force={maxForce(p)} label={p.forceLabel} />
           <PriceLabel label={startingPriceLabel(p)} />
         </div>
       </div>

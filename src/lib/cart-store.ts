@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { priceCart } from "@/lib/pricing";
+import { onOrderEntry, priceCart } from "@/lib/pricing";
 
 export type CartLine = {
   sku: string;
@@ -73,7 +73,8 @@ export const useCart = create<CartState>()(
         set((state) => {
           let changed = false;
           const lines = state.lines.flatMap((l) => {
-            const ref = catalog[l.sku];
+            // Les références sur commande ne sont pas dans la liste du serveur : leur prix se relit dans la table des tarifs.
+            const ref = catalog[l.sku] ?? onOrderEntry(l.sku);
             if (!ref) {
               changed = true;
               return [];

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import { categories, categoryOrder, visibleProducts, getProductsByCategory, type Product } from "@/data/products";
+import Link from "next/link";
+import { categories, categoryOrder, visibleProducts, visibleOnOrderProducts, getProductsByCategory, type Product } from "@/data/products";
+import { ON_ORDER_DELAY, ON_ORDER_STEPS } from "@/lib/pricing";
+import { fr } from "@/lib/utils";
 import { ProductCard } from "@/components/product/ProductCard";
 import { BoutiqueCatalog, type CatalogEntry, type CatalogGroup } from "@/components/product/BoutiqueCatalog";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -59,6 +62,21 @@ export default function BoutiquePage() {
           </>
         }
       />
+
+      {/* Renvoi vers les références sur commande */}
+      <section className="wrap pt-6 sm:pt-10">
+        <div className="panel sheet flex flex-wrap items-end justify-between gap-x-10 gap-y-7">
+          <div className="measure-wide">
+            <h2 className="t-h2">
+              Sur commande, <em>{visibleOnOrderProducts.length} références de plus.</em>
+            </h2>
+            <p className="mt-4 text-foreground/80">{fr(`Des fleurs et des résines que nous commandons pour vous : livrées sous ${ON_ORDER_DELAY}, vendues au gramme, avec un prix de gros dès ${ON_ORDER_STEPS[0]} g.`)}</p>
+          </div>
+          <Link href="/sur-commande" className="btn btn-primary">
+            Voir la section sur commande
+          </Link>
+        </div>
+      </section>
 
       {/* Texte de présentation, sur papier */}
       <section className="wrap section-tight">

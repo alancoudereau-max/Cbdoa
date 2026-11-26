@@ -36,10 +36,11 @@ const items: { text: string; icon: ReactNode }[] = [
 
 /**
  * Les quatre engagements rappelés sur chaque fiche produit : sous la photo sur ordinateur, sous le bloc d'achat sur téléphone.
- * `thc` remplace le premier quand le produit a un taux de THC particulier (« THC 0,1 % max »).
+ * `thc` remplace le premier quand le produit a un taux de THC particulier (« THC 0,1 % max ») ;
+ * `delay` remplace le deuxième pour une référence sur commande (« Livré sous 1 semaine »).
  */
-export function Reassurance({ className, thc }: { className?: string; thc?: string }) {
-  const list = thc ? [{ ...items[0], text: thc }, ...items.slice(1)] : items;
+export function Reassurance({ className, thc, delay }: { className?: string; thc?: string; delay?: string }) {
+  const list = items.map((item, n) => (n === 0 && thc ? { ...item, text: thc } : n === 1 && delay ? { ...item, text: delay } : item));
   return (
     <ul className={cn("grid grid-cols-2 text-[0.875rem] text-foreground/80", className)}>
       {list.map((item, n) => (

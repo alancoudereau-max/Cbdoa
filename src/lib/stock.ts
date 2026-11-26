@@ -1,4 +1,4 @@
-import { products } from "@/data/products";
+import { allProducts } from "@/data/products";
 
 /**
  * Disponibilité des variantes, calculée depuis le catalogue (`soldOut` sur un produit ou une variante).
@@ -6,7 +6,7 @@ import { products } from "@/data/products";
  */
 export function getAvailabilityMap(): Record<string, boolean> {
   const map: Record<string, boolean> = {};
-  for (const p of products) {
+  for (const p of allProducts) {
     for (const v of p.variants) map[v.sku] = !(p.soldOut || v.soldOut);
   }
   return map;

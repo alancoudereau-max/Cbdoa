@@ -5,7 +5,7 @@ import Image from "next/image";
 import { labelImage } from "@/lib/etiquettes";
 import { Minus, Plus } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
-import { priceCart, QUOTE_FROM_GRAMS } from "@/lib/pricing";
+import { gramsLabel, isOnOrder, priceCart, ON_ORDER_DELAY } from "@/lib/pricing";
 import { FREE_SHIPPING_FROM_CENTS } from "@/lib/shipping";
 import { site } from "@/data/site";
 import { formatEUR, commas, fr } from "@/lib/utils";
@@ -15,6 +15,7 @@ export function CartPage() {
   const { lines, hydrated, setQuantity, remove } = useCart();
   const cart = priceCart(lines);
   const subtotal = cart.subtotalCents;
+  const hasOnOrder = lines.some((l) => isOnOrder(l.slug));
   const remaining = Math.max(0, FREE_SHIPPING_FROM_CENTS - subtotal);
 
   return (
@@ -50,6 +51,7 @@ export function CartPage() {
                   <p className="t-fine mt-1">
                     {commas(l.variantLabel)}, {formatEUR(l.unitCents)} l'unité
                     {l.bulkPercent > 0 && <span className="t-num block text-or">{fr(`Prix dégressif : −${l.bulkPercent} %`)}</span>}
+                    {isOnOrder(l.slug) && <span className="block">{fr(`Sur commande, sous ${ON_ORDER_DELAY}`)}</span>}
                   </p>
                   <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
                     <div className="inline-flex items-center rounded-full border border-foreground/30">
@@ -88,13 +90,14 @@ export function CartPage() {
                   const name = lines.find((l) => l.slug === q.slug)?.name ?? "";
                   return (
                     <p key={q.slug} className="mt-4 rounded-[3px] border border-or/50 px-3.5 py-3 text-[0.875rem] leading-snug">
-                      {fr(`${q.grams} g de ${name} : à partir de ${QUOTE_FROM_GRAMS} g, le prix se négocie.`)}{" "}
-                      <a href={`${site.whatsapp}?text=${encodeURIComponent(`Bonjour CBDoux, je souhaite un prix pour ${q.grams} g de ${name.replace(/\s+[—–-]\s+/g, " ")}.`)}`} target="_blank" rel="noopener noreferrer" className="link">
+                      {fr(`${gramsLabel(q.grams)} de ${name} : à partir de ${gramsLabel(q.fromGrams)}, le prix se négocie.`)}{" "}
+                      <a href={`${site.whatsapp}?text=${encodeURIComponent(`Bonjour CBDoux, je souhaite un prix pour ${gramsLabel(q.grams)} de ${name.replace(/\s+[—–-]\s+/g, " ")}.`)}`} target="_blank" rel="noopener noreferrer" className="link">
                         Nous écrire sur WhatsApp
                       </a>
                     </p>
                   );
                 })}
+                {hasOnOrder && <p className="mt-4 text-[0.875rem] leading-snug text-foreground/85">{fr(`Votre panier contient un article sur commande : l'ensemble est expédié en une fois, sous ${ON_ORDER_DELAY} environ.`)}</p>}
                 {remaining > 0 && (
                   <p className="mt-4 text-[0.875rem] text-foreground/80">
                     Plus que <strong className="t-num">{formatEUR(remaining)}</strong> pour le port Colissimo offert.
@@ -112,7 +115,7 @@ export function CartPage() {
                 </Link>
                 <ul className="t-fine mt-6 space-y-1.5">
                   <li>Commande envoyée sur WhatsApp, paiement par lien sécurisé (carte).</li>
-                  <li>Colis neutre, expédié sous 24 h ouvrées.</li>
+                  {hasOnOrder ? <li>{fr(`Colis neutre, expédié en une fois sous ${ON_ORDER_DELAY} environ.`)}</li> : <li>Colis neutre, expédié sous 24 h ouvrées.</li>}
                   <li>Code BIENVENUE10 : 10 € offerts dès 100 €.</li>
                 </ul>
                 <Link href="/boutique" className="link mt-6 block text-center text-[0.9375rem]">

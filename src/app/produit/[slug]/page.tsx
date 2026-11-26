@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProduct, visibleProducts, categories, forceLabels, formatPrice, maxForce, thcLabel } from "@/data/products";
+import { getProduct, visibleProducts, allVisibleProducts, visibleOnOrderProducts, categories, forceLabels, formatPrice, maxForce, thcLabel } from "@/data/products";
 import { site } from "@/data/site";
 import { guides } from "@/data/guides";
 import { coas } from "@/data/coa";
@@ -16,14 +16,14 @@ import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, productJsonLd, productSeoTitle } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
-import { bulkRuleText, bulkTiersFor, quoteMessage, QUOTE_FROM_GRAMS } from "@/lib/pricing";
+import { bulkRuleText, bulkTiersFor, gramsLabel, onOrderRates, quoteFromGrams, quoteMessage, ON_ORDER_DELAY, ON_ORDER_STEPS } from "@/lib/pricing";
 import { commas, fr } from "@/lib/utils";
-import { categoryFaq } from "@/data/category-faq";
+import { categoryFaq, onOrderFaq } from "@/data/category-faq";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return visibleProducts.map((p) => ({ slug: p.slug }));
+  return allVisibleProducts.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -32,7 +32,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!p) return {};
   return buildMetadata({
     title: productSeoTitle(p),
-    description: `${p.short} ${p.thcMax ? "Analyse labo." : `${thcLabel(p)}, analyse labo.`} Livraison 24/48 h, port offert dès 60 €.`,
+    description: p.onOrder
+      ? `${p.short} ${thcLabel(p)}. Prix de gros dès ${ON_ORDER_STEPS[0]} g.`
+      : `${p.short} ${p.thcMax ? "Analyse labo." : `${thcLabel(p)}, analyse labo.`} Livraison 24/48 h, port offert dès 60 €.`,
     path: `/produit/${p.slug}`,
     image: `/produit/${p.slug}/opengraph-image`,
     type: "product",
@@ -47,12 +49,20 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const cat = categories[p.category];
   const availability = getAvailabilityMap();
   const anyAvailable = p.variants.some((v) => availability[v.sku] !== false);
-  const related = visibleProducts.filter((x) => x.category === p.category && x.slug !== p.slug).slice(0, 4);
+  // À découvrir aussi : le même rayon pour le stock ; la même famille, à partir de la référence suivante, sur commande.
+  const family = visibleOnOrderProducts.filter((x) => x.onOrder === p.onOrder);
+  const at = family.findIndex((x) => x.slug === p.slug);
+  const related = p.onOrder
+    ? [...family.slice(at + 1), ...family.slice(0, at)].slice(0, 4)
+    : visibleProducts.filter((x) => x.category === p.category && x.slug !== p.slug).slice(0, 4);
   const relatedGuides = guides.filter((g) => g.relatedProducts.includes(p.slug)).slice(0, 3);
   const coa = coas.find((c) => c.productSlugs.includes(p.slug));
   const strongest = maxForce(p);
   // Références au tarif dégressif (force Maxi) : le tableau des tarifs ajoute la ligne « 100 g et plus, à négocier ».
   const bulk = p.variants.find((v) => v.perGramCents !== undefined);
+  const orderRates = onOrderRates(p.slug);
+  const quoteFrom = quoteFromGrams(p.slug);
+  const delay = p.onOrder ? `Livré sous ${ON_ORDER_DELAY}` : undefined;
 
   return (
     <div>
@@ -62,7 +72,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <Breadcrumbs
           items={[
             { name: "Boutique", path: "/boutique" },
-            { name: cat.name, path: `/${cat.slug}` },
+            p.onOrder ? { name: "Sur commande", path: "/sur-commande" } : { name: cat.name, path: `/${cat.slug}` },
             { name: p.name, path: `/produit/${p.slug}` },
           ]}
         />
@@ -71,16 +81,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           {/* Média */}
           <div className="lg:col-span-6">
             <div className="lg:sticky lg:top-28">
-              <ProductMedia product={p} src={labelImage(p.image)} natural={photoSize(p.image)} />
-              <Reassurance className="mt-5 hidden lg:grid" thc={p.thcMax ? thcLabel(p) : undefined} />
+              {/* Sur commande : la photo est celle de la référence, pas du lot ; elle n'est pas assez grande pour la loupe. */}
+              <ProductMedia product={p} src={labelImage(p.image)} natural={p.onOrder ? null : photoSize(p.image)} />
+              {p.onOrder && <p className="t-fine mt-3">Photo non contractuelle : l'aspect varie d'un lot à l'autre.</p>}
+              <Reassurance className="mt-5 hidden lg:grid" thc={p.thcMax ? thcLabel(p) : undefined} delay={delay} />
             </div>
           </div>
 
           {/* Infos & achat */}
           <div className="lg:col-span-5 lg:col-start-8">
             <p className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.9375rem] text-foreground/75">
-              <Link href={`/${cat.slug}`} className="link">
-                {cat.name}
+              <Link href={p.onOrder ? "/sur-commande" : `/${cat.slug}`} className="link">
+                {p.onOrder ? "Sur commande" : cat.name}
               </Link>
               {p.origin && <span>{commas(p.origin)}</span>}
               {p.badge && <span className="pastille ml-auto whitespace-nowrap">{fr(p.badge)}</span>}
@@ -92,7 +104,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               <AddToCart product={p} availability={availability} />
             </div>
             {/* Sur téléphone, les engagements viennent après le choix, pas entre la photo et le titre */}
-            <Reassurance className="mt-6 lg:hidden" thc={p.thcMax ? thcLabel(p) : undefined} />
+            <Reassurance className="mt-6 lg:hidden" thc={p.thcMax ? thcLabel(p) : undefined} delay={delay} />
 
             <dl className="mt-9">
               {[
@@ -143,7 +155,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             ))}
             <p className="mt-7 flex items-start gap-3 rounded-[3px] bg-danger-soft px-4 py-3.5 text-[0.875rem] leading-relaxed text-foreground">
               <span>
-                Produit réservé aux adultes. Ne pas conduire ni utiliser de machines après usage. Déconseillé aux femmes enceintes ou allaitantes et aux personnes sous traitement sans avis médical. {forceLabels[strongest].label} : {fr(forceLabels[strongest].description.replace(/^./, (c) => c.toLowerCase()))} Ce produit n'est pas un médicament. <Link href="/conseils-prudence">Conseils et prudence</Link>.
+                Produit réservé aux adultes. Ne pas conduire ni utiliser de machines après usage. Déconseillé aux femmes enceintes ou allaitantes et aux personnes sous traitement sans avis médical. {p.notice ? fr(p.notice) : <>{forceLabels[strongest].label} : {fr(forceLabels[strongest].description.replace(/^./, (c) => c.toLowerCase()))}</>} Ce produit n'est pas un médicament. <Link href="/conseils-prudence">Conseils et prudence</Link>.
               </span>
             </p>
           </div>
@@ -187,23 +199,29 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                       <span className="block">{fr(bulk.tierLabel)}</span>
                       <span className="block text-[0.8125rem] text-foreground/65">{fr(bulk.cbdInfo)}</span>
                     </td>
-                    <td className="py-3 pr-2 sm:pr-3">{fr(`${QUOTE_FROM_GRAMS} g et plus`)}</td>
+                    <td className="py-3 pr-2 sm:pr-3">{fr(`${gramsLabel(quoteFrom)} et plus`)}</td>
                     <td className="py-3 text-right font-medium">
-                      <a href={`${site.whatsapp}?text=${encodeURIComponent(quoteMessage(p.name, bulk.tierLabel))}`} target="_blank" rel="noopener noreferrer" className="link">
-                        à négocier
+                      <a href={`${site.whatsapp}?text=${encodeURIComponent(quoteMessage(p.name, bulk.tierLabel, quoteFrom))}`} target="_blank" rel="noopener noreferrer" className="link">
+                        {orderRates ? "sur demande" : "à négocier"}
                       </a>
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
-            {bulk && (
+            {bulk && !orderRates && (
               <p className="mt-5 text-[0.9375rem] leading-relaxed text-foreground/85">
-                {fr(`Prix dégressif : ${bulkRuleText(bulkTiersFor(p.slug))} d'une même référence, tous formats additionnés dans le panier. À partir de ${QUOTE_FROM_GRAMS} g, le prix se négocie sur WhatsApp.`)}
+                {fr(`Prix dégressif : ${bulkRuleText(bulkTiersFor(p.slug))} d'une même référence, tous formats additionnés dans le panier. À partir de ${gramsLabel(quoteFrom)}, le prix se négocie sur WhatsApp.`)}
+              </p>
+            )}
+            {orderRates && (
+              <p className="mt-5 text-[0.9375rem] leading-relaxed text-foreground/85">
+                {fr(`Prix de gros : ${formatPrice(orderRates[1])} le gramme dès ${ON_ORDER_STEPS[0]} g, ${formatPrice(orderRates[2])} dès ${ON_ORDER_STEPS[1]} g d'une même référence, tous formats additionnés dans le panier. À partir de ${gramsLabel(quoteFrom)}, le prix se fixe sur demande, sur WhatsApp.`)}
               </p>
             )}
             <ul className="mt-6 space-y-2 text-[0.9375rem] text-foreground/85">
-              <li>Port Colissimo offert dès 60 €, Chronopost 24 h disponible.</li>
+              {p.onOrder && <li>{fr(`Sur commande : livraison sous ${ON_ORDER_DELAY} environ, à compter de votre paiement.`)}</li>}
+              {p.onOrder ? <li>{fr("Port Colissimo offert dès 60 €.")}</li> : <li>Port Colissimo offert dès 60 €, Chronopost 24 h disponible.</li>}
               <li>Retrait gratuit à Damprichard et au Russey.</li>
               <li>Commande par WhatsApp, paiement par lien sécurisé (carte) ou virement.</li>
             </ul>
@@ -214,10 +232,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       {/* FAQ catégorie */}
       <section className="wrap section grid gap-10 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-4">
-          <h2 className="t-h2">Questions fréquentes sur nos {cat.name.charAt(0).toLowerCase() + cat.name.slice(1)}</h2>
+          <h2 className="t-h2">{p.onOrder ? "Questions fréquentes sur la vente sur commande" : `Questions fréquentes sur nos ${cat.name.charAt(0).toLowerCase() + cat.name.slice(1)}`}</h2>
         </div>
         <div className="lg:col-span-7 lg:col-start-6">
-          <Faq items={categoryFaq[p.category]} withJsonLd={false} />
+          <Faq items={p.onOrder ? onOrderFaq : categoryFaq[p.category]} withJsonLd={false} />
         </div>
       </section>
 
@@ -244,8 +262,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <section className="wrap section border-t border-foreground/15">
           <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
             <h2 className="t-h2">À découvrir aussi</h2>
-            <Link href={`/${cat.slug}`} className="link">
-              Toute la catégorie
+            <Link href={p.onOrder ? "/sur-commande" : `/${cat.slug}`} className="link">
+              {p.onOrder ? "Toute la section" : "Toute la catégorie"}
             </Link>
           </div>
           <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">

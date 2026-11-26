@@ -235,6 +235,9 @@ export default function HomePage() {
             <Link href="/nouveautes" className="btn btn-ghost btn-sm">
               Nouveautés
             </Link>
+            <Link href="/sur-commande" className="btn btn-ghost btn-sm">
+              Sur commande
+            </Link>
           </div>
         </div>
       </section>

@@ -226,6 +226,9 @@ const RETURN_POLICY = {
 
 export function productJsonLd(p: Product, opts: { available: boolean }) {
   const cat = categories[p.category];
+  // Référence sur commande : disponible, mais pas en stock ; quelques jours de préparation avant l'expédition.
+  const inStock = p.onOrder ? "https://schema.org/BackOrder" : "https://schema.org/InStock";
+  const handling = p.onOrder ? { minValue: 3, maxValue: 5 } : { minValue: 0, maxValue: 1 };
   const low = minPriceCents(p) / 100;
   const high = maxPriceCents(p) / 100;
   const url = absoluteUrl(`/produit/${p.slug}`);
@@ -239,7 +242,7 @@ export function productJsonLd(p: Product, opts: { available: boolean }) {
     url,
     sku: p.variants[0]?.sku,
     brand: { "@type": "Brand", name: site.name },
-    category: cat.name,
+    category: p.onOrder ? `${cat.name} sur commande` : cat.name,
     additionalProperty: [
       { "@type": "PropertyValue", name: "THC", value: thcLabel(p).replace(/^THC\s+/, "") },
       ...(p.origin ? [{ "@type": "PropertyValue", name: "Origine / culture", value: p.origin }] : []),
@@ -265,7 +268,7 @@ export function productJsonLd(p: Product, opts: { available: boolean }) {
       lowPrice: low.toFixed(2),
       highPrice: high.toFixed(2),
       offerCount: p.variants.length,
-      availability: opts.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      availability: opts.available ? inStock : "https://schema.org/OutOfStock",
       itemCondition: "https://schema.org/NewCondition",
       seller: { "@id": `${SITE_URL}/#organization` },
       eligibleRegion: { "@type": "Country", name: "FR" },
@@ -275,7 +278,7 @@ export function productJsonLd(p: Product, opts: { available: boolean }) {
         name: `${p.name} — ${v.tierLabel} · ${v.format}`,
         price: (v.priceCents / 100).toFixed(2),
         priceCurrency: "EUR",
-        availability: opts.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+        availability: opts.available ? inStock : "https://schema.org/OutOfStock",
         url,
         hasMerchantReturnPolicy: RETURN_POLICY,
         shippingDetails: {
@@ -284,7 +287,7 @@ export function productJsonLd(p: Product, opts: { available: boolean }) {
           shippingRate: { "@type": "MonetaryAmount", value: "5.90", currency: "EUR" },
           deliveryTime: {
             "@type": "ShippingDeliveryTime",
-            handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 1, unitCode: "DAY" },
+            handlingTime: { "@type": "QuantitativeValue", ...handling, unitCode: "DAY" },
             transitTime: { "@type": "QuantitativeValue", minValue: 1, maxValue: 3, unitCode: "DAY" },
           },
         },

@@ -9,7 +9,11 @@
  * Pour changer un seuil ou un taux, modifiez BULK_TIERS, BULK_TIERS_BY_SLUG ou QUOTE_FROM_GRAMS : les formats
  * 10 g et 25 g du catalogue, les prix « dès », les fiches produit, le panier et le récapitulatif WhatsApp
  * se recalculent tous seuls. Les montants sont en centimes d'euro.
+ *
+ * Références « Sur commande » : même principe, mais chaque référence a ses trois prix au gramme (au détail,
+ * dès 100 g, dès 500 g) dans src/data/tarifs-sur-commande.ts ; à partir de 1 kg, le prix se fixe sur demande.
  */
+import { ON_ORDER_RATES } from "@/data/tarifs-sur-commande";
 
 export type BulkTier = { fromGrams: number; percent: number };
 export type BulkTiers = ReadonlyArray<BulkTier>;
@@ -54,9 +58,74 @@ export function bulkRuleText(tiers: BulkTiers = BULK_TIERS): string {
     .join(", ");
 }
 
+// ───────────────────────────── Sur commande ─────────────────────────────
+
+/** Formats vendus sur commande, en grammes. */
+export const ON_ORDER_PACKS: ReadonlyArray<number> = [1, 10, 25, 100, 500];
+/** Poids d'une même référence qui ouvrent les deux paliers de prix sur commande. */
+export const ON_ORDER_STEPS: readonly [number, number] = [100, 500];
+/** Poids d'une même référence sur commande à partir duquel le prix se fixe sur demande. */
+export const ON_ORDER_QUOTE_FROM_GRAMS = 1000;
+/** Délai de livraison annoncé pour une référence sur commande (fiches, panier, commande, récapitulatif WhatsApp). */
+export const ON_ORDER_DELAY = "1 semaine";
+
+/** Vrai si la référence se vend sur commande. */
+export function isOnOrder(slug: string): boolean {
+  return Object.hasOwn(ON_ORDER_RATES, slug);
+}
+
+/** Les trois prix au gramme d'une référence sur commande (centimes) : au détail, dès 100 g, dès 500 g. */
+export function onOrderRates(slug: string): readonly [number, number, number] | undefined {
+  return isOnOrder(slug) ? ON_ORDER_RATES[slug] : undefined;
+}
+
+/** Prix au gramme d'une référence sur commande pour un poids total donné ; `undefined` pour toute autre référence. */
+export function onOrderRate(slug: string, totalGrams: number): number | undefined {
+  const r = onOrderRates(slug);
+  if (!r) return undefined;
+  return totalGrams >= ON_ORDER_STEPS[1] ? r[2] : totalGrams >= ON_ORDER_STEPS[0] ? r[1] : r[0];
+}
+
+/** Identifiant d'un format sur commande : « SC-ketama-100G ». Il se relit avec `onOrderEntry`. */
+export function onOrderSku(slug: string, grams: number): string {
+  return `SC-${slug}-${grams}G`;
+}
+
+/** Prix du jour d'un format sur commande d'après son identifiant : [prix du format, prix de base au gramme]. */
+export function onOrderEntry(sku: string): [number, number] | undefined {
+  const m = /^SC-(.+)-(\d+)G$/.exec(sku);
+  const grams = m ? Number(m[2]) : 0;
+  const rate = m ? onOrderRate(m[1], grams) : undefined;
+  if (!m || rate === undefined || !ON_ORDER_PACKS.includes(grams)) return undefined;
+  return [rate * grams, ON_ORDER_RATES[m[1]][0]];
+}
+
+// ───────────────────────────── Règles communes ─────────────────────────────
+
+/** « 100 g », « 1 kg » : un poids tel qu'on l'écrit. */
+export function gramsLabel(grams: number): string {
+  return grams >= 1000 && grams % 100 === 0 ? `${String(grams / 1000).replace(".", ",")} kg` : `${grams} g`;
+}
+
+/** Poids d'une même référence à partir duquel le prix se négocie : 100 g en force Maxi, 1 kg sur commande. */
+export function quoteFromGrams(slug: string): number {
+  return isOnOrder(slug) ? ON_ORDER_QUOTE_FROM_GRAMS : QUOTE_FROM_GRAMS;
+}
+
+/**
+ * Prix payé pour un format de `grams` grammes quand le panier contient `totalGrams` grammes de la référence,
+ * et la remise (en %) que cela représente sur le prix de base au gramme.
+ */
+export function tierPrice(slug: string, perGramCents: number, grams: number, totalGrams: number): { unitCents: number; percent: number } {
+  const rate = onOrderRate(slug, totalGrams);
+  if (rate !== undefined) return { unitCents: rate * grams, percent: Math.round((1 - rate / ON_ORDER_RATES[slug][0]) * 100) };
+  const percent = bulkPercent(totalGrams, bulkTiersFor(slug));
+  return { unitCents: bulkPriceCents(perGramCents, grams, percent), percent };
+}
+
 /** Message WhatsApp d'une demande de prix à partir du seuil où il se négocie. */
-export function quoteMessage(productName: string, tierLabel: string): string {
-  return `Bonjour CBDoux, je souhaite un prix pour ${QUOTE_FROM_GRAMS} g ou plus de ${productName.replace(/\s+[—–-]\s+/g, " ")} (${tierLabel}).`;
+export function quoteMessage(productName: string, tierLabel: string, fromGrams: number = QUOTE_FROM_GRAMS): string {
+  return `Bonjour CBDoux, je souhaite un prix pour ${gramsLabel(fromGrams)} ou plus de ${productName.replace(/\s+[—–-]\s+/g, " ")} (${tierLabel}).`;
 }
 
 /** Ce qu'il faut connaître d'une ligne de panier pour en calculer le prix. */
@@ -81,14 +150,15 @@ export type Priced<T> = T & {
 export type PricedCart<T> = {
   lines: Priced<T>[];
   subtotalCents: number;
-  /** Références dont le poids total atteint le seuil où le prix se négocie */
-  quotes: Array<{ slug: string; grams: number }>;
+  /** Références dont le poids total atteint le seuil où le prix se négocie (`fromGrams` : ce seuil) */
+  quotes: Array<{ slug: string; grams: number; fromGrams: number }>;
 };
 
 /**
  * Calcule le prix de chaque ligne du panier. Les lignes d'une même référence au tarif dégressif sont
  * additionnées (1 g × 4 + 10 g = 14 g, donc −10 % sur les deux lignes) et reçoivent la remise prévue pour
- * cette référence ; les autres gardent leur prix catalogue.
+ * cette référence (force Maxi) ou le prix au gramme du palier atteint (sur commande) ; les autres gardent leur
+ * prix catalogue.
  */
 export function priceCart<T extends Priceable>(lines: T[]): PricedCart<T> {
   const gramsBySlug = new Map<string, number>();
@@ -96,14 +166,14 @@ export function priceCart<T extends Priceable>(lines: T[]): PricedCart<T> {
     if (l.perGramCents) gramsBySlug.set(l.slug, (gramsBySlug.get(l.slug) ?? 0) + l.grams * l.quantity);
   }
   const priced = lines.map((l) => {
-    const percent = l.perGramCents ? bulkPercent(gramsBySlug.get(l.slug) ?? 0, bulkTiersFor(l.slug)) : 0;
+    const tier = l.perGramCents ? tierPrice(l.slug, l.perGramCents, l.grams, gramsBySlug.get(l.slug) ?? 0) : { unitCents: l.unitPriceCents, percent: 0 };
     // Jamais plus cher que le prix catalogue du format (un sachet de 25 g porte déjà sa remise).
-    const unitCents = l.perGramCents ? Math.min(l.unitPriceCents, bulkPriceCents(l.perGramCents, l.grams, percent)) : l.unitPriceCents;
-    return { ...l, unitCents, totalCents: unitCents * l.quantity, bulkPercent: percent };
+    const unitCents = Math.min(l.unitPriceCents, tier.unitCents);
+    return { ...l, unitCents, totalCents: unitCents * l.quantity, bulkPercent: tier.percent };
   });
   return {
     lines: priced,
     subtotalCents: priced.reduce((s, l) => s + l.totalCents, 0),
-    quotes: [...gramsBySlug].filter(([, grams]) => grams >= QUOTE_FROM_GRAMS).map(([slug, grams]) => ({ slug, grams })),
+    quotes: [...gramsBySlug].filter(([slug, grams]) => grams >= quoteFromGrams(slug)).map(([slug, grams]) => ({ slug, grams, fromGrams: quoteFromGrams(slug) })),
   };
 }

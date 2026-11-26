@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 import { promises as fs } from "fs";
 import path from "path";
-import { getProduct, visibleProducts, categories, formatPrice, lowestPerGram, thcLabel } from "@/data/products";
+import { getProduct, allVisibleProducts, categories, formatPrice, lowestPerGram, thcLabel } from "@/data/products";
+import { ON_ORDER_DELAY } from "@/lib/pricing";
 
 export const alt = "CBDoux — fiche produit";
 export const size = { width: 1200, height: 630 };
@@ -9,7 +10,7 @@ export const contentType = "image/png";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return visibleProducts.map((p) => ({ slug: p.slug }));
+  return allVisibleProducts.map((p) => ({ slug: p.slug }));
 }
 
 const SAPIN = "#12372a";
@@ -79,12 +80,12 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
             <div style={{ fontSize: 44, color: OR, display: "flex" }}>CBDoux</div>
           )}
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: 24, color: "rgba(242,234,214,0.78)", display: "flex" }}>{ogSafe(`${categories[p.category].name}${p.origin ? `, ${p.origin}` : ""}`)}</div>
+            <div style={{ fontSize: 24, color: "rgba(242,234,214,0.78)", display: "flex" }}>{ogSafe(`${p.onOrder ? "Sur commande" : categories[p.category].name}${p.origin ? `, ${p.origin}` : ""}`)}</div>
             <div style={{ fontFamily: "Fraunces, serif", fontWeight: 300, fontSize: name.length > 26 ? 66 : 80, lineHeight: 0.98, letterSpacing: -2.4, marginTop: 14, display: "flex" }}>{name}</div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 16 }}>
             <div style={{ display: "flex", background: PAPIER, color: SAPIN, padding: "12px 28px", borderRadius: 999, fontSize: 30, fontWeight: 600, whiteSpace: "nowrap" }}>{`dès ${min}${perGram ? " le gramme" : ""}`}</div>
-            <div style={{ fontSize: 22, color: "rgba(242,234,214,0.78)", display: "flex", whiteSpace: "nowrap" }}>{`${thcLabel(p).replace(/(\d) %/g, "$1 %")}, livré en 24/48 h`}</div>
+            <div style={{ fontSize: 22, color: "rgba(242,234,214,0.78)", display: "flex", whiteSpace: "nowrap" }}>{`${thcLabel(p).replace(/(\d) %/g, "$1 %")}, ${p.onOrder ? `livré sous ${ON_ORDER_DELAY.replace(" ", "\u00a0")}` : "livré en 24/48 h"}`}</div>
           </div>
         </div>
         <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", paddingRight: 30 }}>

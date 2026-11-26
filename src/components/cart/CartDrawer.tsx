@@ -6,7 +6,7 @@ import { labelImage } from "@/lib/etiquettes";
 import { useEffect, useRef } from "react";
 import { X, Minus, Plus } from "lucide-react";
 import { useCart, type CartCatalog } from "@/lib/cart-store";
-import { priceCart, QUOTE_FROM_GRAMS } from "@/lib/pricing";
+import { gramsLabel, isOnOrder, priceCart, ON_ORDER_DELAY } from "@/lib/pricing";
 import { FREE_SHIPPING_FROM_CENTS } from "@/lib/shipping";
 import { site } from "@/data/site";
 import { formatEUR, commas, fr } from "@/lib/utils";
@@ -41,6 +41,7 @@ export function CartDrawer({ suggestions = [], catalog }: { suggestions?: CartSu
   // Tarif dégressif compris : les lignes d'une même référence en force Maxi s'additionnent.
   const cart = priceCart(lines);
   const subtotal = cart.subtotalCents;
+  const hasOnOrder = lines.some((l) => isOnOrder(l.slug));
   const remaining = Math.max(0, FREE_SHIPPING_FROM_CENTS - subtotal);
   // Deux idées au plus, parmi ce qui n'est pas déjà au panier : de préférence celles qui suffisent à elles seules
   // (les moins chères d'abord), sinon les premières du catalogue.
@@ -162,6 +163,7 @@ export function CartDrawer({ suggestions = [], catalog }: { suggestions?: CartSu
                     </div>
                     <p className="t-fine mt-0.5">{commas(l.variantLabel)}</p>
                     {l.bulkPercent > 0 && <p className="t-fine t-num text-or">{fr(`Prix dégressif : −${l.bulkPercent} %`)}</p>}
+                    {isOnOrder(l.slug) && <p className="t-fine">{fr(`Sur commande, sous ${ON_ORDER_DELAY}`)}</p>}
                     <div className="mt-2.5 flex items-center justify-between">
                       <div className="inline-flex items-center rounded-full border border-foreground/30">
                         <button type="button" onClick={() => setQuantity(l.sku, l.quantity - 1)} aria-label="Diminuer la quantité" className="flex h-9 w-9 items-center justify-center" tabIndex={isOpen ? 0 : -1}>
@@ -189,13 +191,14 @@ export function CartDrawer({ suggestions = [], catalog }: { suggestions?: CartSu
                 const name = lines.find((l) => l.slug === q.slug)?.name ?? "";
                 return (
                   <p key={q.slug} className="rounded-[3px] border border-or/50 px-3.5 py-3 text-[0.875rem] leading-snug">
-                    {fr(`${q.grams} g de ${name} : à partir de ${QUOTE_FROM_GRAMS} g, le prix se négocie.`)}{" "}
-                    <a href={`${site.whatsapp}?text=${encodeURIComponent(`Bonjour CBDoux, je souhaite un prix pour ${q.grams} g de ${name.replace(/\s+[—–-]\s+/g, " ")}.`)}`} target="_blank" rel="noopener noreferrer" className="link" tabIndex={isOpen ? 0 : -1}>
+                    {fr(`${gramsLabel(q.grams)} de ${name} : à partir de ${gramsLabel(q.fromGrams)}, le prix se négocie.`)}{" "}
+                    <a href={`${site.whatsapp}?text=${encodeURIComponent(`Bonjour CBDoux, je souhaite un prix pour ${gramsLabel(q.grams)} de ${name.replace(/\s+[—–-]\s+/g, " ")}.`)}`} target="_blank" rel="noopener noreferrer" className="link" tabIndex={isOpen ? 0 : -1}>
                       Nous écrire sur WhatsApp
                     </a>
                   </p>
                 );
               })}
+              {hasOnOrder && <p className="text-[0.875rem] leading-snug text-foreground/85">{fr(`Votre panier contient un article sur commande : l'ensemble est expédié en une fois, sous ${ON_ORDER_DELAY} environ.`)}</p>}
               <div className="flex items-baseline justify-between">
                 <span>Sous-total</span>
                 <span className="t-num font-serif text-[2rem] font-light leading-none tracking-[-0.02em]">{formatEUR(subtotal)}</span>

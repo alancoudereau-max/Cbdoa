@@ -15,8 +15,12 @@
  * Les prix « dès » des cartes et des titres reprennent le prix au gramme le plus bas (`lowestPerGram`).
  * Rupture de stock : `soldOut: true` sur un produit ou une variante. Retirer un produit : `hidden: true`.
  * Taux de THC particulier (« 0,1 % max ») : champ `thcMax` du produit ; sans lui, la fiche affiche « THC < 0,3 % ».
+ *
+ * Ce fichier est le catalogue en stock. Les références vendues sur commande sont dans src/data/sur-commande.ts :
+ * elles ont leur fiche et leur section (/sur-commande) mais ne figurent pas dans les rayons (`visibleProducts`).
  */
 import { BULK_PACKS, BULK_TIERS, bulkPercent, bulkPriceCents, bulkTiersFor, type BulkTiers } from "@/lib/pricing";
+import { onOrderProducts } from "@/data/sur-commande";
 
 export type Category = "fleurs" | "resines" | "huiles" | "vape";
 export type Force = 1 | 2 | 3 | "maxi";
@@ -74,6 +78,12 @@ export type Product = {
   keywords: string[];
   /** Nom optimisé pour le titre Google de la fiche (le prix d'appel est ajouté automatiquement). Facultatif. */
   seoName?: string;
+  /** Référence vendue sur commande : la famille où elle se range dans la section /sur-commande (src/data/sur-commande.ts). */
+  onOrder?: string;
+  /** Libellé affiché à la place du nom de la force (« Concentré de CBD ») quand celui-ci ne convient pas. */
+  forceLabel?: string;
+  /** Phrase qui remplace la description de la force dans l'encadré de prudence de la fiche. */
+  notice?: string;
 };
 
 export const categories: Record<
@@ -727,10 +737,16 @@ export const products: Product[] = [
 
 // ───────────────────────────── Helpers ─────────────────────────────
 
+/** Le catalogue en stock : rayons, boutique, sélections, accueil. */
 export const visibleProducts = products.filter((p) => !p.hidden);
+/** Les références sur commande visibles, dans l'ordre de leur section. */
+export const visibleOnOrderProducts = onOrderProducts.filter((p) => !p.hidden);
+/** Tout ce qui a une fiche produit : le stock, puis les références sur commande. */
+export const allProducts: Product[] = [...products, ...onOrderProducts];
+export const allVisibleProducts = allProducts.filter((p) => !p.hidden);
 
 export function getProduct(slug: string): Product | undefined {
-  return products.find((p) => p.slug === slug && !p.hidden);
+  return allProducts.find((p) => p.slug === slug && !p.hidden);
 }
 
 export function getProductsByCategory(category: Category): Product[] {
@@ -743,7 +759,7 @@ export function getCategoryBySlug(slug: string): (typeof categories)[Category] &
 }
 
 export function findVariant(sku: string): { product: Product; variant: Variant } | undefined {
-  for (const product of products) {
+  for (const product of allProducts) {
     const variant = product.variants.find((v) => v.sku === sku);
     if (variant) return { product, variant };
   }

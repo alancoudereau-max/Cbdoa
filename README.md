@@ -30,7 +30,7 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 | `python3 -I scripts/build-carte.py` | régénère la carte du Haut-Doubs (`src/data/carte-haut-doubs.json`) : communes, zones de livraison, contour du Doubs |
 | `python3 -I scripts/normalize-product-photos.py <photo.jpg>` | ramène au blanc le fond grisâtre d'une photo produit, avant de lancer la commande précédente |
 | `python3 -I scripts/patch-fonts.py` | à relancer si un fichier de police est remplacé : l'apostrophe du clavier s'affiche en apostrophe typographique |
-| `node --experimental-strip-types --no-warnings qa/pricing.test.mjs` | contrôle la règle des prix dégressifs (paliers, règle propre à une référence, formats, panier), sans navigateur |
+| `node --experimental-strip-types --no-warnings --import ./qa/alias.mjs qa/pricing.test.mjs` | contrôle la règle des prix dégressifs (paliers, règle propre à une référence, formats, panier), sans navigateur |
 | `node --experimental-strip-types --no-warnings --import ./qa/alias.mjs qa/catalogue.test.mjs` | contrôle le catalogue : prix des formats de la force Maxi et prix « dès » de chaque produit, sans navigateur (la liste attendue est en tête du fichier : à mettre à jour quand un prix change) |
 | `python3 -I qa/seo_extract.py` | après un build : longueur des titres et descriptions de chaque page |
 | `node qa/audit.mjs 320,360,390,768,1024,1280,1440` | site construit et lancé sur le port 3100 : débordements, images cassées et erreurs sur toutes les pages |
@@ -111,3 +111,12 @@ Métadonnées par page, canonical, Open Graph (image générée par produit), JS
 ## Conformité CBD
 
 Vocabulaire des distributeurs : « caméra connectée avec haut-parleur intégré », jamais « interphone ». Vérification d'âge 18+, bandeau et pages légales (LCEN, CGV, RGPD, cookies, rétractation), aucune allégation thérapeutique, THC < 0,3 %, conseils de prudence (page + PDF), case de prudence obligatoire pour les forces 3 et Maxi, huiles présentées à usage cutané (interdiction alimentaire du 15 mai 2026), analyses labo publiées.
+
+## Références « Sur commande »
+
+Section `/sur-commande` : des références qui ne sont pas en stock, commandées pour le client et livrées sous le délai annoncé (`ON_ORDER_DELAY`, `src/lib/pricing.ts`). Elles ont leur fiche produit mais n'apparaissent ni dans les rayons, ni dans la boutique, ni dans les sélections.
+
+- **Produits** : `src/data/sur-commande.ts` (une ligne par référence : nom, famille, ce que montre la photo, arômes habituels, taux de THC annoncé). Retirer une référence : la supprimer de la liste et de la table des tarifs.
+- **Prix** : `src/data/tarifs-sur-commande.ts`, en centimes par gramme : `[au détail, dès 100 g, dès 500 g]`. Les formats (1 g, 10 g, 25 g, 100 g, 500 g), les prix « dès », le panier et le message WhatsApp se recalculent. À partir de 1 kg d'une même référence, le prix se fixe sur demande.
+- **Photos** : `public/images/products/sc-<identifiant>.jpg` (carré, fond blanc), puis `python3 -I scripts/build-etiquettes.py`.
+- **Contrôles** : `node --experimental-strip-types --no-warnings --import ./qa/alias.mjs qa/pricing.test.mjs`, même commande pour `qa/catalogue.test.mjs`, puis `node qa/parcours.mjs 390` sur le site construit (scénario 6).

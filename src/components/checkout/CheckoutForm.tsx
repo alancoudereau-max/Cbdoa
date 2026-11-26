@@ -5,7 +5,7 @@ import Image from "next/image";
 import { labelImage } from "@/lib/etiquettes";
 import { useEffect, useMemo, useState } from "react";
 import { useCart } from "@/lib/cart-store";
-import { priceCart, QUOTE_FROM_GRAMS } from "@/lib/pricing";
+import { gramsLabel, isOnOrder, priceCart, ON_ORDER_DELAY } from "@/lib/pricing";
 import { availableShippingMethods, type ShippingMethodId } from "@/lib/shipping";
 import { evaluatePromo } from "@/data/promos";
 import { locations, site } from "@/data/site";
@@ -77,6 +77,7 @@ export function CheckoutForm() {
   const discountCents = promo.discountCents;
   const total = Math.max(0, subtotal - discountCents + shippingCents);
   const hasStrong = lines.some((l) => l.force === 3 || l.force === "maxi");
+  const hasOnOrder = lines.some((l) => isOnOrder(l.slug));
 
   const set = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const v = e.target.type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value;
@@ -136,8 +137,9 @@ export function CheckoutForm() {
     L.push(`📞 ${form.phone.trim()}${form.email.trim() ? ` · ✉️ ${form.email.trim()}` : ""}`);
     L.push("");
     L.push("*Produits*");
-    cart.lines.forEach((l) => L.push(`• ${l.name} — ${l.variantLabel} × ${l.quantity} = ${formatEUR(l.totalCents)}${l.bulkPercent > 0 ? ` (prix dégressif −${l.bulkPercent} %)` : ""}`));
-    cart.quotes.forEach((q) => L.push(`ℹ️ ${q.grams} g de ${lines.find((l) => l.slug === q.slug)?.name ?? q.slug} : à partir de ${QUOTE_FROM_GRAMS} g, prix à négocier.`));
+    cart.lines.forEach((l) => L.push(`• ${l.name} — ${l.variantLabel} × ${l.quantity} = ${formatEUR(l.totalCents)}${l.bulkPercent > 0 ? ` (prix dégressif −${l.bulkPercent} %)` : ""}${isOnOrder(l.slug) ? " — SUR COMMANDE" : ""}`));
+    cart.quotes.forEach((q) => L.push(`ℹ️ ${gramsLabel(q.grams)} de ${lines.find((l) => l.slug === q.slug)?.name ?? q.slug} : à partir de ${gramsLabel(q.fromGrams)}, prix à négocier.`));
+    if (hasOnOrder) L.push(`⏳ Articles sur commande : livraison sous ${ON_ORDER_DELAY} environ, envoi en une fois.`);
     L.push("");
     L.push(`Sous-total : ${formatEUR(subtotal)}`);
     if (discountCents > 0) L.push(`Code promo ${promoCode} : − ${formatEUR(discountCents)}`);
@@ -160,7 +162,7 @@ export function CheckoutForm() {
     L.push("✅ Je certifie être majeur(e), avoir lu les conseils de prudence et accepté les CGV.");
     L.push("Merci de me confirmer la disponibilité et de m'envoyer la facture et le lien de paiement.");
     return L.join("\n");
-  }, [orderNumber, form, lines, cart, subtotal, discountCents, promoCode, selected, shippingCents, total, shippingMethod, pickup]);
+  }, [orderNumber, form, lines, cart, subtotal, discountCents, promoCode, selected, shippingCents, total, shippingMethod, pickup, hasOnOrder]);
 
   const waUrl = `${site.whatsapp}?text=${encodeURIComponent(recap)}`;
   const mailUrl = `mailto:${site.email}?subject=${encodeURIComponent(`Commande CBDoux ${orderNumber}`)}&body=${encodeURIComponent(recap.replace(/\*/g, ""))}`;
@@ -269,6 +271,11 @@ export function CheckoutForm() {
               })}
             </div>
             <p className="t-fine mt-3">Frais de port indicatifs, confirmés sur votre facture avec le montant exact.</p>
+            {hasOnOrder && (
+              <p className="mt-4 rounded-[3px] border border-or/50 px-3.5 py-3 text-[0.875rem] leading-snug">
+                {fr(`Votre panier contient un article sur commande : nous le commandons dès votre paiement et l'ensemble est expédié en une fois, sous ${ON_ORDER_DELAY} environ. Les délais ci-dessus sont ceux du transporteur, une fois le colis parti. Vous voulez recevoir tout de suite les articles en stock ? Écrivez-le dans les notes.`)}
+              </p>
+            )}
 
             {shippingMethod === "retrait" ? (
               <div className="mt-5">
@@ -344,6 +351,7 @@ export function CheckoutForm() {
                         {commas(l.variantLabel)}, quantité {l.quantity}
                       </span>
                       {l.bulkPercent > 0 && <span className="t-fine t-num block text-or">{fr(`Prix dégressif : −${l.bulkPercent} %`)}</span>}
+                      {isOnOrder(l.slug) && <span className="t-fine block">{fr(`Sur commande, sous ${ON_ORDER_DELAY}`)}</span>}
                     </span>
                     <span className="t-num whitespace-nowrap">{formatEUR(l.totalCents)}</span>
                   </li>
@@ -366,7 +374,7 @@ export function CheckoutForm() {
 
               {cart.quotes.map((q) => (
                 <p key={q.slug} className="rounded-[3px] border border-or/50 px-3.5 py-3 text-[0.875rem] leading-snug">
-                  {fr(`${q.grams} g de ${lines.find((l) => l.slug === q.slug)?.name ?? ""} : à partir de ${QUOTE_FROM_GRAMS} g, le prix se négocie. Nous vous proposerons un prix en confirmant votre commande.`)}
+                  {fr(`${gramsLabel(q.grams)} de ${lines.find((l) => l.slug === q.slug)?.name ?? ""} : à partir de ${gramsLabel(q.fromGrams)}, le prix se négocie. Nous vous proposerons un prix en confirmant votre commande.`)}
                 </p>
               ))}
 
@@ -416,7 +424,7 @@ export function CheckoutForm() {
                 Après réception, nous confirmons la disponibilité et vous envoyons votre facture avec un lien de paiement sécurisé par carte (Shine) ou un RIB. Aucune donnée bancaire n'est saisie sur ce site.
               </p>
               <ul className="t-fine space-y-1">
-                <li>Expédition sous 24 h ouvrées après paiement.</li>
+                {hasOnOrder ? <li>{fr(`Expédition en une fois, sous ${ON_ORDER_DELAY} environ après paiement.`)}</li> : <li>Expédition sous 24 h ouvrées après paiement.</li>}
                 <li>Colis neutre, sachets hermétiques.</li>
                 <li>Produits réservés aux adultes, THC &lt; 0,3 %.</li>
               </ul>
