@@ -776,11 +776,12 @@ export function maxPriceCents(p: Product): number {
 
 /**
  * Prix au gramme le plus bas d'un produit vendu au gramme, et le format qui le donne : c'est celui du plus
- * grand format, remise comprise (25 g en force Maxi, sachet de 10 g ailleurs). `undefined` si le produit ne se
- * vend pas au gramme. Arrondi au centime supérieur : le prix annoncé n'est jamais plus bas que le prix payé.
+ * grand format, remise comprise (25 g en force Maxi, 500 g sur commande, sachet de 10 g ailleurs). `undefined`
+ * si le produit ne se vend pas au gramme. Arrondi au centime supérieur : le prix annoncé n'est jamais plus bas que le prix payé.
  */
 export function lowestPerGram(p: Product): { cents: number; grams: number } | undefined {
-  if (!p.variants.some((v) => v.format === "1 g")) return undefined;
+  // Vendu au gramme : un format « 1 g », ou une référence sur commande (formats au poids, à partir de 25 g).
+  if (!p.onOrder && !p.variants.some((v) => v.format === "1 g")) return undefined;
   const byWeight = p.variants.filter((v) => /^\d+ g$/.test(v.format) && v.grams > 0);
   const inStock = byWeight.filter((v) => !v.soldOut);
   return (inStock.length ? inStock : byWeight)

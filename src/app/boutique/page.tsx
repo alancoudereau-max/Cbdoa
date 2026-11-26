@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { categories, categoryOrder, visibleProducts, visibleOnOrderProducts, getProductsByCategory, type Product } from "@/data/products";
-import { ON_ORDER_DELAY, ON_ORDER_STEPS } from "@/lib/pricing";
+import { ON_ORDER_DELAY, ON_ORDER_MIN_GRAMS, ON_ORDER_STEPS } from "@/lib/pricing";
 import { fr } from "@/lib/utils";
 import { ProductCard } from "@/components/product/ProductCard";
 import { BoutiqueCatalog, type CatalogEntry, type CatalogGroup } from "@/components/product/BoutiqueCatalog";
@@ -70,7 +70,7 @@ export default function BoutiquePage() {
             <h2 className="t-h2">
               Sur commande, <em>{visibleOnOrderProducts.length} références de plus.</em>
             </h2>
-            <p className="mt-4 text-foreground/80">{fr(`Des fleurs et des résines que nous commandons pour vous : livrées sous ${ON_ORDER_DELAY}, vendues au gramme, avec un prix de gros dès ${ON_ORDER_STEPS[0]} g.`)}</p>
+            <p className="mt-4 text-foreground/80">{fr(`Des fleurs et des résines que nous commandons pour vous : livrées sous ${ON_ORDER_DELAY}, à partir de ${ON_ORDER_MIN_GRAMS} g par référence, avec un prix de gros dès ${ON_ORDER_STEPS[0]} g.`)}</p>
           </div>
           <Link href="/sur-commande" className="btn btn-primary">
             Voir la section sur commande

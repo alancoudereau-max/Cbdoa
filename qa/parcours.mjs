@@ -283,27 +283,27 @@ const minus = async (page, n) => { for (let i = 0; i < n; i++) await panel(page)
   await ctx.close();
 }
 
-// ───────────── 6. Sur commande : prix de gros dès 100 g et 500 g, délai rappelé jusqu'au message WhatsApp
+// ───────────── 6. Sur commande : 25 g au minimum, prix de gros dès 100 g et 500 g, délai rappelé jusqu'au message WhatsApp
 {
   const { ctx, page } = await open();
   await page.goto(BASE + "/produit/ketama", { waitUntil: "networkidle" });
   const t = await tiles(page);
   console.log("sur commande, cases :", t);
+  // 25 g au minimum par référence : plus de format 1 g ni 10 g
   assert.deepEqual(t, [
-    "1 g 2,75 €",
-    "10 g 27,50 € 2,75 € le gramme",
     "25 g 68,75 € 2,75 € le gramme",
     "100 g 200 € 2 € le gramme −27 % , 27 % de moins au gramme",
     "500 g 750 € 1,50 € le gramme −45 % , 45 % de moins au gramme",
     "1 kg et plus Sur demande sur WhatsApp",
   ]);
   const fiche = clean(await panel(page).innerText());
-  assert.match(fiche, /Prix de gros : 2 € le gramme dès 100 g, 1,50 € dès 500 g de cette référence dans votre panier, tous formats additionnés\./);
+  assert.match(fiche, /Commande minimale : 25 g\. Prix de gros : 2 € le gramme dès 100 g, 1,50 € dès 500 g de cette référence dans votre panier, tous formats additionnés\./);
   assert.match(fiche, /Sur commande\. Nous commandons cette référence pour vous dès votre paiement : livraison sous 1 semaine environ\./);
   // CBD classique : pas de case de prudence à cocher
   assert.equal(await panel(page).locator('input[type="checkbox"]').count(), 0);
-  assert.equal(await total(page), "2,75 €");
+  assert.equal(await total(page), "68,75 €");
   const top = clean(await page.locator("main").innerText());
+  assert.match(top, /Commande minimale : 25 g par référence\./);
   assert.match(top, /Boutique Sur commande Ketama/);
   assert.match(top, /Photo non contractuelle : l'aspect varie d'un lot à l'autre\./);
   assert.match(top, /Livré sous 1 semaine/);
@@ -316,7 +316,7 @@ const minus = async (page, n) => { for (let i = 0; i < n; i++) await panel(page)
   assert.equal(await total(page), "206,25 €"); // 75 g au détail
   await plus(page, 1);
   assert.equal(await total(page), "200 €"); // 100 g
-  assert.match(clean(await panel(page).innerText()), /soit 2 € le gramme, 27 % de moins qu'au détail/);
+  assert.match(clean(await panel(page).innerText()), /soit 2 € le gramme, 27 % de moins que par 25 g/);
   await page.screenshot({ path: `${SHOTS}/p7-sur-commande-${W}.png` });
   await add(page);
   let lines = await drawerLines(page);
@@ -374,6 +374,24 @@ const minus = async (page, n) => { for (let i = 0; i < n; i++) await panel(page)
     assert.ok(!slugs.some((slug) => slug in section), `${path} : une référence sur commande est dans un rayon`);
   }
   assert.match(clean(await page.locator("main").innerText()), /Sur commande, 67 références de plus\./);
+  await ctx.close();
+}
+
+// ───────────── 7. Un panier enregistré quand la section vendait au gramme : les formats 1 g et 10 g en sortent
+{
+  const img = "/images/products/sc-ketama.jpg";
+  const old = { state: { lines: [
+    { sku: "SC-ketama-1G", slug: "ketama", name: "Ketama", variantLabel: "CBD classique · 1 g", format: "1 g", grams: 1, unitPriceCents: 275, perGramCents: 275, image: img, quantity: 3, force: 1 },
+    { sku: "SC-ketama-10G", slug: "ketama", name: "Ketama", variantLabel: "CBD classique · 10 g", format: "10 g", grams: 10, unitPriceCents: 2750, perGramCents: 275, image: img, quantity: 1, force: 1 },
+    { sku: "SC-ketama-25G", slug: "ketama", name: "Ketama", variantLabel: "CBD classique · 25 g", format: "25 g", grams: 25, unitPriceCents: 6000, perGramCents: 240, image: img, quantity: 1, force: 1 },
+  ], promoCode: null }, version: 0 };
+  const { ctx, page } = await open({ "cbdoux-cart-v2": JSON.stringify(old) });
+  await page.goto(BASE + "/panier", { waitUntil: "networkidle" });
+  await page.waitForTimeout(400);
+  const stored = JSON.parse(await page.evaluate(() => localStorage.getItem("cbdoux-cart-v2"))).state.lines.map((l) => [l.sku, l.unitPriceCents, l.perGramCents ?? null, l.quantity]);
+  console.log("ancien panier sur commande remis à jour :", JSON.stringify(stored));
+  assert.deepEqual(stored, [["SC-ketama-25G", 6875, 275, 1]]);
+  assert.match(clean(await page.locator("main").innerText()), /Ketama 68,75 € CBD classique, 25 g, 68,75 € l'unité Sur commande, sous 1 semaine/);
   await ctx.close();
 }
 

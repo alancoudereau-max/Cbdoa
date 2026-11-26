@@ -1,5 +1,6 @@
 /**
- * Tarifs des références « Sur commande », en centimes d'euro par gramme : [au détail, dès 100 g, dès 500 g].
+ * Tarifs des références « Sur commande », en centimes d'euro par gramme : [prix de base, dès 100 g, dès 500 g].
+ * Le prix de base vaut de la commande minimale (25 g) à 99 g.
  *
  * Le palier se calcule sur le poids total d'une même référence au panier, tous formats additionnés
  * (voir src/lib/pricing.ts). Pour changer un prix, modifiez la ligne de la référence : les formats, les prix

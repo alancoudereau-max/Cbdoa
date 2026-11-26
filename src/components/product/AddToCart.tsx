@@ -7,7 +7,7 @@ import { Minus, Plus, AlertTriangle } from "lucide-react";
 import { type Product, type Variant, forceLabels, startingPriceLabel, thcLabel, type TierKey } from "@/data/products";
 import { site } from "@/data/site";
 import { useCart } from "@/lib/cart-store";
-import { bulkRuleText, bulkTiersFor, gramsLabel, onOrderRates, quoteFromGrams, quoteMessage, tierPrice, ON_ORDER_DELAY, ON_ORDER_STEPS } from "@/lib/pricing";
+import { bulkRuleText, bulkTiersFor, gramsLabel, onOrderRates, quoteFromGrams, quoteMessage, tierPrice, ON_ORDER_DELAY, ON_ORDER_MIN_GRAMS, ON_ORDER_STEPS } from "@/lib/pricing";
 import { formatEUR, cn, fr } from "@/lib/utils";
 import { ForceBadge } from "@/components/ui/ForceBadge";
 
@@ -183,7 +183,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
         {/* Choix du format */}
         <div>
           <p className="field-label">Format</p>
-          <div className={cn("grid grid-cols-2 gap-2", (!bulk || orderRates) && "sm:grid-cols-3")} role="radiogroup" aria-label="Format">
+          <div className={cn("grid grid-cols-2 gap-2", !bulk && "sm:grid-cols-3")} role="radiogroup" aria-label="Format">
             {formats.map((v) => {
               const active = v.sku === sku;
               const ok = availability[v.sku] !== false;
@@ -216,7 +216,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
           {bulk && !orderRates && <p className="t-fine mt-3">{fr(`Prix dégressif : ${bulkRuleText(bulkTiers)} de cette référence dans votre panier, tous formats additionnés.`)}</p>}
           {orderRates && (
             <p className="t-fine t-num mt-3">
-              {fr(`Prix de gros : ${formatEUR(orderRates[1])} le gramme dès ${ON_ORDER_STEPS[0]} g, ${formatEUR(orderRates[2])} dès ${ON_ORDER_STEPS[1]} g de cette référence dans votre panier, tous formats additionnés.`)}
+              {fr(`Commande minimale : ${ON_ORDER_MIN_GRAMS} g. Prix de gros : ${formatEUR(orderRates[1])} le gramme dès ${ON_ORDER_STEPS[0]} g, ${formatEUR(orderRates[2])} dès ${ON_ORDER_STEPS[1]} g de cette référence dans votre panier, tous formats additionnés.`)}
             </p>
           )}
         </div>
@@ -283,7 +283,7 @@ export function AddToCart({ product, availability }: { product: Product; availab
             </p>
             {perGram !== null && (
               <p className="t-fine t-num mt-1.5">
-                soit {formatEUR(Math.round(perGram))} le gramme{variantSaving > 0 && <>, {variantSaving}&nbsp;% de moins qu'au détail</>}
+                soit {formatEUR(Math.round(perGram))} le gramme{variantSaving > 0 && <>, {variantSaving}&nbsp;% de moins {orderRates ? fr(`que par ${ON_ORDER_MIN_GRAMS} g`) : "qu'au détail"}</>}
               </p>
             )}
           </div>

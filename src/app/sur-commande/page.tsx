@@ -11,7 +11,7 @@ import { Fleuron } from "@/components/ui/Fleuron";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, itemListJsonLd } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
-import { ON_ORDER_DELAY, ON_ORDER_QUOTE_FROM_GRAMS, ON_ORDER_STEPS, gramsLabel } from "@/lib/pricing";
+import { ON_ORDER_DELAY, ON_ORDER_MIN_GRAMS, ON_ORDER_QUOTE_FROM_GRAMS, ON_ORDER_STEPS, gramsLabel } from "@/lib/pricing";
 import { fr } from "@/lib/utils";
 
 const COUNT = visibleOnOrderProducts.length;
@@ -19,13 +19,13 @@ const FROM = formatPrice(lowestPerGramCents(visibleOnOrderProducts) ?? 0);
 
 export const metadata: Metadata = buildMetadata({
   title: "CBD sur commande : fleurs et résines au prix de gros",
-  description: `${COUNT} fleurs et résines de CBD sur commande, livrées sous ${ON_ORDER_DELAY} partout en France. Au gramme, prix de gros dès ${ON_ORDER_STEPS[0]} g et ${ON_ORDER_STEPS[1]} g, dès ${FROM}/g. THC < 0,3 %.`,
+  description: `${COUNT} fleurs et résines de CBD sur commande, livrées sous ${ON_ORDER_DELAY} partout en France. Dès ${ON_ORDER_MIN_GRAMS} g, prix de gros dès ${ON_ORDER_STEPS[0]} g et ${ON_ORDER_STEPS[1]} g, dès ${FROM}/g. THC < 0,3 %.`,
   path: "/sur-commande",
   keywords: ["cbd sur commande", "cbd prix de gros", "fleur cbd 100 g", "résine cbd 100 g", "cbd en gros particulier", "fleur cbd 500 g", "small buds cbd pas cher", "pollen cbd prix de gros"],
 });
 
 const steps = [
-  { t: "Vous choisissez", d: "Ajoutez vos références au panier, au gramme ou par 100 g et 500 g. Votre récapitulatif nous arrive sur WhatsApp en un geste." },
+  { t: "Vous choisissez", d: `Ajoutez vos références au panier, par ${ON_ORDER_MIN_GRAMS} g, 100 g ou 500 g. Votre récapitulatif nous arrive sur WhatsApp en un geste.` },
   { t: "Nous confirmons", d: "Nous vérifions la disponibilité et le délai, puis nous vous envoyons votre facture avec un lien de paiement sécurisé." },
   { t: "Nous commandons", d: "Votre lot est commandé dès réception du paiement, puis pesé et mis en sachet hermétique chez nous." },
   { t: "Vous recevez", d: `Le colis, neutre et suivi, arrive chez vous sous ${ON_ORDER_DELAY} environ, partout en France métropolitaine.` },
@@ -51,9 +51,9 @@ export default function SurCommandePage() {
           </>
         }
         titleClassName="max-w-[15ch]"
-        lead={fr(`${COUNT} fleurs et résines de CBD de plus, que nous commandons pour vous. Vendues au gramme, avec un prix de gros dès ${ON_ORDER_STEPS[0]} g et dès ${ON_ORDER_STEPS[1]} g, et expédiées partout en France.`)}
+        lead={fr(`${COUNT} fleurs et résines de CBD de plus, que nous commandons pour vous. À partir de ${ON_ORDER_MIN_GRAMS} g par référence, avec un prix de gros dès ${ON_ORDER_STEPS[0]} g et dès ${ON_ORDER_STEPS[1]} g, et expédiées partout en France.`)}
       >
-        <p className="t-num text-[0.9688rem] text-foreground/75">{fr(`${COUNT} références, dès ${FROM} le gramme, THC inférieur à 0,3 %`)}</p>
+        <p className="t-num text-[0.9688rem] text-foreground/75">{fr(`${COUNT} références, dès ${FROM} le gramme, commande minimale de ${ON_ORDER_MIN_GRAMS} g, THC inférieur à 0,3 %`)}</p>
         <nav aria-label="Familles de produits sur commande" className="mt-6 flex flex-wrap gap-2.5">
           {groups.map((g) => (
             <a key={g.key} href={`#${g.key}`} className="btn btn-ghost btn-sm">
@@ -106,7 +106,7 @@ export default function SurCommandePage() {
           <div className="prose-cbd lg:col-span-7">
             <h2>Comment se calculent les prix</h2>
             <p>
-              {fr(`Chaque référence sur commande a trois prix au gramme : le prix au détail, un prix de gros à partir de ${ON_ORDER_STEPS[0]} g et un prix encore plus bas à partir de ${ON_ORDER_STEPS[1]} g. Le palier se calcule sur le poids total d'une même référence dans votre panier, tous formats additionnés : quatre sachets de 25 g sont au prix des 100 g.`)}
+              {fr(`La commande minimale est de ${ON_ORDER_MIN_GRAMS} g par référence. Chaque référence a trois prix au gramme : le prix de base, un prix de gros à partir de ${ON_ORDER_STEPS[0]} g et un prix encore plus bas à partir de ${ON_ORDER_STEPS[1]} g. Le palier se calcule sur le poids total d'une même référence dans votre panier, tous formats additionnés : quatre sachets de 25 g sont au prix des 100 g.`)}
             </p>
             <p>{fr(`Le prix « dès » affiché sur chaque étiquette est le plus bas des trois, celui des ${ON_ORDER_STEPS[1]} g. À partir de ${gramsLabel(ON_ORDER_QUOTE_FROM_GRAMS)} d'une même référence, écrivez-nous sur WhatsApp : le prix se fixe sur demande.`)}</p>
             <h2>Ce que sont ces produits</h2>

@@ -74,15 +74,15 @@ assert.equal(new Set(allProducts.map((p) => p.name)).size, allProducts.length, "
 const skus = allProducts.flatMap((p) => p.variants.map((v) => v.sku));
 assert.equal(new Set(skus).size, skus.length, "deux formats ont le même identifiant");
 const groupKeys = onOrderGroups.map((g) => g.key);
-// Prix attendus de quelques références (centimes : 1 g, 10 g, 25 g, 100 g, 500 g) et leur prix d'appel.
+// Prix attendus de quelques références (centimes : 25 g, 100 g, 500 g ; 25 g est la commande minimale) et leur prix d'appel.
 const surCommande = {
-  "mandarine-sherbet": [[1485, 14850, 37125, 108000, 378000], "dès 7,56 €/g"],
-  "white-rhino": [[550, 5500, 13750, 40000, 138000], "dès 2,76 €/g"],
-  "trim-standard": [[61, 610, 1525, 4400, 16500], "dès 0,33 €/g"],
-  "small-buds-standard": [[88, 880, 2200, 6400, 24000], "dès 0,48 €/g"],
-  ketama: [[275, 2750, 6875, 20000, 75000], "dès 1,50 €/g"],
-  "ice-o-lator": [[1045, 10450, 26125, 76000, 285000], "dès 5,70 €/g"],
-  "moon-rock": [[605, 6050, 15125, 44000, 147000], "dès 2,94 €/g"],
+  "mandarine-sherbet": [[37125, 108000, 378000], "dès 7,56 €/g"],
+  "white-rhino": [[13750, 40000, 138000], "dès 2,76 €/g"],
+  "trim-standard": [[1525, 4400, 16500], "dès 0,33 €/g"],
+  "small-buds-standard": [[2200, 6400, 24000], "dès 0,48 €/g"],
+  ketama: [[6875, 20000, 75000], "dès 1,50 €/g"],
+  "ice-o-lator": [[26125, 76000, 285000], "dès 5,70 €/g"],
+  "moon-rock": [[15125, 44000, 147000], "dès 2,94 €/g"],
 };
 for (const [slug, [prices, label]] of Object.entries(surCommande)) {
   const p = getProduct(slug);
@@ -95,7 +95,7 @@ for (const p of visibleOnOrderProducts) {
   assert.ok(rates, `${p.slug} : tarif manquant`);
   assert.ok(groupKeys.includes(p.onOrder), `${p.slug} : famille inconnue`);
   assert.equal(p.badge, "Sur commande");
-  assert.deepEqual(p.variants.map((v) => v.format), ["1 g", "10 g", "25 g", "100 g", "500 g"], `${p.slug} : formats`);
+  assert.deepEqual(p.variants.map((v) => v.format), ["25 g", "100 g", "500 g"], `${p.slug} : formats (25 g au minimum)`);
   for (const v of p.variants) {
     assert.deepEqual(onOrderEntry(v.sku), [v.priceCents, v.perGramCents], `${v.sku} : prix du format`);
     assert.equal(v.force, 1, `${v.sku} : aucune référence sur commande n'est enrichie`);

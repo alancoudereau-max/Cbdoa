@@ -2,7 +2,7 @@
 //   node --experimental-strip-types --no-warnings --import ./qa/alias.mjs qa/pricing.test.mjs
 import assert from "node:assert/strict";
 import { bulkPercent, bulkPriceCents, bulkRuleText, bulkTiersFor, priceCart, quoteMessage, BULK_PACKS, QUOTE_FROM_GRAMS } from "../src/lib/pricing.ts";
-import { gramsLabel, isOnOrder, onOrderEntry, onOrderRate, onOrderRates, onOrderSku, quoteFromGrams, tierPrice, ON_ORDER_PACKS, ON_ORDER_QUOTE_FROM_GRAMS, ON_ORDER_STEPS } from "../src/lib/pricing.ts";
+import { gramsLabel, isOnOrder, onOrderEntry, onOrderRate, onOrderRates, onOrderSku, quoteFromGrams, tierPrice, ON_ORDER_MIN_GRAMS, ON_ORDER_PACKS, ON_ORDER_QUOTE_FROM_GRAMS, ON_ORDER_STEPS } from "../src/lib/pricing.ts";
 import { ON_ORDER_RATES } from "../src/data/tarifs-sur-commande.ts";
 
 // Paliers de la règle générale
@@ -95,8 +95,9 @@ assert.deepEqual(priceCart([]), { lines: [], subtotalCents: 0, quotes: [] });
 
 assert.equal(quoteMessage("Beldia — Résine", "Force Maxi"), "Bonjour CBDoux, je souhaite un prix pour 100 g ou plus de Beldia Résine (Force Maxi).");
 
-// ───────────── Références sur commande : trois prix au gramme (détail, dès 100 g, dès 500 g)
-assert.deepEqual([...ON_ORDER_PACKS], [1, 10, 25, 100, 500]);
+// ───────────── Références sur commande : trois prix au gramme (prix de base, dès 100 g, dès 500 g), 25 g au minimum
+assert.deepEqual([...ON_ORDER_PACKS], [25, 100, 500]);
+assert.equal(ON_ORDER_MIN_GRAMS, 25);
 assert.deepEqual([...ON_ORDER_STEPS], [100, 500]);
 assert.equal(ON_ORDER_QUOTE_FROM_GRAMS, 1000);
 assert.ok(Object.keys(ON_ORDER_RATES).length > 0);
@@ -110,36 +111,38 @@ assert.equal(isOnOrder("mango-pops"), false);
 assert.equal(isOnOrder("constructor"), false);
 assert.deepEqual([...onOrderRates("ketama")], [275, 200, 150]);
 assert.equal(onOrderRates("mango-pops"), undefined);
-for (const [g, rate] of [[1, 275], [99, 275], [100, 200], [499, 200], [500, 150], [5000, 150]]) assert.equal(onOrderRate("ketama", g), rate, `Ketama, ${g} g`);
+for (const [g, rate] of [[25, 275], [99, 275], [100, 200], [499, 200], [500, 150], [5000, 150]]) assert.equal(onOrderRate("ketama", g), rate, `Ketama, ${g} g`);
 assert.equal(onOrderRate("mango-pops", 100), undefined);
 // Identifiants des formats, et prix du jour relu d'après l'identifiant (panier enregistré)
 assert.equal(onOrderSku("ketama", 100), "SC-ketama-100G");
-assert.deepEqual(onOrderEntry("SC-ketama-1G"), [275, 275]);
 assert.deepEqual(onOrderEntry("SC-ketama-25G"), [6875, 275]);
 assert.deepEqual(onOrderEntry("SC-ketama-100G"), [20000, 275]);
 assert.deepEqual(onOrderEntry("SC-ketama-500G"), [75000, 275]);
 assert.deepEqual(onOrderEntry("SC-aladin-purple-kush-small-buds-500G"), [63000, 231]);
-for (const sku of ["SC-ketama-7G", "SC-inconnu-10G", "MANGO-MAXI-10G", "SC-ketama-100", ""]) assert.equal(onOrderEntry(sku), undefined, sku);
+// Les formats 1 g et 10 g ne se vendent plus (25 g au minimum) : un panier qui en garderait un le voit retiré.
+for (const sku of ["SC-ketama-1G", "SC-ketama-10G", "SC-ketama-7G", "SC-inconnu-25G", "MANGO-MAXI-10G", "SC-ketama-100", ""]) assert.equal(onOrderEntry(sku), undefined, sku);
 // Prix d'un format selon le poids total de la référence au panier
 assert.deepEqual(tierPrice("ketama", 275, 25, 25), { unitCents: 6875, percent: 0 });
 assert.deepEqual(tierPrice("ketama", 275, 25, 100), { unitCents: 5000, percent: 27 });
-assert.deepEqual(tierPrice("ketama", 275, 1, 500), { unitCents: 150, percent: 45 });
+assert.deepEqual(tierPrice("ketama", 275, 25, 500), { unitCents: 3750, percent: 45 });
 assert.deepEqual(tierPrice("mango-pops", 700, 10, 10), { unitCents: 6300, percent: 10 });
 assert.equal(quoteFromGrams("ketama"), 1000);
 assert.equal(quoteFromGrams("beldia"), 100);
 assert.deepEqual([100, 999, 1000, 1500, 2000].map(gramsLabel), ["100 g", "999 g", "1 kg", "1,5 kg", "2 kg"]);
 
 const so = (slug, grams, quantity) => ({ slug, grams, quantity, perGramCents: ON_ORDER_RATES[slug][0], unitPriceCents: onOrderEntry(onOrderSku(slug, grams))[0] });
-// 3 × 25 g : prix au détail ; 4 × 25 g = 100 g : le prix des 100 g
+// 3 × 25 g : prix de base ; 4 × 25 g = 100 g : le prix des 100 g
+c = priceCart([so("ketama", 25, 1)]);
+assert.deepEqual([c.subtotalCents, c.lines[0].bulkPercent, c.quotes], [6875, 0, []]);
 c = priceCart([so("ketama", 25, 3)]);
 assert.deepEqual([c.subtotalCents, c.lines[0].bulkPercent, c.quotes], [20625, 0, []]);
 c = priceCart([so("ketama", 25, 4)]);
 assert.deepEqual([c.subtotalCents, c.lines[0].unitCents, c.lines[0].bulkPercent], [20000, 5000, 27]);
 c = priceCart([so("ketama", 100, 1)]);
 assert.equal(c.subtotalCents, 20000);
-// 100 g + 10 × 1 g = 110 g : tout au prix des 100 g
-c = priceCart([so("ketama", 100, 1), so("ketama", 1, 10)]);
-assert.deepEqual(c.lines.map((l) => l.totalCents), [20000, 2000]);
+// 100 g + 2 × 25 g = 150 g : tout au prix des 100 g
+c = priceCart([so("ketama", 100, 1), so("ketama", 25, 2)]);
+assert.deepEqual(c.lines.map((l) => l.totalCents), [20000, 10000]);
 // 4 × 100 g + 4 × 25 g = 500 g : tout au prix des 500 g, égal au sachet de 500 g
 c = priceCart([so("ketama", 100, 4), so("ketama", 25, 4)]);
 assert.deepEqual([c.subtotalCents, c.lines.map((l) => l.bulkPercent), c.quotes], [75000, [45, 45], []]);
@@ -153,8 +156,8 @@ c = priceCart([so("ketama", 25, 3), so("super-pollen", 25, 3), line("mango", 10,
 assert.deepEqual(c.lines.map((l) => [l.totalCents, l.bulkPercent]), [[20625, 0], [20625, 0], [6300, 10]]);
 assert.deepEqual(c.quotes, []);
 // Centimes exacts sur la référence la moins chère
-c = priceCart([so("trim-standard", 1, 7)]);
-assert.equal(c.subtotalCents, 427);
+c = priceCart([so("trim-standard", 25, 1)]);
+assert.equal(c.subtotalCents, 1525);
 c = priceCart([so("trim-standard", 500, 1)]);
 assert.equal(c.subtotalCents, 16500);
 assert.equal(quoteMessage("Ketama", "CBD classique", 1000), "Bonjour CBDoux, je souhaite un prix pour 1 kg ou plus de Ketama (CBD classique).");

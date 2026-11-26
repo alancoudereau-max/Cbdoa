@@ -80,7 +80,7 @@ export const onOrderFaq: FaqItem[] = [
   },
   {
     q: "Comment passer une commande ?",
-    a: "Comme pour le reste du site : vous ajoutez les références au panier, puis votre récapitulatif nous est envoyé sur WhatsApp. Nous confirmons la disponibilité et le délai, puis nous vous adressons votre facture avec un lien de paiement sécurisé. La commande est lancée à réception du paiement.",
+    a: "Comme pour le reste du site : vous ajoutez les références au panier (25 g au minimum par référence), puis votre récapitulatif nous est envoyé sur WhatsApp. Nous confirmons la disponibilité et le délai, puis nous vous adressons votre facture avec un lien de paiement sécurisé. La commande est lancée à réception du paiement.",
   },
   {
     q: "Quel est le délai de livraison ?",
@@ -88,7 +88,7 @@ export const onOrderFaq: FaqItem[] = [
   },
   {
     q: "Comment fonctionnent les prix de gros ?",
-    a: "Chaque référence a trois prix au gramme : le prix au détail, un prix plus bas à partir de 100 g et un prix encore plus bas à partir de 500 g. Le palier se calcule sur le poids total d'une même référence dans votre panier, tous formats additionnés. À partir de 1 kg, écrivez-nous sur WhatsApp : le prix se fixe sur demande.",
+    a: "La commande minimale est de 25 g par référence. Chaque référence a trois prix au gramme : le prix de base, un prix plus bas à partir de 100 g et un prix encore plus bas à partir de 500 g. Le palier se calcule sur le poids total d'une même référence dans votre panier, tous formats additionnés. À partir de 1 kg, écrivez-nous sur WhatsApp : le prix se fixe sur demande.",
   },
   {
     q: "Puis-je commander en même temps des produits en stock ?",

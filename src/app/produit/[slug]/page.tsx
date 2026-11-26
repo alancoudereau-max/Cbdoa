@@ -16,7 +16,7 @@ import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMetadata, productJsonLd, productSeoTitle } from "@/lib/seo";
 import { getAvailabilityMap } from "@/lib/stock";
-import { bulkRuleText, bulkTiersFor, gramsLabel, onOrderRates, quoteFromGrams, quoteMessage, ON_ORDER_DELAY, ON_ORDER_STEPS } from "@/lib/pricing";
+import { bulkRuleText, bulkTiersFor, gramsLabel, onOrderRates, quoteFromGrams, quoteMessage, ON_ORDER_DELAY, ON_ORDER_MIN_GRAMS, ON_ORDER_STEPS } from "@/lib/pricing";
 import { commas, fr } from "@/lib/utils";
 import { categoryFaq, onOrderFaq } from "@/data/category-faq";
 
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return buildMetadata({
     title: productSeoTitle(p),
     description: p.onOrder
-      ? `${p.short} ${thcLabel(p)}. Prix de gros dès ${ON_ORDER_STEPS[0]} g.`
+      ? `${p.short} ${thcLabel(p)}. Dès ${ON_ORDER_MIN_GRAMS} g, prix de gros dès ${ON_ORDER_STEPS[0]} g.`
       : `${p.short} ${p.thcMax ? "Analyse labo." : `${thcLabel(p)}, analyse labo.`} Livraison 24/48 h, port offert dès 60 €.`,
     path: `/produit/${p.slug}`,
     image: `/produit/${p.slug}/opengraph-image`,
@@ -216,7 +216,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             )}
             {orderRates && (
               <p className="mt-5 text-[0.9375rem] leading-relaxed text-foreground/85">
-                {fr(`Prix de gros : ${formatPrice(orderRates[1])} le gramme dès ${ON_ORDER_STEPS[0]} g, ${formatPrice(orderRates[2])} dès ${ON_ORDER_STEPS[1]} g d'une même référence, tous formats additionnés dans le panier. À partir de ${gramsLabel(quoteFrom)}, le prix se fixe sur demande, sur WhatsApp.`)}
+                {fr(`Commande minimale : ${ON_ORDER_MIN_GRAMS} g par référence. Prix de gros : ${formatPrice(orderRates[1])} le gramme dès ${ON_ORDER_STEPS[0]} g, ${formatPrice(orderRates[2])} dès ${ON_ORDER_STEPS[1]} g d'une même référence, tous formats additionnés dans le panier. À partir de ${gramsLabel(quoteFrom)}, le prix se fixe sur demande, sur WhatsApp.`)}
               </p>
             )}
             <ul className="mt-6 space-y-2 text-[0.9375rem] text-foreground/85">

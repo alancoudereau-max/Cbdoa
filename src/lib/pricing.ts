@@ -10,8 +10,9 @@
  * 10 g et 25 g du catalogue, les prix « dès », les fiches produit, le panier et le récapitulatif WhatsApp
  * se recalculent tous seuls. Les montants sont en centimes d'euro.
  *
- * Références « Sur commande » : même principe, mais chaque référence a ses trois prix au gramme (au détail,
- * dès 100 g, dès 500 g) dans src/data/tarifs-sur-commande.ts ; à partir de 1 kg, le prix se fixe sur demande.
+ * Références « Sur commande » : même principe, mais chaque référence a ses trois prix au gramme (prix de base,
+ * dès 100 g, dès 500 g) dans src/data/tarifs-sur-commande.ts. Elles se commandent à partir de 25 g (ON_ORDER_PACKS) ;
+ * à partir de 1 kg, le prix se fixe sur demande.
  */
 import { ON_ORDER_RATES } from "@/data/tarifs-sur-commande";
 
@@ -60,8 +61,10 @@ export function bulkRuleText(tiers: BulkTiers = BULK_TIERS): string {
 
 // ───────────────────────────── Sur commande ─────────────────────────────
 
-/** Formats vendus sur commande, en grammes. */
-export const ON_ORDER_PACKS: ReadonlyArray<number> = [1, 10, 25, 100, 500];
+/** Formats vendus sur commande, en grammes. Le plus petit est la commande minimale par référence. */
+export const ON_ORDER_PACKS: ReadonlyArray<number> = [25, 100, 500];
+/** Commande minimale d'une référence sur commande, en grammes. */
+export const ON_ORDER_MIN_GRAMS = ON_ORDER_PACKS[0];
 /** Poids d'une même référence qui ouvrent les deux paliers de prix sur commande. */
 export const ON_ORDER_STEPS: readonly [number, number] = [100, 500];
 /** Poids d'une même référence sur commande à partir duquel le prix se fixe sur demande. */
@@ -74,7 +77,7 @@ export function isOnOrder(slug: string): boolean {
   return Object.hasOwn(ON_ORDER_RATES, slug);
 }
 
-/** Les trois prix au gramme d'une référence sur commande (centimes) : au détail, dès 100 g, dès 500 g. */
+/** Les trois prix au gramme d'une référence sur commande (centimes) : prix de base, dès 100 g, dès 500 g. */
 export function onOrderRates(slug: string): readonly [number, number, number] | undefined {
   return isOnOrder(slug) ? ON_ORDER_RATES[slug] : undefined;
 }

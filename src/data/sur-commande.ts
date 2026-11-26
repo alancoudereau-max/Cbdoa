@@ -4,14 +4,15 @@
  * leur fiche produit, mais n'apparaissent ni dans les rayons, ni dans la boutique, ni dans les sélections.
  *
  * Toutes sont en CBD classique : aucune n'est enrichie en cannabinoïdes (pas de force 2, 3 ou Maxi ici).
- * Prix : src/data/tarifs-sur-commande.ts (au gramme, dès 100 g, dès 500 g). Photos : public/images/products/sc-*.jpg.
+ * Commande minimale : 25 g par référence (formats 25 g, 100 g et 500 g : ON_ORDER_PACKS, src/lib/pricing.ts).
+ * Prix : src/data/tarifs-sur-commande.ts (prix de base, dès 100 g, dès 500 g). Photos : public/images/products/sc-*.jpg.
  * Retirer une référence : `hidden: true` ; la signaler indisponible : `soldOut: true`.
  *
  * Règles de rédaction : celles du catalogue (src/data/products.ts). Les arômes donnés sont le profil habituel de
  * la variété, pas celui d'un lot : chaque fiche le dit. `aromas` vide = profil inconnu, la fiche renvoie au lot.
  */
 import type { Category, Product, Variant } from "@/data/products";
-import { ON_ORDER_DELAY, ON_ORDER_PACKS, onOrderRate, onOrderRates, onOrderSku } from "@/lib/pricing";
+import { ON_ORDER_DELAY, ON_ORDER_MIN_GRAMS, ON_ORDER_PACKS, onOrderRate, onOrderRates, onOrderSku } from "@/lib/pricing";
 
 export type OnOrderGroupKey = "californiennes" | "fleurs" | "faible-thc" | "small-buds" | "resines" | "rocks";
 
@@ -82,7 +83,7 @@ const VAPO = "Vaporisation. Non destinée à la combustion ni à un usage alimen
 const VAPO_M = "Vaporisation. Non destiné à la combustion ni à un usage alimentaire.";
 const VAPO_RESINE = "Vaporisation (chambre pour concentrés). Non destinée à la combustion ni à un usage alimentaire.";
 const LOT = "Les notes varient d'un lot à l'autre : demandez-nous le profil du lot en cours avant de commander.";
-const ORDER = `Cette référence se vend sur commande : nous la commandons pour vous dès votre paiement et vous la recevez sous ${ON_ORDER_DELAY} environ. Elle est vendue au gramme, avec un prix de gros dès 100 g puis dès 500 g de cette même référence.`;
+const ORDER = `Cette référence se vend sur commande : nous la commandons pour vous dès votre paiement et vous la recevez sous ${ON_ORDER_DELAY} environ. Elle se commande à partir de ${ON_ORDER_MIN_GRAMS} g, avec un prix de gros dès 100 g puis dès 500 g de cette même référence.`;
 
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 const RESINS: Kind[] = ["kief", "pollen", "presse"];
