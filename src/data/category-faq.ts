@@ -80,7 +80,7 @@ export const onOrderFaq: FaqItem[] = [
   },
   {
     q: "Comment passer une commande ?",
-    a: "Comme pour le reste du site : vous ajoutez les références au panier (25 g au minimum par référence), puis votre récapitulatif nous est envoyé sur WhatsApp. Nous confirmons la disponibilité et le délai, puis nous vous adressons votre facture avec un lien de paiement sécurisé. La commande est lancée à réception du paiement.",
+    a: "Comme pour le reste du site : vous ajoutez les références au panier (25 g au minimum par fleur ou résine), puis votre récapitulatif nous est envoyé sur WhatsApp. Nous confirmons la disponibilité et le délai, puis nous vous adressons votre facture avec un lien de paiement sécurisé. La commande est lancée à réception du paiement.",
   },
   {
     q: "Quel est le délai de livraison ?",
@@ -88,7 +88,7 @@ export const onOrderFaq: FaqItem[] = [
   },
   {
     q: "Comment fonctionnent les prix de gros ?",
-    a: "La commande minimale est de 25 g par référence. Chaque référence a trois prix au gramme : le prix de base, un prix plus bas à partir de 100 g et un prix encore plus bas à partir de 500 g. Le palier se calcule sur le poids total d'une même référence dans votre panier, tous formats additionnés. À partir de 1 kg, écrivez-nous sur WhatsApp : le prix se fixe sur demande.",
+    a: "Pour les fleurs et les résines, la commande minimale est de 25 g par référence. Chaque référence a trois prix au gramme : le prix de base, un prix plus bas à partir de 100 g et un prix encore plus bas à partir de 500 g. Le palier se calcule sur le poids total d'une même référence dans votre panier, tous formats additionnés. À partir de 1 kg, écrivez-nous sur WhatsApp : le prix se fixe sur demande.",
   },
   {
     q: "Puis-je commander en même temps des produits en stock ?",
@@ -96,7 +96,7 @@ export const onOrderFaq: FaqItem[] = [
   },
   {
     q: "Ces produits sont-ils analysés ?",
-    a: "Ce sont des fleurs et des résines en CBD classique : aucune n'est enrichie en cannabinoïdes, et leur taux de THC reste sous le plafond légal de 0,3 %. Le certificat d'analyse du lot vous est transmis sur simple demande, avant de commander.",
+    a: "Les fleurs et les résines sont en CBD classique : aucune n'est enrichie en cannabinoïdes, et leur taux de THC reste sous le plafond légal de 0,3 %. Le certificat d'analyse du lot vous est transmis sur simple demande, avant de commander.",
   },
   {
     q: "Puis-je changer d'avis après avoir commandé ?",

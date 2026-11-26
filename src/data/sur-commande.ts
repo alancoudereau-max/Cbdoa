@@ -12,9 +12,10 @@
  * la variété, pas celui d'un lot : chaque fiche le dit. `aromas` vide = profil inconnu, la fiche renvoie au lot.
  */
 import type { Category, Product, Variant } from "@/data/products";
-import { ON_ORDER_DELAY, ON_ORDER_MIN_GRAMS, ON_ORDER_PACKS, onOrderRate, onOrderRates, onOrderSku } from "@/lib/pricing";
+import { ON_ORDER_DELAY, ON_ORDER_MIN_GRAMS, ON_ORDER_PACKS, onOrderItemSku, onOrderRate, onOrderRates, onOrderSku } from "@/lib/pricing";
+import { ON_ORDER_ITEMS } from "@/data/tarifs-articles";
 
-export type OnOrderGroupKey = "californiennes" | "fleurs" | "faible-thc" | "small-buds" | "resines" | "rocks";
+export type OnOrderGroupKey = "californiennes" | "fleurs" | "faible-thc" | "small-buds" | "resines" | "rocks" | "cosmetiques" | "accessoires";
 
 export const onOrderGroups: Array<{ key: OnOrderGroupKey; name: string; title: string; intro: string }> = [
   {
@@ -52,6 +53,18 @@ export const onOrderGroups: Array<{ key: OnOrderGroupKey; name: string; title: s
     name: "Moon rocks et ice rocks",
     title: "Moon rocks et ice rocks",
     intro: "Des têtes de fleurs enrobées d'extrait de chanvre puis de pollen ou de cristaux de CBD : les formats les plus concentrés en CBD.",
+  },
+  {
+    key: "cosmetiques",
+    name: "Cosmétiques au CBD",
+    title: "Cosmétiques au CBD",
+    intro: "Crèmes, baumes, sérums et huiles de soin au CBD de deux marques, Trycome et Alpinium, vendus à la pièce, au prix public conseillé.",
+  },
+  {
+    key: "accessoires",
+    name: "Accessoires",
+    title: "Accessoires",
+    intro: "Feuilles, filtres, cônes, grinder, plateau et cendrier des marques RAW, OCB et Juicy, au carnet, à la boîte ou à la pièce, au prix public conseillé.",
   },
 ];
 
@@ -344,3 +357,97 @@ function build(r: Row): Product {
 
 /** Toutes les références sur commande, dans l'ordre de la section. */
 export const onOrderProducts: Product[] = rows.map(build);
+
+// ───────────────────────────── Articles vendus à la pièce : cosmétiques et accessoires ─────────────────────────────
+
+type Item = {
+  slug: string;
+  name: string;
+  objet: "accessoire" | "cosmetique";
+  brand: string;
+  /** Ce que c'est, en une proposition : « baume pour les lèvres au beurre de karité » */
+  what: string;
+  /** Description, en phrases complètes. */
+  text: string[];
+  /** Teneur annoncée par la marque : « 1 500 mg de CBD » */
+  cbd?: string;
+  usage: string;
+  keywords: string[];
+  seo: string;
+};
+
+const COSMETIC_USAGE = "Usage externe, sur une peau saine. Ne pas avaler ; éviter le contour des yeux et les muqueuses.";
+const items: Item[] = [
+  // ── Cosmétiques Trycome
+  { slug: "trycome-baume-levres", name: "Baume à lèvres Trycome", objet: "cosmetique", brand: "Trycome", what: "baume pour les lèvres au beurre de karité, au CBD", text: ["Un stick de 4,8 g, riche en beurre de karité, au parfum floral. Il s'applique sur les lèvres aussi souvent que nécessaire, au fil de la journée."], usage: "Sur les lèvres, aussi souvent que nécessaire.", keywords: ["baume à lèvres cbd", "stick lèvres cbd", "trycome"], seo: "baume à lèvres au CBD" },
+  { slug: "trycome-gommage", name: "Gommage corps Trycome", objet: "cosmetique", brand: "Trycome", what: "gommage pour le corps au sel marin, au CBD", text: ["Un pot de 245 g : sel de mer, huile d'amande douce et macérât de calendula, avec du CBD. Il s'applique en massage sur la peau humide, puis se rince."], usage: "En massage sur la peau humide, puis rincer. Une à deux fois par semaine. Ne pas avaler.", keywords: ["gommage cbd", "gommage corps cbd", "trycome"], seo: "gommage corps au CBD" },
+  { slug: "trycome-creme-jour", name: "Crème de jour Trycome", objet: "cosmetique", brand: "Trycome", what: "crème de jour pour le visage, au CBD", text: ["Un pot de 50 ml pour tous les types de peau. Sa texture est hydratante, au fini poudré ; elle est enrichie en huile d'amande douce et en acide hyaluronique."], usage: "Le matin, sur le visage propre. " + COSMETIC_USAGE, keywords: ["crème visage cbd", "crème de jour cbd", "trycome"], seo: "crème de jour au CBD" },
+  { slug: "trycome-creme-nuit", name: "Crème de nuit Trycome", objet: "cosmetique", brand: "Trycome", what: "crème de nuit pour le visage, au CBD", text: ["Un pot de 50 ml, à l'huile de jojoba et aux extraits de spilanthes acmella, avec du CBD. Elle s'applique le soir, sur le visage propre."], usage: "Le soir, sur le visage propre. " + COSMETIC_USAGE, keywords: ["crème de nuit cbd", "crème visage cbd", "trycome"], seo: "crème de nuit au CBD" },
+  { slug: "trycome-serum-visage", name: "Sérum visage Trycome", objet: "cosmetique", brand: "Trycome", what: "sérum pour le visage en flacon vaporisateur, au CBD", text: ["Un flacon de 50 ml avec vaporisateur, pour tous les types de peau. Il associe huile de jojoba, acide hyaluronique et CBD."], usage: "Une à deux pulvérisations sur le visage propre, avant la crème. " + COSMETIC_USAGE, keywords: ["sérum cbd", "sérum visage cbd", "trycome"], seo: "sérum visage au CBD" },
+  { slug: "trycome-creme-mains", name: "Crème mains Trycome", objet: "cosmetique", brand: "Trycome", what: "crème pour les mains et les ongles, au CBD", text: ["Une boîte de 60 ml, à l'huile de jojoba et au beurre de karité, avec du CBD. Elle pénètre vite et ne laisse pas les mains grasses."], usage: "Sur les mains et les ongles, aussi souvent que nécessaire. Ne pas avaler.", keywords: ["crème mains cbd", "crème cbd", "trycome"], seo: "crème mains au CBD" },
+  { slug: "trycome-huile-corps", name: "Huile corps Trycome", objet: "cosmetique", brand: "Trycome", cbd: "2 000 mg de CBD", what: "huile de soin et de massage pour le corps, au CBD", text: ["Un flacon de 100 ml contenant 2 000 mg de CBD, à l'huile d'amande douce, au parfum doux. Elle convient au soin des peaux sèches comme au massage."], usage: "En massage sur la peau, après la douche ou le bain. " + COSMETIC_USAGE, keywords: ["huile de massage cbd", "huile corps cbd", "trycome"], seo: "huile corps au CBD" },
+  { slug: "trycome-serum-cheveux", name: "Sérum cheveux Trycome", objet: "cosmetique", brand: "Trycome", cbd: "2 000 mg de CBD", what: "sérum pour les cheveux, au CBD", text: ["Un flacon de 100 ml contenant 2 000 mg de CBD, aux huiles de ricin, d'avocat, de jojoba et d'amande douce. Il démêle et lisse les cheveux."], usage: "Quelques pressions sur les longueurs, sur cheveux secs ou humides. Ne pas avaler ; éviter le contact avec les yeux.", keywords: ["sérum cheveux cbd", "soin cheveux cbd", "trycome"], seo: "sérum cheveux au CBD" },
+  // ── Cosmétiques Alpinium
+  { slug: "alpinium-gel-arnica", name: "Gel à l'arnica Alpinium", objet: "cosmetique", brand: "Alpinium", cbd: "200 mg de CBD", what: "gel à l'arnica et au CBD", text: ["Un gel frais à l'arnica, qui contient 200 mg de CBD. Il s'applique en massage léger, sur une petite zone."], usage: "En massage léger, sur une peau saine. " + COSMETIC_USAGE, keywords: ["gel arnica cbd", "arnica cbd", "alpinium"], seo: "gel arnica au CBD" },
+  { slug: "alpinium-creme-decontractante", name: "Crème corps Alpinium", objet: "cosmetique", brand: "Alpinium", cbd: "1 500 mg de CBD", what: "crème hydratante pour le corps, au CBD", text: ["Une crème hydratante pour le corps qui contient 1 500 mg de CBD, pensée par la marque pour les sportifs."], usage: "En massage sur la peau, avant ou après l'effort. " + COSMETIC_USAGE, keywords: ["crème cbd", "crème corps cbd", "crème cbd sport", "alpinium"], seo: "crème corps au CBD" },
+  { slug: "alpinium-baume-refroidissant", name: "Baume effet froid Alpinium", objet: "cosmetique", brand: "Alpinium", cbd: "1 000 mg de CBD", what: "baume à effet froid, au CBD", text: ["Un baume qui contient 1 000 mg de CBD et procure une sensation de fraîcheur dès l'application."], usage: "En massage sur une petite zone. Se laver les mains après usage. " + COSMETIC_USAGE, keywords: ["baume cbd", "baume froid cbd", "alpinium"], seo: "baume effet froid au CBD" },
+  { slug: "alpinium-baume-chauffant", name: "Baume effet chaud Alpinium", objet: "cosmetique", brand: "Alpinium", cbd: "1 000 mg de CBD", what: "baume à effet chauffant, au CBD", text: ["Un baume qui contient 1 000 mg de CBD et procure une sensation de chaleur à l'application."], usage: "En massage sur une petite zone. Se laver les mains après usage. " + COSMETIC_USAGE, keywords: ["baume cbd", "baume chauffant cbd", "alpinium"], seo: "baume effet chaud au CBD" },
+  { slug: "alpinium-gel-cryogene", name: "Gel effet glacé Alpinium", objet: "cosmetique", brand: "Alpinium", cbd: "1 500 mg de CBD", what: "gel à effet glacé, au CBD", text: ["Un gel en flacon pompe qui contient 1 500 mg de CBD et procure une sensation de froid intense à l'application."], usage: "En massage sur une petite zone. Se laver les mains après usage. " + COSMETIC_USAGE, keywords: ["gel cbd", "gel froid cbd", "alpinium"], seo: "gel effet glacé au CBD" },
+  { slug: "alpinium-huile-relaxante", name: "Huile de massage Alpinium", objet: "cosmetique", brand: "Alpinium", cbd: "1 500 mg de CBD", what: "huile de massage au CBD", text: ["Une huile de massage en flacon pompe qui contient 1 500 mg de CBD."], usage: "En massage sur la peau. " + COSMETIC_USAGE, keywords: ["huile de massage cbd", "huile cbd massage", "alpinium"], seo: "huile de massage au CBD" },
+  // ── Accessoires
+  { slug: "raw-plateau", name: "Plateau RAW", objet: "accessoire", brand: "RAW", what: "plateau en métal", text: ["Un plateau en métal aux bords relevés, décoré aux couleurs de la marque, facile à nettoyer."], usage: "Nettoyer avec un chiffon sec ou légèrement humide.", keywords: ["plateau raw", "rolling tray raw", "plateau métal"], seo: "plateau en métal" },
+  { slug: "raw-cendrier", name: "Cendrier RAW", objet: "accessoire", brand: "RAW", what: "cendrier rond en métal", text: ["Un cendrier rond en métal, compact, décoré aux couleurs de la marque."], usage: "Nettoyer à l'eau savonneuse.", keywords: ["cendrier raw", "cendrier métal"], seo: "cendrier en métal" },
+  { slug: "raw-grinder", name: "Grinder RAW aluminium", objet: "accessoire", brand: "RAW", what: "grinder en aluminium à plusieurs étages", text: ["Un grinder en aluminium à plusieurs étages, avec un compartiment de rangement, livré dans sa boîte."], usage: "Nettoyer à sec avec une petite brosse.", keywords: ["grinder raw", "grinder aluminium", "moulin à herbes"], seo: "grinder en aluminium" },
+  { slug: "raw-classic-king-size", name: "Feuilles RAW Classic King Size", objet: "accessoire", brand: "RAW", what: "feuilles longues non blanchies", text: ["Des feuilles longues (King Size) en fibres non blanchies. Le carnet contient 33 feuilles ; la boîte, 50 carnets."], usage: "Accessoire réservé aux adultes.", keywords: ["feuilles raw", "raw king size", "feuilles slim non blanchies"], seo: "feuilles King Size" },
+  { slug: "raw-wide-tips", name: "Filtres carton RAW Wide Tips", objet: "accessoire", brand: "RAW", what: "filtres en carton prédécoupés", text: ["Des filtres en carton souple, prédécoupés et perforés, faciles à plier. Le carnet en contient 50 ; la boîte, 50 carnets."], usage: "Accessoire réservé aux adultes.", keywords: ["filtres carton raw", "raw tips", "wide tips"], seo: "filtres en carton" },
+  { slug: "ocb-black-1", name: "Feuilles OCB Premium n°1", objet: "accessoire", brand: "OCB", what: "feuilles courtes, format n°1", text: ["Des feuilles courtes OCB Premium, format n°1. Le carnet contient 50 feuilles ; la boîte, 50 carnets."], usage: "Accessoire réservé aux adultes.", keywords: ["ocb premium", "feuilles ocb", "ocb n°1"], seo: "feuilles courtes" },
+  { slug: "ocb-black-4", name: "Feuilles OCB Premium Double n°4", objet: "accessoire", brand: "OCB", what: "feuilles courtes en double carnet, format n°4", text: ["Des feuilles courtes OCB Premium en double carnet, format n°4. La boîte contient 25 carnets de 100 feuilles."], usage: "Accessoire réservé aux adultes.", keywords: ["ocb double", "ocb n°4", "feuilles ocb"], seo: "feuilles courtes" },
+  { slug: "ocb-black-slim", name: "Feuilles OCB Premium Slim", objet: "accessoire", brand: "OCB", what: "feuilles longues et fines", text: ["Des feuilles longues et fines OCB Premium Slim. Le carnet contient 32 feuilles ; la boîte, 50 carnets."], usage: "Accessoire réservé aux adultes.", keywords: ["ocb slim", "feuilles longues ocb", "ocb premium slim"], seo: "feuilles longues" },
+  { slug: "ocb-black-slim-tips", name: "Feuilles OCB Slim + filtres", objet: "accessoire", brand: "OCB", what: "feuilles longues avec filtres en carton", text: ["Des feuilles longues OCB Premium Slim avec leurs filtres en carton intégrés au carnet. La boîte contient 32 carnets."], usage: "Accessoire réservé aux adultes.", keywords: ["ocb slim tips", "ocb filtres", "feuilles avec filtres"], seo: "feuilles et filtres" },
+  { slug: "juicy-hemp-wraps-blue", name: "Hemp wraps Juicy Blue", objet: "accessoire", brand: "Juicy", what: "feuilles de chanvre aromatisées, sans tabac", text: ["Des feuilles roulées en chanvre, sans tabac, aromatisées à la myrtille. Le paquet refermable en contient 2 ; la boîte, 25 paquets."], usage: "Accessoire réservé aux adultes.", keywords: ["hemp wrap", "juicy hemp wraps", "feuille de chanvre"], seo: "feuilles de chanvre" },
+  { slug: "cones-basic", name: "Cônes pré-roulés Basic", objet: "accessoire", brand: "Basic", what: "cônes pré-roulés King Size", text: ["Des cônes déjà roulés, au format King Size, avec leur filtre, vendus en étui."], usage: "Accessoire réservé aux adultes.", keywords: ["cônes pré-roulés", "cone king size", "pre rolled cones"], seo: "cônes pré-roulés" },
+];
+
+function buildItem(i: Item): Product {
+  const formats = ON_ORDER_ITEMS[i.slug];
+  if (!formats) throw new Error(`Tarif manquant : ${i.slug}`);
+  const cosmetic = i.objet === "cosmetique";
+  const info = i.cbd ?? (cosmetic ? "Cosmétique au CBD" : i.brand);
+  return {
+    slug: i.slug,
+    name: i.name,
+    category: cosmetic ? "huiles" : "vape",
+    origin: `${i.brand} · ${cosmetic ? "cosmétique" : "accessoire"}`,
+    badge: "Sur commande",
+    onOrder: cosmetic ? "cosmetiques" : "accessoires",
+    objet: i.objet,
+    short: `${i.name}, ${i.what}. Sur commande : livraison sous ${ON_ORDER_DELAY}.`,
+    description: [
+      ...i.text,
+      cosmetic
+        ? `C'est un produit de la marque ${i.brand}, vendu dans son emballage d'origine. Il s'agit d'un cosmétique : il n'est pas destiné à soigner, et ne remplace pas un avis médical. Faites un essai sur une petite zone de peau avant la première utilisation.`
+        : `C'est un article de la marque ${i.brand}, neuf, dans son emballage d'origine.`,
+      `Cette référence se vend sur commande : nous la commandons pour vous dès votre paiement et vous la recevez sous ${ON_ORDER_DELAY} environ, au prix public conseillé par la marque.`,
+    ],
+    aromas: formats.map((f) => f[0]).join(" ou ").replace(/^Pièce$/, "À la pièce"),
+    profile: i.brand,
+    usage: i.usage,
+    notice: cosmetic ? "Cosmétique : usage externe uniquement, ne pas avaler. Faites un essai sur une petite zone de peau avant la première utilisation ; en cas de réaction, rincez et cessez l'application." : undefined,
+    image: `/images/products/sc-${i.slug}.jpg`,
+    variants: formats.map(([format, priceCents, grams], n) => ({
+      sku: onOrderItemSku(i.slug, n),
+      tier: "unique" as const,
+      tierLabel: cosmetic ? "Cosmétique" : "Accessoire",
+      force: 1 as const,
+      format,
+      grams,
+      priceCents,
+      cbdInfo: info,
+    })),
+    keywords: i.keywords,
+    // Titre Google : « Baume effet chaud au CBD Alpinium » pour un cosmétique, le nom seul pour un accessoire.
+    seoName: cosmetic ? `${i.seo.charAt(0).toUpperCase()}${i.seo.slice(1)} ${i.brand}` : i.name,
+  };
+}
+
+onOrderProducts.push(...items.map(buildItem));

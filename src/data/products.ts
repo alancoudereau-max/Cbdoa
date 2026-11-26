@@ -84,6 +84,8 @@ export type Product = {
   forceLabel?: string;
   /** Phrase qui remplace la description de la force dans l'encadré de prudence de la fiche. */
   notice?: string;
+  /** Article qui n'est pas une fleur ni une résine (sur commande) : ni force ni taux de THC affichés. */
+  objet?: "accessoire" | "cosmetique";
 };
 
 export const categories: Record<
@@ -820,6 +822,7 @@ export function formatPrice(cents: number): string {
 
 /** Taux de THC à afficher pour un produit : « THC 0,1 % max » s'il a un taux particulier, sinon « THC < 0,3 % ». */
 export function thcLabel(p: Product): string {
+  if (p.objet) return p.objet === "accessoire" ? "Accessoire" : "Cosmétique au CBD";
   return p.thcMax ? `THC ${p.thcMax} % max` : "THC < 0,3 %";
 }
 

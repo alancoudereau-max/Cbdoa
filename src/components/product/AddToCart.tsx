@@ -236,9 +236,9 @@ export function AddToCart({ product, availability }: { product: Product; availab
 
         {/* Ce que contient la variante choisie */}
         <p className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[0.875rem] text-foreground/80">
-          <ForceBadge force={variant.force} label={product.forceLabel} />
+          {!product.objet && <ForceBadge force={variant.force} label={product.forceLabel} />}
           <span>{fr(variant.cbdInfo)}</span>
-          <span>{fr(thcLabel(product))}</span>
+          {thcLabel(product) !== variant.cbdInfo && <span>{fr(thcLabel(product))}</span>}
         </p>
 
         {variant.warning && (

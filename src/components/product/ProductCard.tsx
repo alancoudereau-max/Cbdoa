@@ -85,7 +85,7 @@ export function ProductCard({
         <p className="mt-1.5 text-[0.8125rem] leading-snug text-foreground/70">{commas(p.origin ?? categories[p.category].name)}</p>
         {/* Force et prix : l'un sous l'autre sur une étiquette étroite, face à face dès que l'étiquette elle-même est assez large */}
         <div className="etiquette-pied mt-auto">
-          <ForceBadge force={maxForce(p)} label={p.forceLabel} />
+          {p.objet ? <span className="text-[0.8125rem] text-foreground/75">{p.objet === "accessoire" ? "Accessoire" : "Cosmétique"}</span> : <ForceBadge force={maxForce(p)} label={p.forceLabel} />}
           <PriceLabel label={startingPriceLabel(p)} />
         </div>
       </div>

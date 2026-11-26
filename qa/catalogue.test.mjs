@@ -6,7 +6,8 @@ import { existsSync } from "node:fs";
 import { visibleProducts, visibleOnOrderProducts, allProducts, getProduct, findVariant, startingPriceLabel, lowestPerGram, lowestPerGramCents, getProductsByCategory, thcLabel } from "../src/data/products.ts";
 import { onOrderGroups } from "../src/data/sur-commande.ts";
 import { ON_ORDER_RATES } from "../src/data/tarifs-sur-commande.ts";
-import { bulkPercent, bulkPriceCents, bulkTiersFor, bulkRuleText, onOrderEntry } from "../src/lib/pricing.ts";
+import { bulkPercent, bulkPriceCents, bulkTiersFor, bulkRuleText, isOnOrder, onOrderEntry } from "../src/lib/pricing.ts";
+import { ON_ORDER_ITEMS } from "../src/data/tarifs-articles.ts";
 
 const plain = (s) => s.replace(/[  ]/g, " ");
 const bySlug = Object.fromEntries(visibleProducts.map((p) => [p.slug, p]));
@@ -67,8 +68,16 @@ assert.equal(lowestPerGramCents(getProductsByCategory("huiles")), undefined);
 // Elles ne sont pas dans les rayons : le catalogue en stock ne change pas.
 assert.equal(visibleProducts.length, 22);
 assert.ok(visibleProducts.every((p) => !p.onOrder), "une référence sur commande est dans le catalogue en stock");
-assert.equal(visibleOnOrderProducts.length, 67);
-assert.equal(visibleOnOrderProducts.length, Object.keys(ON_ORDER_RATES).length, "chaque tarif a sa référence, et inversement");
+const weighed = visibleOnOrderProducts.filter((p) => !p.objet);
+assert.equal(weighed.length, 67);
+assert.equal(weighed.length, Object.keys(ON_ORDER_RATES).length, "chaque tarif a sa référence, et inversement");
+assert.equal(visibleOnOrderProducts.length, 67 + Object.keys(ON_ORDER_ITEMS).length);
+for (const p of visibleOnOrderProducts.filter((x) => x.objet)) {
+  assert.ok(isOnOrder(p.slug), p.slug);
+  assert.ok(existsSync(new URL(`../public${p.image}`, import.meta.url)), `${p.slug} : photo absente`);
+  for (const v of p.variants) assert.deepEqual(onOrderEntry(v.sku), [v.priceCents, 0], v.sku);
+  assert.ok(!/THC/.test(thcLabel(p)), `${p.slug} : pas de taux de THC sur un article`);
+}
 assert.equal(new Set(allProducts.map((p) => p.slug)).size, allProducts.length, "deux produits ont le même identifiant");
 assert.equal(new Set(allProducts.map((p) => p.name)).size, allProducts.length, "deux produits ont le même nom");
 const skus = allProducts.flatMap((p) => p.variants.map((v) => v.sku));
@@ -90,7 +99,7 @@ for (const [slug, [prices, label]] of Object.entries(surCommande)) {
   assert.deepEqual(p.variants.map((v) => v.priceCents), prices, `${slug} : prix des formats`);
   assert.equal(plain(startingPriceLabel(p)), label, `${slug} : prix d'appel`);
 }
-for (const p of visibleOnOrderProducts) {
+for (const p of weighed) {
   const rates = ON_ORDER_RATES[p.slug];
   assert.ok(rates, `${p.slug} : tarif manquant`);
   assert.ok(groupKeys.includes(p.onOrder), `${p.slug} : famille inconnue`);

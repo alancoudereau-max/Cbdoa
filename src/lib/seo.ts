@@ -242,11 +242,11 @@ export function productJsonLd(p: Product, opts: { available: boolean }) {
     url,
     sku: p.variants[0]?.sku,
     brand: { "@type": "Brand", name: site.name },
-    category: p.onOrder ? `${cat.name} sur commande` : cat.name,
+    category: p.objet ? (p.objet === "accessoire" ? "Accessoires sur commande" : "Cosmétiques au CBD sur commande") : p.onOrder ? `${cat.name} sur commande` : cat.name,
     additionalProperty: [
-      { "@type": "PropertyValue", name: "THC", value: thcLabel(p).replace(/^THC\s+/, "") },
-      ...(p.origin ? [{ "@type": "PropertyValue", name: "Origine / culture", value: p.origin }] : []),
-      { "@type": "PropertyValue", name: "Arômes", value: p.aromas },
+      ...(p.objet ? [] : [{ "@type": "PropertyValue", name: "THC", value: thcLabel(p).replace(/^THC\s+/, "") }]),
+      ...(p.origin ? [{ "@type": "PropertyValue", name: p.objet ? "Marque" : "Origine / culture", value: p.origin }] : []),
+      ...(p.objet ? [] : [{ "@type": "PropertyValue", name: "Arômes", value: p.aromas }]),
     ],
     audience: { "@type": "PeopleAudience", suggestedMinAge: 18 },
     ...(p.video

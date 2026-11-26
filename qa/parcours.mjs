@@ -365,7 +365,8 @@ const minus = async (page, n) => { for (let i = 0; i < n; i++) await panel(page)
   // la section : toutes les références, leur prix d'appel, aucune dans les rayons
   await page.goto(BASE + "/sur-commande", { waitUntil: "networkidle" });
   const section = Object.fromEntries(await page.locator("article.etiquette").evaluateAll((cards) => cards.map((a) => [a.querySelector("a").getAttribute("href").split("/").pop(), a.querySelector(".etiquette-prix").innerText.replace(/[\u00a0\u202f]/g, " ").replace(/\s+/g, " ").trim().replace(/ ?\/g$| le gramme$/, "")])));
-  assert.equal(Object.keys(section).length, 67);
+  assert.equal(Object.keys(section).length, 92);
+  assert.deepEqual([section["raw-grinder"], section["trycome-creme-mains"], section["ocb-black-1"]], ["30 €", "29,90 €", "dès 0,50 €"]);
   assert.deepEqual([section["mandarine-sherbet"], section["white-rhino"], section["trim-standard"], section.ketama, section["moon-rock"]], ["dès 7,56 €", "dès 2,76 €", "dès 0,33 €", "dès 1,50 €", "dès 2,94 €"]);
   assert.match(clean(await page.locator("h1").innerText()), /Sur commande, livré sous 1 semaine\./);
   for (const path of ["/fleurs-cbd", "/resines-cbd", "/boutique"]) {
@@ -373,7 +374,7 @@ const minus = async (page, n) => { for (let i = 0; i < n; i++) await panel(page)
     const slugs = await page.locator("article.etiquette a").evaluateAll((links) => links.map((a) => a.getAttribute("href").split("/").pop()));
     assert.ok(!slugs.some((slug) => slug in section), `${path} : une référence sur commande est dans un rayon`);
   }
-  assert.match(clean(await page.locator("main").innerText()), /Sur commande, 67 références de plus\./);
+  assert.match(clean(await page.locator("main").innerText()), /Sur commande, 92 références de plus\./);
   await ctx.close();
 }
 

@@ -32,7 +32,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!p) return {};
   return buildMetadata({
     title: productSeoTitle(p),
-    description: p.onOrder
+    description: p.objet
+      ? `${p.short} ${p.objet === "cosmetique" ? "Cosmétique au CBD" : "Accessoire de marque"}, au prix public conseillé.`
+      : p.onOrder
       ? `${p.short} ${thcLabel(p)}. Dès ${ON_ORDER_MIN_GRAMS} g, prix de gros dès ${ON_ORDER_STEPS[0]} g.`
       : `${p.short} ${p.thcMax ? "Analyse labo." : `${thcLabel(p)}, analyse labo.`} Livraison 24/48 h, port offert dès 60 €.`,
     path: `/produit/${p.slug}`,
@@ -84,7 +86,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               {/* Sur commande : la photo est celle de la référence, pas du lot ; elle n'est pas assez grande pour la loupe. */}
               <ProductMedia product={p} src={labelImage(p.image)} natural={p.onOrder ? null : photoSize(p.image)} />
               {p.onOrder && <p className="t-fine mt-3">Photo non contractuelle : l'aspect varie d'un lot à l'autre.</p>}
-              <Reassurance className="mt-5 hidden lg:grid" thc={p.thcMax ? thcLabel(p) : undefined} delay={delay} />
+              <Reassurance className="mt-5 hidden lg:grid" thc={p.thcMax || p.objet ? thcLabel(p) : undefined} delay={delay} />
             </div>
           </div>
 
@@ -104,14 +106,21 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               <AddToCart product={p} availability={availability} />
             </div>
             {/* Sur téléphone, les engagements viennent après le choix, pas entre la photo et le titre */}
-            <Reassurance className="mt-6 lg:hidden" thc={p.thcMax ? thcLabel(p) : undefined} delay={delay} />
+            <Reassurance className="mt-6 lg:hidden" thc={p.thcMax || p.objet ? thcLabel(p) : undefined} delay={delay} />
 
             <dl className="mt-9">
-              {[
-                ["Arômes", p.aromas],
-                ["Profil", p.profile],
-                ["Utilisation", p.usage],
-              ].map(([term, text]) => (
+              {(p.objet
+                ? [
+                    ["Format", p.aromas],
+                    ["Marque", p.profile],
+                    ["Utilisation", p.usage],
+                  ]
+                : [
+                    ["Arômes", p.aromas],
+                    ["Profil", p.profile],
+                    ["Utilisation", p.usage],
+                  ]
+              ).map(([term, text]) => (
                 <div key={term} className="grid gap-x-6 gap-y-1 border-t border-foreground/15 py-4 last:border-b sm:grid-cols-[7.5rem_1fr]">
                   <dt className="font-medium">{term}</dt>
                   <dd className="text-[0.9688rem] leading-relaxed text-foreground/80">{fr(text)}</dd>
@@ -153,18 +162,24 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {p.description.map((para) => (
               <p key={para}>{fr(para)}</p>
             ))}
+            {p.objet === "accessoire" ? null : p.objet === "cosmetique" ? (
+              <p className="mt-7 flex items-start gap-3 rounded-[3px] bg-danger-soft px-4 py-3.5 text-[0.875rem] leading-relaxed text-foreground">
+                <span>{fr(p.notice ?? "")} Ce produit n'est pas un médicament.</span>
+              </p>
+            ) : (
             <p className="mt-7 flex items-start gap-3 rounded-[3px] bg-danger-soft px-4 py-3.5 text-[0.875rem] leading-relaxed text-foreground">
               <span>
                 Produit réservé aux adultes. Ne pas conduire ni utiliser de machines après usage. Déconseillé aux femmes enceintes ou allaitantes et aux personnes sous traitement sans avis médical. {p.notice ? fr(p.notice) : <>{forceLabels[strongest].label} : {fr(forceLabels[strongest].description.replace(/^./, (c) => c.toLowerCase()))}</>} Ce produit n'est pas un médicament. <Link href="/conseils-prudence">Conseils et prudence</Link>.
               </span>
             </p>
+            )}
           </div>
           <aside className="lg:col-span-5">
             <h2 className="t-h3">Formats et tarifs</h2>
             <table className="mt-5 w-full text-[0.9375rem]">
               <thead>
                 <tr className="border-b border-foreground/50 text-left text-[0.875rem]">
-                  <th className="py-2.5 pr-2 font-semibold sm:pr-3">Force</th>
+                  <th className="py-2.5 pr-2 font-semibold sm:pr-3">{p.objet ? "Article" : "Force"}</th>
                   <th className="py-2.5 pr-2 font-semibold sm:pr-3">Format</th>
                   <th className="py-2.5 text-right font-semibold">Prix</th>
                 </tr>

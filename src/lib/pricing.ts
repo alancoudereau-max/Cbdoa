@@ -15,6 +15,7 @@
  * à partir de 1 kg, le prix se fixe sur demande.
  */
 import { ON_ORDER_RATES } from "@/data/tarifs-sur-commande";
+import { ON_ORDER_ITEMS } from "@/data/tarifs-articles";
 
 export type BulkTier = { fromGrams: number; percent: number };
 export type BulkTiers = ReadonlyArray<BulkTier>;
@@ -72,9 +73,14 @@ export const ON_ORDER_QUOTE_FROM_GRAMS = 1000;
 /** Délai de livraison annoncé pour une référence sur commande (fiches, panier, commande, récapitulatif WhatsApp). */
 export const ON_ORDER_DELAY = "1 semaine";
 
-/** Vrai si la référence se vend sur commande. */
+/** Vrai si la référence se vend sur commande (au poids ou à la pièce). */
 export function isOnOrder(slug: string): boolean {
-  return Object.hasOwn(ON_ORDER_RATES, slug);
+  return Object.hasOwn(ON_ORDER_RATES, slug) || Object.hasOwn(ON_ORDER_ITEMS, slug);
+}
+
+/** Identifiant d'un format d'article sur commande vendu à la pièce : « SC-raw-grinder-P0 ». */
+export function onOrderItemSku(slug: string, index: number): string {
+  return `SC-${slug}-P${index}`;
 }
 
 /** Les trois prix au gramme d'une référence sur commande (centimes) : prix de base, dès 100 g, dès 500 g. */
@@ -96,6 +102,11 @@ export function onOrderSku(slug: string, grams: number): string {
 
 /** Prix du jour d'un format sur commande d'après son identifiant : [prix du format, prix de base au gramme]. */
 export function onOrderEntry(sku: string): [number, number] | undefined {
+  const item = /^SC-(.+)-P(\d+)$/.exec(sku);
+  if (item) {
+    const format = Object.hasOwn(ON_ORDER_ITEMS, item[1]) ? ON_ORDER_ITEMS[item[1]][Number(item[2])] : undefined;
+    return format ? [format[1], 0] : undefined;
+  }
   const m = /^SC-(.+)-(\d+)G$/.exec(sku);
   const grams = m ? Number(m[2]) : 0;
   const rate = m ? onOrderRate(m[1], grams) : undefined;
