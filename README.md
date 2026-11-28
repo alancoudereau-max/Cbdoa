@@ -51,6 +51,7 @@ Aucune variable n'est obligatoire. L'adresse publique du site (URLs canoniques, 
 | Codes promo | `src/data/promos.ts` |
 | Tarifs et modes de livraison, seuil port offert, codes postaux zone locale | `src/lib/shipping.ts` |
 | Coordonnées, société, mentions légales (SIRET…), points de retrait, navigation | `src/data/site.ts` |
+| Appel « Nous recherchons des emplacements » (accueil et page distributeurs) : texte, conditions, message WhatsApp | `src/components/content/RechercheEmplacements.tsx` |
 | FAQ (accueil, livraison, catégories) | `src/data/faq.ts`, `src/data/category-faq.ts` |
 | Guides / blog SEO | `src/data/guides.ts` |
 | Pages locales (villes) | `src/data/cities.ts` |

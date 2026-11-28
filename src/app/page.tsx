@@ -17,6 +17,7 @@ import { LiveTime } from "@/components/motion/ParisTime";
 import { WatchDial } from "@/components/home/WatchDial";
 import { GoldDust } from "@/components/motion/GoldDust";
 import { HautDoubsMap } from "@/components/content/HautDoubsMap";
+import { RechercheEmplacements } from "@/components/content/RechercheEmplacements";
 import { ForceGauge, type ForceOption } from "@/components/home/ForceGauge";
 import { Rosette } from "@/components/brand/Logo";
 import { itemListJsonLd, buildMetadata } from "@/lib/seo";
@@ -381,6 +382,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ───────────── Appel à emplacements ───────────── */}
+      <RechercheEmplacements />
 
       {/* ───────────── Livraison ───────────── */}
       <section className="section">

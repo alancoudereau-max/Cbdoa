@@ -4,6 +4,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { locations, site, vendingSupervision } from "@/data/site";
 import { HautDoubsMap } from "@/components/content/HautDoubsMap";
+import { RechercheEmplacements } from "@/components/content/RechercheEmplacements";
 import { PageHero } from "@/components/ui/PageHero";
 import { WatchDial } from "@/components/home/WatchDial";
 import { LiveTime } from "@/components/motion/ParisTime";
@@ -162,6 +163,9 @@ export default function DistributeursPage() {
           <p className="mt-8 text-foreground/75">{fr(vendingSupervision.support)}</p>
         </div>
       </section>
+
+      {/* Appel à emplacements */}
+      <RechercheEmplacements />
 
       {/* Points de retrait */}
       <section className="wrap section">
